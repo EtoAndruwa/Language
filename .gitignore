@@ -1,0 +1,12 @@
+*.exe
+obj/
+*.o
+logs/
+*.txt
+.vscode/
+*.html
+*.jpg
+*.aux
+*.log
+*.pdf
+*.tex
