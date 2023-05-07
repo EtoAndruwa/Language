@@ -1,11 +1,9 @@
 #ifndef TREE_H
-#define TREE_H
+#define TREE_H 
 
 /*####################################################################################################################################################################*/
 
-const int POISON = 0xDEAD; /// \brief The Poison value which is used in order to delete node's values  
-
-/*####################################################################################################################################################################*/
+const int TREE_POISON = 0xDEAD;
 
 /**
  * @brief This union is used in order to store the number of arithmetical operator or the value of the node
@@ -47,9 +45,11 @@ enum op_func_numbers
 {
     #define DEF_OP(name_op, code_op, ...) name_op = code_op,
     #define DEF_FUNC(name_func, code_func, ...) name_func = code_func,
+    #define DEF_LOGIC(name_logic, code_logic, ...) name_logic = code_logic,
     #include "def_cmd.h"
     #undef DEF_OP
     #undef DEF_FUNC
+    #undef DEF_LOGIC
 };
 
 /**
@@ -120,76 +120,11 @@ typedef struct Tree
 
 /*####################################################################################################################################################################*/
 
-/**
- * @brief Creates and initializes the tree struct
- * @return The pointer to the Tree struct which is containing all information about tree
- */
 Tree* tree_ctor();
-
-/*####################################################################################################################################################################*/
-
-/**
- * @brief Deletes the tree struct and free's all its nodes
- * @param tree_ptr The pointer to the Tree struct
- */
 void tree_dtor(Tree* tree_ptr);
-
-/*####################################################################################################################################################################*/
-
-/**
- * @brief Deletes the node's data and free's all its children and itself
- * @param node_ptr The pointer to the node of the tree (or subtree)
- */
 void dtor_childs(Node* node_ptr);
-
-/*####################################################################################################################################################################*/
-
-/**
- * @brief Takes all information about future node and creates it
- * 
- * @param tree_ptr The pointer to the Tree struct
- * @param node_value The value of the node (op_number or node_value)
- * @param node_type The type of the node (fun, op, val, varib)
- * @param text The text of the node if needed (for varib)
- * @param left_child  The pointer to the left child of the node to create link between them
- * @param right_child The pointer to the right child of the node to create link between them
- * @return The pointer to the created node 
- */
 Node* create_node(Tree* tree_ptr, double node_value, int node_type = IS_VAL, char* text = nullptr, Node* left_child = nullptr, Node* right_child = nullptr);
-
-/*####################################################################################################################################################################*/
-
-/**
- * @brief (OLD) Prints all leaves of the node (or subtree)
- * @param node_ptr The pointer to the node (or subtree)
- */
 void print_leaves(Node* node_ptr);
-
-/*####################################################################################################################################################################*/
-
-/**
- * @brief (OLD) Prints the nodes in inorder format
- * @param node_ptr The pointer to the node (or subtree). Usually pointer to the tree's root node
- */
-void print_inorder(Node* node_ptr);
-
-/*####################################################################################################################################################################*/
-
-/**
- * @brief (OLD) Prints the nodes in preorder format
- * @param node_ptr The pointer to the node (or subtree). Usually pointer to the tree's root node
- */
 void print_preorder(Node* node_ptr);
-
-/*####################################################################################################################################################################*/
-
-/**
- * 
- * @brief (OLD) Prints the nodes in postorder format
- * @param node_ptr The pointer to the node (or subtree). Usually pointer to the tree's root node
- */
-void print_postorder(Node* node_ptr);
-
-/*####################################################################################################################################################################*/
 
 #endif
