@@ -42,7 +42,9 @@ enum error_codes_lexer
     ERR_LEX_NEW_TOK_TYPE    = -10,
     ERR_LEX_INVALID_OP      = -12,
     ERR_LEX_INVALID_VAL     = -13,
-    ERR_LEX_NO_END_LINE     = -14, 
+    ERR_LEX_NO_END_LINE     = -14,
+    ERR_LEX_BIG_LENGTH_VAL  = -15, 
+    ERR_LEX_REALLOC_TOKS    = -16,
 };
 
 enum return_codes_lexer
@@ -72,7 +74,7 @@ typedef struct lexer_struct
     char* buff_ptr      = nullptr;  
     int buff_size       = 0;
     int cur_pos_buff    = 0;
-    int num_of_toks     = 20;
+    int num_of_toks     = 10;
     int cur_tok         = 0;
     int error_code      = LEX_RET_OK;
 }lexer_struct;
@@ -88,6 +90,7 @@ int get_word(lexer_struct* lexer_str_ptr);
 int get_op(lexer_struct* lexer_str_ptr);
 int get_val(lexer_struct* lexer_str_ptr);
 int check_op(char op_char);
+int realloc_toks(lexer_struct* lexer_str_ptr);
 
 // int get_string(Tree* const tree_ptr, char* file_name);
 

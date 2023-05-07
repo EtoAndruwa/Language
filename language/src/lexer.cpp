@@ -13,15 +13,15 @@ int ctor_lexer(lexer_struct* lexer_str_ptr) // CHECKED
     lexer_str_ptr->buff_ptr     = nullptr;
     LEX_TOKS                    = nullptr;
     lexer_str_ptr->buff_size    = 0;
-    lexer_str_ptr->num_of_toks  = 20;
+    lexer_str_ptr->num_of_toks  = 10;
     lexer_str_ptr->cur_tok      = 0;
 
     LEX_TOKS = (token*)calloc(lexer_str_ptr->num_of_toks, sizeof(token));
     if(lexer_str_ptr == nullptr)
     {
         LEX_ERROR = ERR_LEX_CALLOC_TOK_ARR;
-        ERROR_MESSAGE(stderr, LEX_ERROR)
-        return LEX_ERROR;
+        ERROR_MESSAGE(stderr, ERR_LEX_CALLOC_TOK_ARR)
+        return ERR_LEX_CALLOC_TOK_ARR;
     }
 
     for(size_t i = 0; i < lexer_str_ptr->num_of_toks; i++)
@@ -68,8 +68,8 @@ int get_string(lexer_struct* lexer_str_ptr, char* file_name) //
     if(file_inp_ptr == nullptr)
     {
         LEX_ERROR = ERR_LEX_OPEN_INP_FILE;
-        ERROR_MESSAGE(stderr, LEX_ERROR)
-        return LEX_ERROR;
+        ERROR_MESSAGE(stderr, ERR_LEX_OPEN_INP_FILE)
+        return ERR_LEX_OPEN_INP_FILE;
     }
 
     int error_code = get_size(lexer_str_ptr, file_inp_ptr);
@@ -91,8 +91,8 @@ int get_string(lexer_struct* lexer_str_ptr, char* file_name) //
     if(fclose(file_inp_ptr) == EOF)
     {   
         LEX_ERROR = ERR_LEX_CLOSE_INP_FILE;
-        ERROR_MESSAGE(stderr, LEX_ERROR)
-        return LEX_ERROR;
+        ERROR_MESSAGE(stderr, ERR_LEX_CLOSE_INP_FILE)
+        return ERR_LEX_CLOSE_INP_FILE;
     }
     return LEX_RET_OK;
 }
@@ -105,8 +105,8 @@ int get_size(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
     if(lexer_str_ptr->buff_size == 0) 
     {
         LEX_ERROR = ERR_LEX_EMPTY_FILE; 
-        ERROR_MESSAGE(stderr, LEX_ERROR)
-        return LEX_ERROR;
+        ERROR_MESSAGE(stderr, ERR_LEX_EMPTY_FILE)
+        return ERR_LEX_EMPTY_FILE;
     } 
 
     fseek(file_inp_ptr, 0, SEEK_SET); // Puts the pointer inside the file to the start
@@ -122,8 +122,8 @@ int get_into_buff(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
     if(lexer_str_ptr->buff_ptr == nullptr)
     {
         LEX_ERROR = ERR_LEX_CALLOC_BUFF;
-        ERROR_MESSAGE(stderr, LEX_ERROR)
-        return LEX_ERROR;
+        ERROR_MESSAGE(stderr, ERR_LEX_CALLOC_BUFF)
+        return ERR_LEX_CALLOC_BUFF;
     }
 
     int num_read = fread(lexer_str_ptr->buff_ptr, sizeof(char), lexer_str_ptr->buff_size, file_inp_ptr); // Reads the file into the buffer
@@ -131,8 +131,8 @@ int get_into_buff(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
     if((num_read <= 0) && (num_read > lexer_str_ptr->buff_size))
     {
         LEX_ERROR = ERR_LEX_READ_INTO_BUFF;
-        ERROR_MESSAGE(stderr, LEX_ERROR)
-        return LEX_ERROR;       
+        ERROR_MESSAGE(stderr, ERR_LEX_READ_INTO_BUFF)
+        return ERR_LEX_READ_INTO_BUFF;       
     }
 
     lexer_str_ptr->buff_ptr[lexer_str_ptr->buff_size] = '\0'; // Makes form the file null-terminated string
@@ -145,7 +145,13 @@ int get_toks(lexer_struct* lexer_str_ptr)
 {
     while(POSITION != lexer_str_ptr->buff_size - 1)
     {
-        printf("POSITION: %ld and char: %c\n", POSITION, STRING[POSITION]);
+        realloc_toks(lexer_str_ptr);
+        if(LEX_ERROR != LEXER_OK)
+        {
+            ERROR_MESSAGE(stderr, LEX_ERROR)
+            return LEX_ERROR;
+        }
+
         if(isspace(STRING[POSITION]) || STRING[POSITION] == '\r' || STRING[POSITION] == '\n')
         {
             POSITION++;
@@ -176,8 +182,8 @@ int get_toks(lexer_struct* lexer_str_ptr)
     if(STRING[POSITION] != '$')
     {
         LEX_ERROR = ERR_LEX_NO_END_LINE;
-        ERROR_MESSAGE(stderr, LEX_ERROR)
-        return LEX_ERROR;
+        ERROR_MESSAGE(stderr, ERR_LEX_NO_END_LINE)
+        return ERR_LEX_NO_END_LINE;
     }
     LEX_TOKS[CUR_TOK].token_text[0] = '$';
     LEX_TOKS[CUR_TOK].token_text[1] = '\0';
@@ -194,8 +200,8 @@ int get_word(lexer_struct* lexer_str_ptr) // CHECKED
         if(tok_text_pos == MAX_LEN_TOK_TEXT - 1)
         {
             LEX_ERROR = ERR_LEX_MAX_LEN_TOK;
-            ERROR_MESSAGE(stderr, LEX_ERROR)
-            return LEX_ERROR;
+            ERROR_MESSAGE(stderr, ERR_LEX_MAX_LEN_TOK)
+            return ERR_LEX_MAX_LEN_TOK;
         }
         LEX_TOKS[CUR_TOK].token_text[tok_text_pos] = STRING[POSITION];
         tok_text_pos++;
@@ -206,7 +212,7 @@ int get_word(lexer_struct* lexer_str_ptr) // CHECKED
     {
         LEX_ERROR = ERR_LEX_INV_WORD_NAME;
         ERROR_MESSAGE(stderr, ERR_LEX_INV_WORD_NAME)
-        return LEX_ERROR;
+        return ERR_LEX_INV_WORD_NAME;
     }
 
     if(!(strcmp(LEX_TOKS[CUR_TOK].token_text, "return")))
@@ -344,29 +350,40 @@ int get_op(lexer_struct* lexer_str_ptr) // CHECKED
             CUR_TOK++;
             break;
         default:
-            break;
+            ERROR_MESSAGE(stderr, ERR_LEX_INVALID_OP)
+            LEX_ERROR = ERR_LEX_INVALID_OP;
+            return ERR_LEX_INVALID_OP;
     }
     return LEX_RET_OK;
 }
 
-int get_val(lexer_struct* lexer_str_ptr)
+int get_val(lexer_struct* lexer_str_ptr) // CHECKED
 {
-    printf("HERE\n");
     size_t length_val = 0;
     size_t num_points = 0;
+    size_t length_tail = 0;
     float val = atof(&(STRING[POSITION]));
-    printf("float %f\n", val);
-    
+        
     while(('0' <= STRING[POSITION] && STRING[POSITION] <= '9') || (STRING[POSITION] == '-' && length_val == 0) 
         ||STRING[POSITION] == '.')
     {
+
         LEX_TOKS[CUR_TOK].token_text[length_val] = STRING[POSITION];
-        printf("Found %c \n", STRING[POSITION]);
-        if(STRING[POSITION] == '.' && num_points > 1)
+        if(num_points == 1)
+        {
+            length_tail++;
+        }
+        if(length_tail > 6)
+        {
+            LEX_ERROR = ERR_LEX_BIG_LENGTH_VAL;
+            ERROR_MESSAGE(stderr, ERR_LEX_BIG_LENGTH_VAL)
+            return ERR_LEX_BIG_LENGTH_VAL;
+        }
+        if(num_points > 1)
         {   
             LEX_ERROR = ERR_LEX_INVALID_VAL;
             ERROR_MESSAGE(stderr, ERR_LEX_INVALID_VAL)
-            return LEX_ERROR;
+            return ERR_LEX_INVALID_VAL;
         }
         if(STRING[POSITION] == '.')
         {
@@ -376,15 +393,13 @@ int get_val(lexer_struct* lexer_str_ptr)
         POSITION++;
     }
     LEX_TOKS[CUR_TOK].token_text[length_val] = '\0';
-    printf("Last now val's char %c\n", STRING[POSITION]);
     if((check_op(STRING[POSITION]) == ERR_LEX_INVALID_OP) && isspace(STRING[POSITION]) == 0)
     {   
         LEX_ERROR = ERR_LEX_INVALID_VAL;
         ERROR_MESSAGE(stderr, ERR_LEX_INVALID_VAL)
-        return LEX_ERROR;
+        return ERR_LEX_INVALID_VAL;
     }
 
-    printf("here___");
     LEX_TOKS[CUR_TOK].token_type = Val;
     LEX_TOKS[CUR_TOK].token_value.flt_val = val;
     CUR_TOK++;
@@ -393,7 +408,6 @@ int get_val(lexer_struct* lexer_str_ptr)
 
 int check_op(char op_char)
 {
-    printf("HERE\n");
     if(op_char == '+')
     {
         return Add;
@@ -513,4 +527,28 @@ void print_toks(lexer_struct* lexer_str_ptr) // CHECKED
         printf("Token flt_val: %f\n", LEX_TOKS[i].token_value.flt_val);
         printf("----------------------TOKEN %ld----------------------\n", i);
     }
+}
+
+int realloc_toks(lexer_struct* lexer_str_ptr)
+{
+    if(lexer_str_ptr->cur_tok == lexer_str_ptr->num_of_toks)
+    {
+        lexer_str_ptr->num_of_toks *= 2;
+        LEX_TOKS = (token*)realloc(LEX_TOKS, lexer_str_ptr->num_of_toks * sizeof(token));
+
+        if(LEX_TOKS == nullptr)
+        {
+            ERROR_MESSAGE(stderr, ERR_LEX_REALLOC_TOKS)
+            LEX_ERROR = ERR_LEX_REALLOC_TOKS;
+            return ERR_LEX_REALLOC_TOKS;
+        }
+
+        for(size_t i = CUR_TOK; i < lexer_str_ptr->num_of_toks; i++)
+        {
+            stpcpy(LEX_TOKS[i].token_text, "");
+            LEX_TOKS[i].token_type = Empty;
+            LEX_TOKS[i].token_value.flt_val = 0;
+        }
+    }
+    return LEX_RET_OK;
 }
