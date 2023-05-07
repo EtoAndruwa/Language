@@ -27,7 +27,7 @@ int ctor_lexer(lexer_struct* lexer_str_ptr) // CHECKED
     for(size_t i = 0; i < lexer_str_ptr->num_of_toks; i++)
     {
         stpcpy(LEX_TOKS[i].token_text, "");
-        LEX_TOKS[i].token_type = EMPTY;
+        LEX_TOKS[i].token_type = Empty;
         LEX_TOKS[i].token_value.flt_val = 0;
     }
 
@@ -180,7 +180,7 @@ int get_word(lexer_struct* lexer_str_ptr)
     }
 
 
-    LEX_TOKS[CUR_TOK].token_type = WORD;
+    LEX_TOKS[CUR_TOK].token_type = Word;
     LEX_TOKS[CUR_TOK].token_value.int_val = 0;
     CUR_TOK++;
 }
@@ -193,17 +193,25 @@ int get_op(lexer_struct* lexer_str_ptr)
             POSITION++;                                                     \
             LEX_TOKS[CUR_TOK].token_text[0] = op_text;                      \ 
             LEX_TOKS[CUR_TOK].token_text[1] = '\0';                         \
-            LEX_TOKS[CUR_TOK].t;                                            \
+            LEX_TOKS[CUR_TOK].toke;                                         \
             return OP_FOUND;                                                \
         }                                                                   \                                                                   
 
     switch((int)STRING[POSITION])
     {
         #define DEF_OP(op_name, op_code, op_text) 
+        #define DEF_FUNC(op_name, op_code, op_text) 
+        #define DEF_LOGIC(op_name, op_code, op_text)
+        #define DEF_BRACK(op_name, op_code, op_text) 
+        #define DEF_KEY_W(op_name, op_code, op_text) 
         #include "def_cmd.h"
         #undef DEF_OP
+        #undef DEF_FUNC
+        #undef DEF_LOGIC
+        #undef DEF_BRACK
+        #undef DEF_KEY_W
         
-        LEX_TOKS[CUR_TOK].token_type = OP;
+        LEX_TOKS[CUR_TOK].token_type = Add;
 
         default:
             return OP_NOT_FOUND;
@@ -228,32 +236,59 @@ void print_toks(lexer_struct* lexer_str_ptr) // CHECKED
 
         switch(LEX_TOKS[i].token_type)
         {
-            case VAL:
-                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "VAL");
+            case Add:
+                printf("Token type: %d (%s)\n", Add, "Add"); 
                 break;
-            case WORD:
-                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "WORD");
+            case Sub:
+                printf("Token type: %d (%s)\n", Sub, "Sub"); 
                 break;
-            case OP:
-                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "OP");
+            case Mul:
+                printf("Token type: %d (%s)\n", Add, "Mul"); 
                 break;
-            case LINE_END:
-                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "LINE_END");
+            case Div:
+                printf("Token type: %d (%s)\n", Add, "Div"); 
                 break;
-            case FIG_BRACK:
-                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "FIG_BRACK");
+            case Brack_l:
+                printf("Token type: %d (%s)\n", Brack_l, "Brack_l"); 
                 break;
-            case COMMA:
-                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "COMMA");
+            case Brack_r:
+                printf("Token type: %d (%s)\n", Brack_r, "Brack_r"); 
                 break;
-            case BRACK:
-                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "BRACK");
+            case Sqr_brack_l:
+                printf("Token type: %d (%s)\n", Sqr_brack_l, "Sqr_brack_l"); 
+                break;            
+            case Sqr_brack_r:
+                printf("Token type: %d (%s)\n", Sqr_brack_r, "Sqr_brack_r"); 
                 break;
-            case SQR_BRACK:
-                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "SQR_BRACK");
+            case Fig_brack_l:
+                printf("Token type: %d (%s)\n", Fig_brack_l, "Fig_brack_l"); 
                 break;
-            case EMPTY:
-                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "EMPTY");
+            case Fig_brack_r:
+                printf("Token type: %d (%s)\n", Fig_brack_r, "Fig_brack_r"); 
+                break;
+            case End_line:
+                printf("Token type: %d (%s)\n", End_line, "End_line"); 
+                break;
+            case Pow:
+                printf("Token type: %d (%s)\n", Pow, "Pow"); 
+                break;            
+            case Comma:
+                printf("Token type: %d (%s)\n", Comma, "Comma"); 
+                break;
+            case Var:
+                printf("Token type: %d (%s)\n", Var, "Var"); 
+                break;
+            case Val:
+                printf("Token type: %d (%s)\n", Val, "Val"); 
+                break;
+            case Empty:
+                printf("Token type: %d (%s)\n", Empty, "Empty"); 
+                break;
+            case Word:
+                printf("Token type: %d (%s)\n", Word, "Word"); 
+                break;            
+            case Return:
+                printf("Token type: %d (%s)\n", Return, "Return"); 
                 break;
             default:
                 ERROR_MESSAGE(stderr, ERR_LEX_NEW_TOK_TYPE)

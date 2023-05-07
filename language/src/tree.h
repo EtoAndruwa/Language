@@ -41,16 +41,16 @@ enum error_codes
 /**
  * @brief This enum contains the names and numbers of functions and operators
  */
-enum op_func_numbers 
-{
-    #define DEF_OP(name_op, code_op, ...) name_op = code_op,
-    #define DEF_FUNC(name_func, code_func, ...) name_func = code_func,
-    #define DEF_LOGIC(name_logic, code_logic, ...) name_logic = code_logic,
-    #include "def_cmd.h"
-    #undef DEF_OP
-    #undef DEF_FUNC
-    #undef DEF_LOGIC
-};
+// enum op_func_numbers 
+// {
+//     #define DEF_OP(name_op, code_op, ...) name_op = code_op,
+//     #define DEF_FUNC(name_func, code_func, ...) name_func = code_func,
+//     #define DEF_LOGIC(name_logic, code_logic, ...) name_logic = code_logic,
+//     #include "def_cmd.h"
+//     #undef DEF_OP
+//     #undef DEF_FUNC
+//     #undef DEF_LOGIC
+// };
 
 /**
  * @brief This enum stores the types of the nodes
@@ -90,11 +90,11 @@ typedef struct Node
 /**
  * @brief This struct describes the single variable
  */
-typedef struct Var
+typedef struct Var_str
 {
     char   var_text[MAX_LEN_VARIB];   /// \brief The text of the variable
     double var_value = 0;             /// \brief The value which will replace the exact variable 
-};
+}Var_str;
 
 /*####################################################################################################################################################################*/
 
@@ -107,7 +107,7 @@ typedef struct Tree
     char*   tree_buff      = nullptr;  /// \brief The pointer to the buffer with the tree equation
     FILE*   file_ptr       = nullptr;  /// \brief The pointer to the file with the tree equation
     Tokens* toks           = nullptr;  /// \brief (OLD) The pointer to the array of token structs
-    Var*    vars_arr       = nullptr;  /// \brief The pointer to the array of var structs
+    Var_str*    vars_arr       = nullptr;  /// \brief The pointer to the array of var structs
 
     size_t  size           = 0;        /// \brief The total size of the buffer with the tree equation
     size_t  num_of_toks    = 1;        /// \brief (OLD) The total number of tokens 

@@ -33,6 +33,9 @@ DEF_KEY_W(Return, 21, "return")
 DEF_KEY_W(End_line, 22, '$')
 DEF_KEY_W(Comma, 23, ',')
 DEF_KEY_W(Var, 26, "var")
+DEF_KEY_W(Word, 27, "")
+DEF_KEY_W(Val, 28, "")
+DEF_KEY_W(Empty, 0, "")
 
 
 

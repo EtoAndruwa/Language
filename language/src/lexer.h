@@ -14,18 +14,17 @@ const int MAX_LEN_TOK_TEXT = 21;
 
 enum token_types
 {
-    VAL        = 1,
-    WORD       = 2,
-    LINE_END   = 4,
-    FIG_BRACK  = 5,
-    COMMA      = 6,
-    BRACK      = 7,
-    SQR_BRACK  = 8,
-    EMPTY      = 0,
-
-    #define DEF_OP(name_op, code_op, ...) name_op = code_op,
+    #define DEF_OP(name, code, ...) name = code,
+    #define DEF_FUNC(fname, fcode, ...) fname = fcode,
+    #define DEF_LOGIC(lname, lcode, ...) lname = lcode,
+    #define DEF_BRACK(bname, bcode, ...) bname = bcode,
+    #define DEF_KEY_W(wname, wcode, ...) wname = wcode,
     #include "def_cmd.h"
     #undef DEF_OP
+    #undef DEF_FUNC
+    #undef DEF_LOGIC
+    #undef DEF_BRACK
+    #undef DEF_KEY_W
 };
 
 enum error_codes_lexer
