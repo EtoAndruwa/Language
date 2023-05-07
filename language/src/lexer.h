@@ -7,15 +7,21 @@
 #include <math.h>
 #include <ctype.h>
 #include "../../graphviz/src/debugger.h"  
+#include "DSL_lexer.h"
 
 const int LEX_POISON = 0xDEAD; 
 
 enum token_types
 {
-    VAL   = 1,
-    WORD  = 2,
-    OP    = 3,
-    CHAR  = 4,
+    VAL        = 1,
+    WORD       = 2,
+    OP         = 3,
+    LINE_END   = 4,
+    FIG_BRACK  = 5,
+    COMMA      = 6,
+    BRACK      = 7,
+    SQR_BRACK  = 8,
+    EMPTY      = 0,
 };
 
 enum error_codes_lexer
@@ -41,7 +47,7 @@ enum return_codes_lexer
 typedef union value_type
 {
     int   int_val;
-    float float_val;
+    float flt_val;
 };
 
 typedef struct token
@@ -66,6 +72,8 @@ int dtor_lexer(lexer_struct* lexer_str_ptr);
 int get_into_buff(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr);
 int get_size(lexer_struct* lexer_str_ptr, FILE* file_int_ptr);
 int get_string(lexer_struct* lexer_str_ptr, char* file_name);
+void print_toks(lexer_struct* lexer_str_ptr);
+int get_toks(lexer_struct* lexer_str_ptr);
 
 
 
