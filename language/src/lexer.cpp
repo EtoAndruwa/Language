@@ -150,17 +150,21 @@ int get_toks(lexer_struct* lexer_str_ptr)
             POSITION++;
             continue;
         }
-        if(isalpha(STRING[POSITION]))
+        if(isalpha(STRING[POSITION]) || STRING[POSITION] == '_')
         {
             get_word(lexer_str_ptr);
+            if(LEX_ERROR != LEXER_OK)
+            {
+                ERROR_MESSAGE(stderr, LEX_ERROR)
+                return LEX_ERROR;
+            }
         }
-        if(ispunct(STRING[POSITION]))
-        {
+        // if(ispunct(STRING[POSITION]))
+        // {
 
-        }
+        // }
         printf("%c ", STRING[POSITION++]);
     }
-
 }
 
 int get_word(lexer_struct* lexer_str_ptr)
@@ -179,10 +183,29 @@ int get_word(lexer_struct* lexer_str_ptr)
         POSITION++;
     }
 
+    if(isdigit(STRING[POSITION]) || STRING[POSITION] == '.' || STRING[POSITION] == '_')
+    {
+        LEX_ERROR = ERR_LEX_INV_WORD_NAME;
+        ERROR_MESSAGE(stderr, ERR_LEX_INV_WORD_NAME)
+        return LEX_ERROR;
+    }
 
-    LEX_TOKS[CUR_TOK].token_type = Word;
+    if(!(strcmp(LEX_TOKS[CUR_TOK].token_text, "return")))
+    {
+        LEX_TOKS[CUR_TOK].token_type = Return;
+    }
+    else if(!(strcmp(LEX_TOKS[CUR_TOK].token_text, "var")))
+    {
+        LEX_TOKS[CUR_TOK].token_type = Var;
+    }
+    else
+    {
+        LEX_TOKS[CUR_TOK].token_type = Word;
+    }
     LEX_TOKS[CUR_TOK].token_value.int_val = 0;
     CUR_TOK++;
+
+    return LEX_RET_OK;
 }
 
 int get_op(lexer_struct* lexer_str_ptr)
