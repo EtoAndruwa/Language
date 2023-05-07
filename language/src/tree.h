@@ -61,7 +61,9 @@ enum node_type
     IS_VAL      = 2,    /// \brief Value
     IS_VARIB    = 3,    /// \brief Variable
     IS_FUNC     = 4,    /// \brief Function
-    IS_CNST_VAR = 5,    /// \brief Constant variable
+    IS_EXPRESS  = 5,    /// \brief Constant variable
+    IS_MAIN     = 6,    /// \brief Constant variable
+    IS_LOGIC    = 6,    /// \brief Constant variable
 };
 
 /*####################################################################################################################################################################*/
@@ -106,14 +108,9 @@ typedef struct Tree
     Node*   root           = nullptr;  /// \brief The pointer to the root node of the tree 
     char*   tree_buff      = nullptr;  /// \brief The pointer to the buffer with the tree equation
     FILE*   file_ptr       = nullptr;  /// \brief The pointer to the file with the tree equation
-    Tokens* toks           = nullptr;  /// \brief (OLD) The pointer to the array of token structs
-    Var_str*    vars_arr       = nullptr;  /// \brief The pointer to the array of var structs
 
-    size_t  size           = 0;        /// \brief The total size of the buffer with the tree equation
     size_t  num_of_toks    = 1;        /// \brief (OLD) The total number of tokens 
     size_t  cur_tok        = 0;        /// \brief (OLD) The current number of tok in the array of tokens
-    int     num_of_vars    = 0;        /// \brief The total number of variables in the tree
-    size_t  cur_pos_str    = 0;        /// \brief The current position in the buffer with the tree equation
     size_t  error_code     = TREE_OK;  /// \brief The error code of the struct
 
 }Tree;

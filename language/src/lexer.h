@@ -7,7 +7,7 @@
 #include <math.h>
 #include <ctype.h>
 #include "../../graphviz/src/debugger.h"  
-#include "DSL_lexer.h"
+#include "DSL.h"
 
 const int LEX_POISON = 0xDEAD; 
 const int MAX_LEN_TOK_TEXT = 21;
@@ -47,14 +47,6 @@ enum error_codes_lexer
     ERR_LEX_REALLOC_TOKS    = -16,
 };
 
-enum return_codes_lexer
-{
-    LEX_RET_OK,
-    OP_NOT_FOUND,
-    OP_FOUND,
-
-};
-
 typedef union value_type
 {
     int   int_val;
@@ -76,7 +68,7 @@ typedef struct lexer_struct
     int cur_pos_buff    = 0;
     int num_of_toks     = 10;
     int cur_tok         = 0;
-    int error_code      = LEX_RET_OK;
+    int error_code      = LEXER_OK;
 }lexer_struct;
 
 int ctor_lexer(lexer_struct* lexer_str_ptr);

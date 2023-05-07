@@ -1,5 +1,4 @@
 #include "language.h"
-#include "lexer.h"
 
 
 int main()
@@ -9,6 +8,8 @@ int main()
 
     get_string(&lexer_str_ptr, "parse_this.txt");
     get_toks(&lexer_str_ptr);
+
+
     print_toks(&lexer_str_ptr);
 
 

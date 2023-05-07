@@ -31,7 +31,7 @@ int ctor_lexer(lexer_struct* lexer_str_ptr) // CHECKED
         LEX_TOKS[i].token_value.flt_val = 0;
     }
 
-    return LEX_RET_OK;
+    return LEXER_OK;
 }
 
 int dtor_lexer(lexer_struct* lexer_str_ptr) // CHECKED
@@ -59,10 +59,10 @@ int dtor_lexer(lexer_struct* lexer_str_ptr) // CHECKED
     lexer_str_ptr->num_of_toks  = LEX_POISON;
     lexer_str_ptr->cur_tok      = LEX_POISON;
 
-    return LEX_RET_OK;
+    return LEXER_OK;
 }
 
-int get_string(lexer_struct* lexer_str_ptr, char* file_name) // 
+int get_string(lexer_struct* lexer_str_ptr, char* file_name) // CHECKED
 {
     FILE* file_inp_ptr = fopen(file_name, "rb");
     if(file_inp_ptr == nullptr)
@@ -73,14 +73,14 @@ int get_string(lexer_struct* lexer_str_ptr, char* file_name) //
     }
 
     int error_code = get_size(lexer_str_ptr, file_inp_ptr);
-    if(error_code != LEX_RET_OK)
+    if(error_code != LEXER_OK)
     {
         ERROR_MESSAGE(stderr, error_code)
         return error_code;
     }
 
     error_code = get_into_buff(lexer_str_ptr, file_inp_ptr);
-    if(error_code != LEX_RET_OK)
+    if(error_code != LEXER_OK)
     {
         ERROR_MESSAGE(stderr, error_code)
         return error_code;
@@ -94,7 +94,7 @@ int get_string(lexer_struct* lexer_str_ptr, char* file_name) //
         ERROR_MESSAGE(stderr, ERR_LEX_CLOSE_INP_FILE)
         return ERR_LEX_CLOSE_INP_FILE;
     }
-    return LEX_RET_OK;
+    return LEXER_OK;
 }
 
 int get_size(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
@@ -111,7 +111,7 @@ int get_size(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
 
     fseek(file_inp_ptr, 0, SEEK_SET); // Puts the pointer inside the file to the start
 
-    return LEX_RET_OK;
+    return LEXER_OK;
 }
 
 int get_into_buff(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
@@ -138,10 +138,10 @@ int get_into_buff(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
     lexer_str_ptr->buff_ptr[lexer_str_ptr->buff_size] = '\0'; // Makes form the file null-terminated string
     fseek(file_inp_ptr, 0, SEEK_SET); // Puts the pointer inside the file to the start
     
-    return LEX_RET_OK;
+    return LEXER_OK;
 }
 
-int get_toks(lexer_struct* lexer_str_ptr)
+int get_toks(lexer_struct* lexer_str_ptr) // CHECKED
 {
     while(POSITION != lexer_str_ptr->buff_size - 1)
     {
@@ -218,19 +218,26 @@ int get_word(lexer_struct* lexer_str_ptr) // CHECKED
     if(!(strcmp(LEX_TOKS[CUR_TOK].token_text, "return")))
     {
         LEX_TOKS[CUR_TOK].token_type = Return;
+        LEX_TOKS[CUR_TOK].token_value.int_val = Return;
     }
     else if(!(strcmp(LEX_TOKS[CUR_TOK].token_text, "var")))
     {
         LEX_TOKS[CUR_TOK].token_type = Var;
+        LEX_TOKS[CUR_TOK].token_value.int_val = Var;
+    }
+    else if(!(strcmp(LEX_TOKS[CUR_TOK].token_text, "main")))
+    {
+        LEX_TOKS[CUR_TOK].token_type = Main;
+        LEX_TOKS[CUR_TOK].token_value.int_val = Main;
     }
     else
     {
         LEX_TOKS[CUR_TOK].token_type = Word;
+        LEX_TOKS[CUR_TOK].token_value.int_val = 0;
     }
-    LEX_TOKS[CUR_TOK].token_value.int_val = 0;
     CUR_TOK++;
 
-    return LEX_RET_OK;
+    return LEXER_OK;
 }
 
 int get_op(lexer_struct* lexer_str_ptr) // CHECKED
@@ -354,7 +361,7 @@ int get_op(lexer_struct* lexer_str_ptr) // CHECKED
             LEX_ERROR = ERR_LEX_INVALID_OP;
             return ERR_LEX_INVALID_OP;
     }
-    return LEX_RET_OK;
+    return LEXER_OK;
 }
 
 int get_val(lexer_struct* lexer_str_ptr) // CHECKED
@@ -403,10 +410,10 @@ int get_val(lexer_struct* lexer_str_ptr) // CHECKED
     LEX_TOKS[CUR_TOK].token_type = Val;
     LEX_TOKS[CUR_TOK].token_value.flt_val = val;
     CUR_TOK++;
-    return LEX_RET_OK;
+    return LEXER_OK;
 }
 
-int check_op(char op_char)
+int check_op(char op_char) // CHECKED
 {
     if(op_char == '+')
     {
@@ -517,6 +524,9 @@ void print_toks(lexer_struct* lexer_str_ptr) // CHECKED
             case Eq:
                 printf("Token type: %d (%s)\n", Eq, "Eq"); 
                 break;
+            case Main:
+                printf("Token type: %d (%s)\n", Main, "Main"); 
+                break;
             default:
                 ERROR_MESSAGE(stderr, ERR_LEX_NEW_TOK_TYPE)
                 printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "NEW_TOK_TYPE");
@@ -529,9 +539,9 @@ void print_toks(lexer_struct* lexer_str_ptr) // CHECKED
     }
 }
 
-int realloc_toks(lexer_struct* lexer_str_ptr)
+int realloc_toks(lexer_struct* lexer_str_ptr) // CHECKED
 {
-    if(lexer_str_ptr->cur_tok == lexer_str_ptr->num_of_toks)
+    if(lexer_str_ptr->cur_tok == lexer_str_ptr->num_of_toks - 1)
     {
         lexer_str_ptr->num_of_toks *= 2;
         LEX_TOKS = (token*)realloc(LEX_TOKS, lexer_str_ptr->num_of_toks * sizeof(token));
@@ -550,5 +560,5 @@ int realloc_toks(lexer_struct* lexer_str_ptr)
             LEX_TOKS[i].token_value.flt_val = 0;
         }
     }
-    return LEX_RET_OK;
+    return LEXER_OK;
 }

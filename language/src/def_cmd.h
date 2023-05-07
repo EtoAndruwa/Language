@@ -40,6 +40,7 @@ DEF_KEY_W(Val, 28, "")
 DEF_KEY_W(Empty, 0, "")
 DEF_KEY_W(New_line_n, 29, '\n')
 DEF_KEY_W(New_line_r, 30, '\r')
+DEF_KEY_W(Main, 31, "main")
 
 
 

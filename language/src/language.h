@@ -19,8 +19,10 @@ static const char* LATEX_DIR_NAME  = "latex/";
 
 /*####################################################################################################################################################################*/
 
-#include "tree.h"                         // The tree header with struct                        // The DSL header with macros
+#include "tree.h"                         // The tree header with struct                        
 #include "../../graphviz/src/graphviz.h"  // The graphviz lib's header with funcs
+#include "DSL.h"
+#include "lexer.h"
 
 /*####################################################################################################################################################################*/
 
