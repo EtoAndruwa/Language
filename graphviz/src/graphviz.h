@@ -10,8 +10,8 @@
 /*####################################################################################################################################################################*/
 
 #include "../config/dot_config.h"                     // The config information
-#include "../../differentiator/src/Differentiator.h"  // The differentiator header
-#include "../../differentiator/src/tree.h"            // The tree header
+// #include "../../lan/src/Differentiator.h"  // The differentiator header
+// #include "../../differentiator/src/tree.h"            // The tree header
 #include "debugger.h"                                 // The debug macro
 
 /*####################################################################################################################################################################*/
