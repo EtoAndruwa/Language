@@ -9,6 +9,7 @@ int main()
 
     get_string(&lexer_str_ptr, "parse_this.txt");
     get_toks(&lexer_str_ptr);
+    print_toks(&lexer_str_ptr);
 
 
     dtor_lexer(&lexer_str_ptr);

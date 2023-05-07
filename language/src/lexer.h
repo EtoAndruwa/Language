@@ -10,18 +10,22 @@
 #include "DSL_lexer.h"
 
 const int LEX_POISON = 0xDEAD; 
+const int MAX_LEN_TOK_TEXT = 21;
 
 enum token_types
 {
     VAL        = 1,
     WORD       = 2,
-    OP         = 3,
     LINE_END   = 4,
     FIG_BRACK  = 5,
     COMMA      = 6,
     BRACK      = 7,
     SQR_BRACK  = 8,
     EMPTY      = 0,
+
+    #define DEF_OP(name_op, code_op, ...) name_op = code_op,
+    #include "def_cmd.h"
+    #undef DEF_OP
 };
 
 enum error_codes_lexer
@@ -34,13 +38,17 @@ enum error_codes_lexer
     ERR_LEX_CLOSE_INP_FILE  = -5,
     ERR_LEX_CALLOC_BUFF     = -6,
     ERR_LEX_READ_INTO_BUFF  = -7,
+    ERR_LEX_MAX_LEN_TOK     = -8,
+    ERR_LEX_INV_WORD_NAME   = -9,
+    ERR_LEX_NEW_TOK_TYPE    = -10,
 
 };
 
 enum return_codes_lexer
 {
-   LEX_RET_OK,
-
+    LEX_RET_OK,
+    OP_NOT_FOUND,
+    OP_FOUND,
 
 };
 
@@ -54,7 +62,7 @@ typedef struct token
 {
     size_t token_type;
     value_type token_value;
-    char token_text[21];
+    char token_text[MAX_LEN_TOK_TEXT];
 }token;
 
 typedef struct lexer_struct
@@ -64,6 +72,7 @@ typedef struct lexer_struct
     int buff_size       = 0;
     int cur_pos_buff    = 0;
     int num_of_toks     = 10;
+    int cur_tok         = 0;
     int error_code      = LEX_RET_OK;
 }lexer_struct;
 
@@ -74,6 +83,7 @@ int get_size(lexer_struct* lexer_str_ptr, FILE* file_int_ptr);
 int get_string(lexer_struct* lexer_str_ptr, char* file_name);
 void print_toks(lexer_struct* lexer_str_ptr);
 int get_toks(lexer_struct* lexer_str_ptr);
+int get_word(lexer_struct* lexer_str_ptr);
 
 
 

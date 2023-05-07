@@ -9,11 +9,12 @@ int ctor_lexer(lexer_struct* lexer_str_ptr) // CHECKED
     }
 
     lexer_str_ptr->cur_pos_buff = 0;
-    LEX_ERROR   = LEXER_OK;   
+    LEX_ERROR                   = LEXER_OK;   
     lexer_str_ptr->buff_ptr     = nullptr;
-    LEX_TOKS  = nullptr;
+    LEX_TOKS                    = nullptr;
     lexer_str_ptr->buff_size    = 0;
     lexer_str_ptr->num_of_toks  = 10;
+    lexer_str_ptr->cur_tok      = 0;
 
     LEX_TOKS = (token*)calloc(lexer_str_ptr->num_of_toks, sizeof(token));
     if(lexer_str_ptr == nullptr)
@@ -56,11 +57,12 @@ int dtor_lexer(lexer_struct* lexer_str_ptr) // CHECKED
 
     lexer_str_ptr->buff_size    = LEX_POISON;
     lexer_str_ptr->num_of_toks  = LEX_POISON;
+    lexer_str_ptr->cur_tok      = LEX_POISON;
 
     return LEX_RET_OK;
 }
 
-int get_string(lexer_struct* lexer_str_ptr, char* file_name) // CHECKED
+int get_string(lexer_struct* lexer_str_ptr, char* file_name) // 
 {
     FILE* file_inp_ptr = fopen(file_name, "rb");
     if(file_inp_ptr == nullptr)
@@ -143,9 +145,71 @@ int get_toks(lexer_struct* lexer_str_ptr)
 {
     while(POSITION < lexer_str_ptr->buff_size)
     {
+        if(isspace(STRING[POSITION]))
+        {
+            POSITION++;
+            continue;
+        }
+        if(isalpha(STRING[POSITION]))
+        {
+            get_word(lexer_str_ptr);
+        }
+        if(ispunct(STRING[POSITION]))
+        {
+
+        }
         printf("%c ", STRING[POSITION++]);
     }
+
 }
+
+int get_word(lexer_struct* lexer_str_ptr)
+{
+    size_t tok_text_pos = 0;
+    while(isalpha(STRING[POSITION]) || (STRING[POSITION] == '_' && tok_text_pos == 4))
+    {
+        if(tok_text_pos == MAX_LEN_TOK_TEXT - 1)
+        {
+            LEX_ERROR = ERR_LEX_MAX_LEN_TOK;
+            ERROR_MESSAGE(stderr, LEX_ERROR)
+            return LEX_ERROR;
+        }
+        LEX_TOKS[CUR_TOK].token_text[tok_text_pos] = STRING[POSITION];
+        tok_text_pos++;
+        POSITION++;
+    }
+
+
+    LEX_TOKS[CUR_TOK].token_type = WORD;
+    LEX_TOKS[CUR_TOK].token_value.int_val = 0;
+    CUR_TOK++;
+}
+
+int get_op(lexer_struct* lexer_str_ptr)
+{
+    #define DEF_OP(op_name, op_code, op_text)                               \   
+        case op_code:                                                       \
+        {                                                                   \
+            POSITION++;                                                     \
+            LEX_TOKS[CUR_TOK].token_text[0] = op_text;                      \ 
+            LEX_TOKS[CUR_TOK].token_text[1] = '\0';                         \
+            LEX_TOKS[CUR_TOK].t;                                            \
+            return OP_FOUND;                                                \
+        }                                                                   \                                                                   
+
+    switch((int)STRING[POSITION])
+    {
+        #define DEF_OP(op_name, op_code, op_text) 
+        #include "def_cmd.h"
+        #undef DEF_OP
+        
+        LEX_TOKS[CUR_TOK].token_type = OP;
+
+        default:
+            return OP_NOT_FOUND;
+    }
+}
+
 
 // int realloc_toks()
 // {
@@ -155,18 +219,51 @@ int get_toks(lexer_struct* lexer_str_ptr)
 
 // }
 
-void print_toks(lexer_struct* lexer_str_ptr)
+void print_toks(lexer_struct* lexer_str_ptr) // CHECKED
 {
-    #define GET_STR(code) #code
-
     for(size_t i = 0; i < lexer_str_ptr->num_of_toks; i++)
     {
-        printf("###############TOKEN_%ld#################\n", i);
+        printf("\n----------------------TOKEN %ld----------------------\n", i);
         printf("Token text: %s\n", LEX_TOKS[i].token_text);
-        printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, GET_STR(LEX_TOKS[i].token_type));
+
+        switch(LEX_TOKS[i].token_type)
+        {
+            case VAL:
+                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "VAL");
+                break;
+            case WORD:
+                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "WORD");
+                break;
+            case OP:
+                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "OP");
+                break;
+            case LINE_END:
+                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "LINE_END");
+                break;
+            case FIG_BRACK:
+                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "FIG_BRACK");
+                break;
+            case COMMA:
+                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "COMMA");
+                break;
+            case BRACK:
+                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "BRACK");
+                break;
+            case SQR_BRACK:
+                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "SQR_BRACK");
+                break;
+            case EMPTY:
+                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "EMPTY");
+                break;
+            default:
+                ERROR_MESSAGE(stderr, ERR_LEX_NEW_TOK_TYPE)
+                printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "NEW_TOK_TYPE");
+                break;
+        }
+
         printf("Token int_val: %d\n", LEX_TOKS[i].token_value.int_val);
         printf("Token flt_val: %d\n", LEX_TOKS[i].token_value.flt_val);
-        printf("###############TOKEN_%ld#################\n", i);
+        printf("----------------------TOKEN %ld----------------------\n", i);
     }
 }
 
