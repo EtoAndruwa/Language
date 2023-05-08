@@ -152,7 +152,17 @@ int get_toks(lexer_struct* lexer_str_ptr) // CHECKED
             return LEX_ERROR;
         }
 
-        if(isspace(STRING[POSITION]) || STRING[POSITION] == '\r' || STRING[POSITION] == '\n')
+        if(STRING[POSITION] == '\\' && STRING[POSITION + 1] == '*')
+        {
+            POSITION += 2;
+            while(STRING[POSITION] != '*' && STRING[POSITION + 1] != '\\')
+            {
+                POSITION++;
+            }
+            POSITION += 2;
+            continue;
+        }
+        else if(isspace(STRING[POSITION]) || STRING[POSITION] == '\r' || STRING[POSITION] == '\n')
         {
             POSITION++;
             continue;
@@ -229,6 +239,11 @@ int get_word(lexer_struct* lexer_str_ptr) // CHECKED
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Main;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Main;
+    }
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "decl")))
+    {
+        LEX_TOKS[LEX_CUR_TOK].token_type = Decl;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Decl;
     }
     else
     {
@@ -526,6 +541,9 @@ void print_toks(lexer_struct* lexer_str_ptr) // CHECKED
                 break;
             case Main:
                 printf("Token type: %d (%s)\n", Main, "Main"); 
+                break;
+            case Decl:
+                printf("Token type: %d (%s)\n", Decl, "Decl"); 
                 break;
             default:
                 ERROR_MESSAGE(stderr, ERR_LEX_NEW_TOK_TYPE)

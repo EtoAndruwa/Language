@@ -17,7 +17,7 @@ const int TREE_POISON = 0xDEAD;
 
 /*####################################################################################################################################################################*/
                     
-#include "../../graphviz/src/graphviz.h"  // The graphviz lib's header with funcs
+// #include "../../graphviz/src/graphviz.h"  // The graphviz lib's header with funcs
 #include "DSL.h"
 #include "lexer.h"
 
