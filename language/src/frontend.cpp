@@ -50,15 +50,31 @@ Node* get_main(Tree* tree_ptr, token* tok_arr_ptr)
 
 Node* get_express(Tree* tree_ptr, token* tok_arr_ptr)
 {
-    Node* expr1 = EXPR_NODE(get_decl_var(tree_ptr, tok_arr_ptr), nullptr);
+    Node* inner_of_expr1 = get_decl_var(tree_ptr, tok_arr_ptr);
+    if(inner_of_expr1->type == ERROR)
+    {   
+        tree_ptr->error_code = ERR_FRT_INV_VAR_DECL;
+        ERROR_MESSAGE(stderr, ERR_FRT_INV_VAR_DECL)
+        return inner_of_expr1;
+    }
+    Node* expr1 = EXPR_NODE(inner_of_expr1, nullptr);
     Node* store_expr1 = expr1;
-    Node* expr_inner = nullptr;
+
+    Node* expr2 = nullptr;
+    Node* inner_of_expr2 = nullptr; 
     
     while(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_r)
     {
-        printf("Here!\n");
-        expr_inner = EXPR_NODE(get_decl_var(tree_ptr, tok_arr_ptr), nullptr);
-        expr1->right_child = expr_inner;
+        inner_of_expr2 = get_decl_var(tree_ptr, tok_arr_ptr);
+        if(inner_of_expr2->type == ERROR)
+        {   
+            tree_ptr->error_code = ERR_FRT_INV_VAR_DECL;
+            ERROR_MESSAGE(stderr, ERR_FRT_INV_VAR_DECL)
+            return inner_of_expr2;
+        }
+
+        expr2 = EXPR_NODE(inner_of_expr2, nullptr);
+        expr1->right_child = expr2;
         expr1 = expr1->right_child;
     }
 
