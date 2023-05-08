@@ -47,6 +47,10 @@ enum error_codes_front
     ERR_FRT_INV_ARGS_FUNC  = -12,
     ERR_FRT_INV_DECL_FUNC  = -13,
     ERR_FRT_MULTIPLE_DEF_MAIN  = -14,
+    ERR_FRT_RECUR_RULE_E   = -15,
+    ERR_FRT_RECUR_RULE_T   = -16,
+    ERR_FRT_RECUR_RULE_P   = -17,
+    ERR_FRT_RECUR_RULE_POW   = -18,
 };
 
 enum error_codes_back
