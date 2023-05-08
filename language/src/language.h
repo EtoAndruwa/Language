@@ -1,5 +1,5 @@
-#ifndef DIFFERENTIATOR_H
-#define DIFFERENTIATOR_H
+#ifndef LANGAUGE_H
+#define LANGAUGE_H
 
 /*####################################################################################################################################################################*/
 
@@ -13,9 +13,7 @@
 
 #define EPS 1e-7        // Used in comparisson of doubles
 #define PI  3.14159265  // Used in calculations
-static const size_t MAX_LEN_VARIB  = 21; // The maximum length of the variable text = 20 + 1 terminating symbol
-static const char* LATEX_FILE_NAME = "Tree.tex";
-static const char* LATEX_DIR_NAME  = "latex/";
+const int TREE_POISON = 0xDEAD;
 
 /*####################################################################################################################################################################*/
 
@@ -26,59 +24,93 @@ static const char* LATEX_DIR_NAME  = "latex/";
 
 /*####################################################################################################################################################################*/
 
-/**
- * @brief This enum contains the codes of returns of the functions
- */
 enum return_codes
 {
-    NULL_PTR_NODE  = 1,
-    NOT_ALL_DIGITS = 2,
-    IS_INT         = 3,
-    IS_FLOAT       = 4,
-    VALID_TOK      = 5,
-    INVALID_TOK    = 6,
-    EXISTING_FUNC  = 7,
-    NON_EXIST_FUNC = 8,
-    IS_POSITIVE    = 9,
-    IS_NEGATIVE    = 10,
-    IS_ZERO        = 11,
-    EQ_FOR_LATEX   = 12,
-    EQ_FOR_PLOT    = 13,
+
 };
 
-/**
- * @brief This enum contains all error codes of the differetiator's part of project
- */
-enum error_codes_diff
+
+enum error_codes_front
 {
-    ERR_CANNOT_OPEN_OUTPUT  = -1,
-    ERR_CANNOT_CLOSE_OUTPUT = -2, 
-    ERR_CANNOT_OPEN_INPUT   = -3,
-    ERR_CANNOT_CLOSE_INPUT  = -4,
-    ERR_INVALID_VAR_NUM     = -5,
-    ERR_TO_CALLOC_VARS      = -6,
-    ERR_INVALID_VAR_TEXT    = -7,
-    ERR_TO_CALLOC_TOKS      = -8,
-    ERR_INVALID_TOKEN       = -9,
-    ERR_OPEN_PARSER_LOG     = -10,
-    ERR_CLOSE_PARSER_LOG    = -11,
-    ERR_NO_END_OF_LINE      = -12,
-    ERR_NO_CLOSING_BRACKETS = -12,
-    ERR_UNKNOWN_FUNC        = -13,
-    ERR_NULL_PTR_NODE       = -14,
-    ERR_EMPTY_INP_FILE      = -15,
-    ERR_TO_REALLOC_TOKS     = -16,
-    ERR_INVALID_ARGUMENT    = -17,
-    ERR_NOT_A_SPACE         = -18,
-    ERR_FOUND_DIFF_NUM_VARS = -19,
-    ERR_UNKNOWN_OPERATOR    = -20,
-    ERR_DIV_TO_ZERO         = -21,
-    ERR_UNCERTAINTY         = -22,
-    ERR_OPEN_LATEX_FILE     = -23,
-    ERR_CLOSE_LATEX_FILE    = -24,
-    ERR_PRINT_LATEX         = -25,
-    ERR_INVALID_TYPE_NODE   = -26,
+    FRONT_OK               = 0,
+    ERR_FRT_NO_MAIN        = -1,
+    ERR_FRT_MAIN_BRACK     = -2,
+    ERR_FRT_NO_OPEN_SQR_BR = -3,
+    ERR_FRT_NO_CLOS_SQR_BR = -4,
+    ERR_FRT_NO_OPEN_BR     = -5,
+    ERR_FRT_NO_CLOS_BR     = -6,
+    ERR_FRT_NO_OPEN_FIG_BR = -7,
+    ERR_FRT_NO_CLOS_FIG_BR = -8,
+    ERR_FRT_NO_END_LINE    = -9,
 };
 
+enum error_codes_back
+{
+
+};
+
+
+typedef union Node_data
+{
+    int     op_number;           /// \brief The number of operator
+    double  node_value;          /// \brief The value of the constant
+    char    text[MAX_LEN_TOK_TEXT]; /// \brief The text of the node (for variables)
+}Node_data;
+
+
+typedef union Tok_data
+{
+    int    int_val; /// \brief This type of data is used to store the value of operator/function in the node
+    double flt_val; /// \brief This type of data is used to store the value of constant node
+}Tok_data;
+
+enum error_codes_tree
+{
+    TREE_OK                = 0,
+    ERR_TO_CALLOC_ROOT     = 1,
+    ERR_TO_CALLOC_NODE     = 2,
+    ERR_TO_CALLOC_TREE     = 3,
+    ERR_VAL_VAR_HAS_CHILD  = 4,
+};
+
+
+enum node_type_tree
+{
+    IS_OP       = 1,    /// \brief Operator
+    IS_VAL      = 2,    /// \brief Value
+    IS_VARIB    = 3,    /// \brief Variable
+    IS_FUNC     = 4,    /// \brief Function
+    IS_EXPRESS  = 5,    
+    IS_MAIN     = 6,    
+    IS_LOGIC    = 7,    
+};
+
+typedef struct Node
+{
+    Node_data value;                 /// \brief The value of the node which is union
+    char      type        = IS_VAL;  /// \brief The type of the node
+    Node*     left_child  = nullptr; /// \brief The pointer to the left child of the node
+    Node*     right_child = nullptr; /// \brief The pointer to the right child of the node
+}Node;
+
+typedef struct Tree
+{
+    Node*   root           = nullptr;  /// \brief The pointer to the root node of the tree 
+    char*   tree_buff      = nullptr;  /// \brief The pointer to the buffer with the tree equation
+    FILE*   file_ptr       = nullptr;  /// \brief The pointer to the file with the tree equation
+
+    size_t  num_of_toks    = 1;        /// \brief (OLD) The total number of tokens 
+    size_t  cur_tok        = 0;        /// \brief (OLD) The current number of tok in the array of tokens
+    size_t  error_code     = TREE_OK;  /// \brief The error code of the struct
+}Tree;
+
+/*####################################################################################################################################################################*/
+
+// Tree* tree_ctor();
+void tree_dtor(Tree* tree_ptr);
+void dtor_childs(Node* node_ptr);
+Node* create_node(Tree* tree_ptr, double node_value, int node_type = IS_VAL, char* text = nullptr, Node* left_child = nullptr, Node* right_child = nullptr);
+void print_leaves(Node* node_ptr);
+void print_preorder(Node* node_ptr);
 
 #endif

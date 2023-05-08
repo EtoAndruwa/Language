@@ -185,11 +185,11 @@ int get_toks(lexer_struct* lexer_str_ptr) // CHECKED
         ERROR_MESSAGE(stderr, ERR_LEX_NO_END_LINE)
         return ERR_LEX_NO_END_LINE;
     }
-    LEX_TOKS[CUR_TOK].token_text[0] = '$';
-    LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-    LEX_TOKS[CUR_TOK].token_type = End_line;
-    LEX_TOKS[CUR_TOK].token_value.int_val = End_line;
-    CUR_TOK++;
+    LEX_TOKS[LEX_CUR_TOK].token_text[0] = '$';
+    LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+    LEX_TOKS[LEX_CUR_TOK].token_type = End_line;
+    LEX_TOKS[LEX_CUR_TOK].token_value.int_val = End_line;
+    LEX_CUR_TOK++;
 }
 
 int get_word(lexer_struct* lexer_str_ptr) // CHECKED
@@ -203,7 +203,7 @@ int get_word(lexer_struct* lexer_str_ptr) // CHECKED
             ERROR_MESSAGE(stderr, ERR_LEX_MAX_LEN_TOK)
             return ERR_LEX_MAX_LEN_TOK;
         }
-        LEX_TOKS[CUR_TOK].token_text[tok_text_pos] = STRING[POSITION];
+        LEX_TOKS[LEX_CUR_TOK].token_text[tok_text_pos] = STRING[POSITION];
         tok_text_pos++;
         POSITION++;
     }
@@ -215,27 +215,27 @@ int get_word(lexer_struct* lexer_str_ptr) // CHECKED
         return ERR_LEX_INV_WORD_NAME;
     }
 
-    if(!(strcmp(LEX_TOKS[CUR_TOK].token_text, "return")))
+    if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "return")))
     {
-        LEX_TOKS[CUR_TOK].token_type = Return;
-        LEX_TOKS[CUR_TOK].token_value.int_val = Return;
+        LEX_TOKS[LEX_CUR_TOK].token_type = Return;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Return;
     }
-    else if(!(strcmp(LEX_TOKS[CUR_TOK].token_text, "var")))
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "var")))
     {
-        LEX_TOKS[CUR_TOK].token_type = Var;
-        LEX_TOKS[CUR_TOK].token_value.int_val = Var;
-    }
-    else if(!(strcmp(LEX_TOKS[CUR_TOK].token_text, "main")))
+        LEX_TOKS[LEX_CUR_TOK].token_type = Var;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Var;
+    }   
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "main")))
     {
-        LEX_TOKS[CUR_TOK].token_type = Main;
-        LEX_TOKS[CUR_TOK].token_value.int_val = Main;
+        LEX_TOKS[LEX_CUR_TOK].token_type = Main;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Main;
     }
     else
     {
-        LEX_TOKS[CUR_TOK].token_type = Word;
-        LEX_TOKS[CUR_TOK].token_value.int_val = 0;
+        LEX_TOKS[LEX_CUR_TOK].token_type = Word;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = 0;
     }
-    CUR_TOK++;
+    LEX_CUR_TOK++;
 
     return LEXER_OK;
 }
@@ -245,116 +245,116 @@ int get_op(lexer_struct* lexer_str_ptr) // CHECKED
     switch((int)STRING[POSITION])
     {
         case Add:
-            LEX_TOKS[CUR_TOK].token_text[0] = '+';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Add;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Add;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = '+';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Add;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Add;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case Sub:
-            LEX_TOKS[CUR_TOK].token_text[0] = '-';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Sub;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Sub;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = '-';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Sub;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Sub;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case Div:
-            LEX_TOKS[CUR_TOK].token_text[0] = '\\';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Div;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Div;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = '\\';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Div;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Div;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case Mul:
-            LEX_TOKS[CUR_TOK].token_text[0] = '*';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Mul;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Mul;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = '*';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Mul;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Mul;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case Brack_l:
-            LEX_TOKS[CUR_TOK].token_text[0] = '(';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Brack_l;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Brack_l;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = '(';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Brack_l;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Brack_l;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case Brack_r:
-            LEX_TOKS[CUR_TOK].token_text[0] = ')';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Brack_r;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Brack_r;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = ')';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Brack_r;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Brack_r;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case Sqr_brack_l:
-            LEX_TOKS[CUR_TOK].token_text[0] = '[';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Sqr_brack_l;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Sqr_brack_l;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = '[';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Sqr_brack_l;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Sqr_brack_l;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case Sqr_brack_r:
-            LEX_TOKS[CUR_TOK].token_text[0] = ']';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Sqr_brack_r;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Sqr_brack_r;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = ']';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Sqr_brack_r;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Sqr_brack_r;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case Fig_brack_l:
-            LEX_TOKS[CUR_TOK].token_text[0] = '{';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Fig_brack_l;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Fig_brack_l;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = '{';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Fig_brack_l;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Fig_brack_l;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case Fig_brack_r:
-            LEX_TOKS[CUR_TOK].token_text[0] = '}';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Fig_brack_r;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Fig_brack_r;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = '}';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Fig_brack_r;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Fig_brack_r;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case End_line:
-            LEX_TOKS[CUR_TOK].token_text[0] = '$';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = End_line;
-            LEX_TOKS[CUR_TOK].token_value.int_val = End_line;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = '$';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = End_line;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = End_line;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case Comma:
-            LEX_TOKS[CUR_TOK].token_text[0] = ',';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Comma;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Comma;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = ',';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Comma;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Comma;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case Eq:
-            LEX_TOKS[CUR_TOK].token_text[0] = '=';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Eq;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Eq;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = '=';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Eq;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Eq;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         case Pow:
-            LEX_TOKS[CUR_TOK].token_text[0] = '^';
-            LEX_TOKS[CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[CUR_TOK].token_type = Pow;
-            LEX_TOKS[CUR_TOK].token_value.int_val = Pow;
+            LEX_TOKS[LEX_CUR_TOK].token_text[0] = '^';
+            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+            LEX_TOKS[LEX_CUR_TOK].token_type = Pow;
+            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Pow;
             POSITION++;
-            CUR_TOK++;
+            LEX_CUR_TOK++;
             break;
         default:
             ERROR_MESSAGE(stderr, ERR_LEX_INVALID_OP)
@@ -375,7 +375,7 @@ int get_val(lexer_struct* lexer_str_ptr) // CHECKED
         ||STRING[POSITION] == '.')
     {
 
-        LEX_TOKS[CUR_TOK].token_text[length_val] = STRING[POSITION];
+        LEX_TOKS[LEX_CUR_TOK].token_text[length_val] = STRING[POSITION];
         if(num_points == 1)
         {
             length_tail++;
@@ -399,7 +399,7 @@ int get_val(lexer_struct* lexer_str_ptr) // CHECKED
         length_val++;
         POSITION++;
     }
-    LEX_TOKS[CUR_TOK].token_text[length_val] = '\0';
+    LEX_TOKS[LEX_CUR_TOK].token_text[length_val] = '\0';
     if((check_op(STRING[POSITION]) == ERR_LEX_INVALID_OP) && isspace(STRING[POSITION]) == 0)
     {   
         LEX_ERROR = ERR_LEX_INVALID_VAL;
@@ -407,9 +407,9 @@ int get_val(lexer_struct* lexer_str_ptr) // CHECKED
         return ERR_LEX_INVALID_VAL;
     }
 
-    LEX_TOKS[CUR_TOK].token_type = Val;
-    LEX_TOKS[CUR_TOK].token_value.flt_val = val;
-    CUR_TOK++;
+    LEX_TOKS[LEX_CUR_TOK].token_type = Val;
+    LEX_TOKS[LEX_CUR_TOK].token_value.flt_val = val;
+    LEX_CUR_TOK++;
     return LEXER_OK;
 }
 
@@ -553,7 +553,7 @@ int realloc_toks(lexer_struct* lexer_str_ptr) // CHECKED
             return ERR_LEX_REALLOC_TOKS;
         }
 
-        for(size_t i = CUR_TOK; i < lexer_str_ptr->num_of_toks; i++)
+        for(size_t i = LEX_CUR_TOK; i < lexer_str_ptr->num_of_toks; i++)
         {
             stpcpy(LEX_TOKS[i].token_text, "");
             LEX_TOKS[i].token_type = Empty;
