@@ -24,7 +24,7 @@
 #define DIV_NODE(left_child, right_child) create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Div, OP, nullptr, left_child, right_child), nullptr);
 #define POW_NODE(left_child, right_child) create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Pow, OP, nullptr, left_child, right_child), nullptr);
 
-#define MAIN(left_child)                  create_node(tree_ptr, 0, MAIN, nullptr, left_child, nullptr);
+#define MAIN_NODE(left_child)             create_node(tree_ptr, 0, MAIN, nullptr, left_child, nullptr);
 
 // #define POW_NODE(base, exp)               create_node(tree_ptr, Pow, FUNC_NAME, nullptr, base, exp);
 // #define SIN_NODE(left_child)              create_node(tree_ptr, Sin, FUNC_NAME, nullptr, left_child);

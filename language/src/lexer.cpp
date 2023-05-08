@@ -1,6 +1,6 @@
 #include "lexer.h"
 
-int ctor_lexer(lexer_struct* lexer_str_ptr) // CHECKED
+int ctor_lexer(Lexer_struct* lexer_str_ptr) // CHECKED
 {
     if(lexer_str_ptr == nullptr)
     {
@@ -34,7 +34,7 @@ int ctor_lexer(lexer_struct* lexer_str_ptr) // CHECKED
     return LEXER_OK;
 }
 
-int dtor_lexer(lexer_struct* lexer_str_ptr) // CHECKED
+int dtor_lexer(Lexer_struct* lexer_str_ptr) // CHECKED
 {   
     if(LEX_TOKS != nullptr)
     {
@@ -62,7 +62,7 @@ int dtor_lexer(lexer_struct* lexer_str_ptr) // CHECKED
     return LEXER_OK;
 }
 
-int get_string(lexer_struct* lexer_str_ptr, char* file_name) // CHECKED
+int get_string(Lexer_struct* lexer_str_ptr, char* file_name) // CHECKED
 {
     FILE* file_inp_ptr = fopen(file_name, "rb");
     if(file_inp_ptr == nullptr)
@@ -97,7 +97,7 @@ int get_string(lexer_struct* lexer_str_ptr, char* file_name) // CHECKED
     return LEXER_OK;
 }
 
-int get_size(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
+int get_size(Lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
 {
     fseek(file_inp_ptr, 0, SEEK_END); // Puts the pointer inside the file to the end of it
     lexer_str_ptr->buff_size = ftell(file_inp_ptr); // Get the size of the file with '\r'!
@@ -114,7 +114,7 @@ int get_size(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
     return LEXER_OK;
 }
 
-int get_into_buff(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
+int get_into_buff(Lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
 {
     fseek(file_inp_ptr, 0, SEEK_SET); // Puts the pointer inside the file to the start
     lexer_str_ptr->buff_ptr = (char*)calloc(1, sizeof(char) * (lexer_str_ptr->buff_size + 1)); // Allocates enough memmory for the buffer of chars  
@@ -141,7 +141,7 @@ int get_into_buff(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr) // CHECKED
     return LEXER_OK;
 }
 
-int get_toks(lexer_struct* lexer_str_ptr) // CHECKED
+int get_toks(Lexer_struct* lexer_str_ptr) // CHECKED
 {
     while(POSITION != lexer_str_ptr->buff_size - 1)
     {
@@ -202,7 +202,7 @@ int get_toks(lexer_struct* lexer_str_ptr) // CHECKED
     LEX_CUR_TOK++;
 }
 
-int get_word(lexer_struct* lexer_str_ptr) // CHECKED
+int get_word(Lexer_struct* lexer_str_ptr) // CHECKED
 {
     size_t tok_text_pos = 0;
     while(isalpha(STRING[POSITION]) || (STRING[POSITION] == '_' && tok_text_pos == 4))
@@ -255,7 +255,7 @@ int get_word(lexer_struct* lexer_str_ptr) // CHECKED
     return LEXER_OK;
 }
 
-int get_op(lexer_struct* lexer_str_ptr) // CHECKED
+int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
 {
     switch((int)STRING[POSITION])
     {
@@ -379,7 +379,7 @@ int get_op(lexer_struct* lexer_str_ptr) // CHECKED
     return LEXER_OK;
 }
 
-int get_val(lexer_struct* lexer_str_ptr) // CHECKED
+int get_val(Lexer_struct* lexer_str_ptr) // CHECKED
 {
     size_t length_val = 0;
     size_t num_points = 0;
@@ -473,7 +473,7 @@ int check_op(char op_char) // CHECKED
     return ERR_LEX_INVALID_OP;
 }
 
-void print_toks(lexer_struct* lexer_str_ptr) // CHECKED
+void print_toks(Lexer_struct* lexer_str_ptr) // CHECKED
 {
     for(size_t i = 0; i < lexer_str_ptr->num_of_toks; i++)
     {
@@ -557,7 +557,7 @@ void print_toks(lexer_struct* lexer_str_ptr) // CHECKED
     }
 }
 
-int realloc_toks(lexer_struct* lexer_str_ptr) // CHECKED
+int realloc_toks(Lexer_struct* lexer_str_ptr) // CHECKED
 {
     if(lexer_str_ptr->cur_tok == lexer_str_ptr->num_of_toks - 1)
     {

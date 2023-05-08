@@ -20,6 +20,19 @@
 #define PURP_BG_COLOR_DOT   "#9370DB" // Used as bg color for functions' nodes
 #define RED_BG_COLOR_DOT    "#FC9696" // Used as bg color for values' nodes
 
+
+#define OP_HEAD_COLOR   "#7668F6" // OP_HEAD
+#define OP_COLOR        "#2E19E4" // OP
+
+#define VAR_HEAD_COLOR  "#FCC76C" // VAR_HEAD
+#define VAR_COLOR       "#FFA70D" // Var
+
+#define VAL_HEAD_COLOR  "#AA6CFC" // VAL_HEAD
+#define VAL_COLOR       "#710FF2" // VAL    
+
+#define EMPTY_COLOR     "#FFFFFF" // EMPTY
+#define MAIN_COLOR      "#7CF699" // MAIN
+
 /*####################################################################################################################################################################*/
 
 #endif

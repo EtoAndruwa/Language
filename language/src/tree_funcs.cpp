@@ -1,6 +1,6 @@
 #include "language.h"
 
-int tree_ctor(Tree* tree_str_ptr) // CHECKED
+int ctor_tree(Tree* tree_str_ptr) // CHECKED
 {
     if(tree_str_ptr == nullptr)
     {
@@ -17,7 +17,7 @@ int tree_ctor(Tree* tree_str_ptr) // CHECKED
     return TREE_OK;
 }
 
-void tree_dtor(Tree* tree_str_ptr) // CHECKED
+void dtor_tree(Tree* tree_str_ptr) // CHECKED
 {
     dtor_childs(tree_str_ptr->root);
 
@@ -46,10 +46,10 @@ void dtor_childs(Node* node_ptr) // CHECKED
 
 Node* create_node(Tree* tree_str_ptr, double node_value, int node_type, char* text, Node* left_child, Node* right_child) // ok
 {
-    if((node_type == VAL || node_type == VAR) && (left_child != nullptr || right_child != nullptr))
+    if((node_type == VAL || node_type == VAR || node_type == Empty) && (left_child != nullptr || right_child != nullptr))
     {
-        tree_str_ptr->error_code = ERR_VAL_VAR_HAS_CHILD;
-        ERROR_MESSAGE(stderr, ERR_VAL_VAR_HAS_CHILD)
+        tree_str_ptr->error_code = ERR_VAL_VAR_EMPT_HAS_CHILD;
+        ERROR_MESSAGE(stderr, ERR_VAL_VAR_EMPT_HAS_CHILD)
         return nullptr;
     }
 
@@ -124,6 +124,11 @@ Node* create_node(Tree* tree_str_ptr, double node_value, int node_type, char* te
             new_node_ptr->type = FUNC_INFO;
             new_node_ptr->left_child  = left_child;
             new_node_ptr->right_child = right_child;
+            return new_node_ptr;
+        case EMPTY:
+            new_node_ptr->type = EMPTY;
+            new_node_ptr->left_child  = nullptr;
+            new_node_ptr->right_child = nullptr;
             return new_node_ptr;
         default:
             break;

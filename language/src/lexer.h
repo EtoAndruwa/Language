@@ -60,7 +60,7 @@ typedef struct token
     char token_text[MAX_LEN_TOK_TEXT];
 }token;
 
-typedef struct lexer_struct
+typedef struct Lexer_struct
 {
     token* tok_arr_ptr  = nullptr;
     char* buff_ptr      = nullptr;  
@@ -69,20 +69,20 @@ typedef struct lexer_struct
     int num_of_toks     = 10;
     int cur_tok         = 0;
     int error_code      = LEXER_OK;
-}lexer_struct;
+}Lexer_struct;
 
-int ctor_lexer(lexer_struct* lexer_str_ptr);
-int dtor_lexer(lexer_struct* lexer_str_ptr);
-int get_into_buff(lexer_struct* lexer_str_ptr, FILE* file_inp_ptr);
-int get_size(lexer_struct* lexer_str_ptr, FILE* file_int_ptr);
-int get_string(lexer_struct* lexer_str_ptr, char* file_name);
-void print_toks(lexer_struct* lexer_str_ptr);
-int get_toks(lexer_struct* lexer_str_ptr);
-int get_word(lexer_struct* lexer_str_ptr);
-int get_op(lexer_struct* lexer_str_ptr);
-int get_val(lexer_struct* lexer_str_ptr);
+int ctor_lexer(Lexer_struct* lexer_str_ptr);
+int dtor_lexer(Lexer_struct* lexer_str_ptr);
+int get_into_buff(Lexer_struct* lexer_str_ptr, FILE* file_inp_ptr);
+int get_size(Lexer_struct* lexer_str_ptr, FILE* file_int_ptr);
+int get_string(Lexer_struct* lexer_str_ptr, char* file_name);
+void print_toks(Lexer_struct* lexer_str_ptr);
+int get_toks(Lexer_struct* lexer_str_ptr);
+int get_word(Lexer_struct* lexer_str_ptr);
+int get_op(Lexer_struct* lexer_str_ptr);
+int get_val(Lexer_struct* lexer_str_ptr);
 int check_op(char op_char);
-int realloc_toks(lexer_struct* lexer_str_ptr);
+int realloc_toks(Lexer_struct* lexer_str_ptr);
 
 // int get_string(Tree* const tree_ptr, char* file_name);
 

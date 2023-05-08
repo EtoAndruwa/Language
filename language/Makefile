@@ -8,25 +8,33 @@ CFLAGS = -g -c -Wshadow -Winit-self -Wredundant-decls -Wundef -Wfloat-equal -Win
 EXE_FLAG_VALGRIND = valgrind -s --leak-check=yes --show-leak-kinds=all --track-origins=yes --log-file="valgrind_log.txt" 
 
 CC = g++
-TARGET = Langauge
-
+TARGET = Language
 
 PREF_OBJ = ./obj/
 PREF_SRC = ./src/
+PREF_GRV= ../graphviz/src/
 
-SRC = $(wildcard $(PREF_SRC)*.cpp)
-OBJ = $(patsubst $(PREF_SRC)%.cpp, $(PREF_OBJ)%.o, $(SRC))
+LANG_SRC = $(wildcard $(PREF_SRC)*.cpp)
+LANG_OBJ = $(patsubst $(PREF_SRC)%.cpp, $(PREF_OBJ)%.o, $(LANG_SRC))
 
-all : $(TARGET) run_program   
+GRV_CPP = $(wildcard $(PREF_GRV)*.cpp)
+GRV_OBJ = $(patsubst $(PREF_GRV)%.cpp, $(PREF_OBJ)%.o, $(GRV_CPP))
+
+OBJ = $(GRV_OBJ) $(LANG_OBJ)
+
+all : $(TARGET) run
 
 $(TARGET) : $(OBJ) 
 	$(CC) $(OBJ) -o $(TARGET).exe
 
 $(PREF_OBJ)%.o : $(PREF_SRC)%.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC)  -c $< -o $@
 
-run_program :
-	$(EXE_FLAG_VALGRIND) ./$(TARGET).exe 
+$(PREF_OBJ)%.o : $(PREF_GRV)%.cpp
+	$(CC)  -c $< -o $@
 
-clean : 
-	rm $(TARGET).exe $(PREF_OBJ)*.o 
+clean: 
+	rm $(TARGET).exe $(PREF_OBJ)*.o
+
+run:
+	$(EXE_FLAG) ./$(TARGET).exe

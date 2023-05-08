@@ -21,7 +21,7 @@
 #define INPUT_FORMAT         ".txt"                            // The input format to the dot                     
 #define HTML                 ".html"                           // The html format
 
-#define OUTPUT_NAME          "diff_tree"                       // The name of the output/input files for dot
+#define OUTPUT_NAME          "prog_struct"                       // The name of the output/input files for dot
 #define DEFAULT_LEGEND_TEXT  "Empty legend"                    // The default legend's text   
 #define SPLINES_DOT          "true"                            // Splines on/off (for edges)
 
