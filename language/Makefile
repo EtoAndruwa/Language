@@ -37,4 +37,4 @@ clean:
 	rm $(TARGET).exe $(PREF_OBJ)*.o
 
 run:
-	$(EXE_FLAG) ./$(TARGET).exe
+	$(EXE_FLAG_VALGRIND) ./$(TARGET).exe

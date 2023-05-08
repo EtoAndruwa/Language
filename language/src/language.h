@@ -56,5 +56,10 @@ Node* get_express(Tree* tree_ptr, token* tok_arr_ptr);
 Node* get_main(Tree* tree_ptr, token* tok_arr_ptr);
 Node* get_decl_var(Tree* tree_ptr, token* tok_arr_ptr);
 Node* get_assign(Tree* tree_ptr, token* tok_arr_ptr);
+Node* rule_Pow(Tree* tree_ptr, token* tok_arr_ptr);
+Node* rule_N(Tree* tree_ptr, token* tok_arr_ptr);
+Node* rule_P(Tree* tree_ptr, token* tok_arr_ptr);
+Node* rule_T(Tree* tree_ptr, token* tok_arr_ptr);
+Node* rule_E(Tree* tree_ptr, token* tok_arr_ptr);
 
 #endif
