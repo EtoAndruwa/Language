@@ -45,6 +45,8 @@ enum error_codes_front
     ERR_FRT_INV_VAR_DECL   = -10,
     ERR_FRT_INV_ASSIGNMENT = -11,
     ERR_FRT_INV_ARGS_FUNC  = -12,
+    ERR_FRT_INV_DECL_FUNC  = -13,
+    ERR_FRT_MULTIPLE_DEF_MAIN  = -14,
 };
 
 enum error_codes_back
@@ -52,7 +54,7 @@ enum error_codes_back
 
 };
 
-Node* get_recur_tree(Tree* tree_ptr, token* tok_arr_ptr);
+Node* get_recur_tree(Tree* tree_ptr, Lexer_struct* lexer_str_ptr,token* tok_arr_ptr);
 Node* get_express(Tree* tree_ptr, token* tok_arr_ptr);
 Node* get_main(Tree* tree_ptr, token* tok_arr_ptr);
 Node* get_decl_var(Tree* tree_ptr, token* tok_arr_ptr);
@@ -64,5 +66,6 @@ Node* rule_T(Tree* tree_ptr, token* tok_arr_ptr);
 Node* rule_E(Tree* tree_ptr, token* tok_arr_ptr);
 Node* rule_F(Tree* tree_ptr, token* tok_arr_ptr);
 Node* rule_V(Tree* tree_ptr, token* tok_arr_ptr);
+Node* get_func_decl(Tree* tree_ptr, token* tok_arr_ptr);
 
 #endif

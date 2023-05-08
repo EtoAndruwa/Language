@@ -88,8 +88,13 @@ int print_tree_data(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // O
         }
         else if(node_ptr->type == FUNC_NAME)
         {
-            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>FUNC_NAME} | {<f0> }}\"];\n", 
-                node_ptr, FUNC_NAME_COLOR);
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>FUNC_NAME} | {<f0> name = %s}}\"];\n", 
+                node_ptr, FUNC_NAME_COLOR, node_ptr->value.text);
+        }
+        else if(node_ptr->type == DECL_FUNC_HEAD)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>DECL_FUNC_HEAD} | {<f0>}}\"];\n", 
+                node_ptr, DECL_FUNC_COLOR);
         }
         
         if(node_ptr->left_child != nullptr)
@@ -116,7 +121,7 @@ int print_tree_links(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // 
 {
     if(node_ptr->left_child != nullptr)
     {
-        fprintf(graph_txt_ptr, "\tnode_%p:f0 -> node_%p:here[color=\"blue\", label = \"left_child\"];\n", node_ptr, node_ptr->left_child);
+        fprintf(graph_txt_ptr, "\tnode_%p:f0 -> node_%p:here[color=\"blue\"];\n", node_ptr, node_ptr->left_child);
         if(print_tree_links(tree_struct, node_ptr->left_child, graph_txt_ptr) != RETURN_OK)
         {
             ERROR_MESSAGE(stderr, tree_struct->error_code);
@@ -125,7 +130,7 @@ int print_tree_links(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // 
     }
     if(node_ptr->right_child != nullptr)
     {
-        fprintf(graph_txt_ptr, "\tnode_%p:f0 -> node_%p:here[color=\"red\", label = \"right_child\"];\n", node_ptr, node_ptr->right_child);
+        fprintf(graph_txt_ptr, "\tnode_%p:f0 -> node_%p:here[color=\"red\"];\n", node_ptr, node_ptr->right_child);
         if(print_tree_links(tree_struct, node_ptr->right_child, graph_txt_ptr) != RETURN_OK)
         {
             ERROR_MESSAGE(stderr, tree_struct->error_code);

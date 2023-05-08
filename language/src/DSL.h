@@ -32,6 +32,7 @@
 #define EXPR_NODE(left_child, right_child) create_node(tree_ptr, 0, EXPR_HEAD, nullptr, left_child, right_child);
 
 #define FUNC_CALL_NODE(left_child)              create_node(tree_ptr, 0, FUNC_CALL, nullptr, left_child, nullptr);
+#define FUNC_DECL_NODE(left_child)              create_node(tree_ptr, 0, DECL_FUNC_HEAD, nullptr, left_child, nullptr);
 #define FUNC_HEAD_NODE(left_child, right_child) create_node(tree_ptr, 0, FUNC_HEAD, nullptr, left_child, right_child);
 #define FUNC_NAME_NODE(text)                    create_node(tree_ptr, 0, FUNC_NAME, text, nullptr, nullptr);
 #define FUNC_INFO_NODE(left_child, right_child) create_node(tree_ptr, 0, FUNC_INFO, nullptr, left_child, right_child);
