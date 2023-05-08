@@ -48,18 +48,21 @@ Node* get_main(Tree* tree_ptr, token* tok_arr_ptr)
     return MAIN_NODE(expres);
 }
 
-// int get_line_end(Tree* tree_ptr, token* tok_arr_ptr)
-// {
-//     if()
-//     {
-
-
-//     }   
-// }
-
 Node* get_express(Tree* tree_ptr, token* tok_arr_ptr)
 {
-    return get_decl_var(tree_ptr, tok_arr_ptr);
+    Node* expr1 = EXPR_NODE(get_decl_var(tree_ptr, tok_arr_ptr), nullptr);
+    Node* store_expr1 = expr1;
+    Node* expr_inner = nullptr;
+    
+    while(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_r)
+    {
+        printf("Here!\n");
+        expr_inner = EXPR_NODE(get_decl_var(tree_ptr, tok_arr_ptr), nullptr);
+        expr1->right_child = expr_inner;
+        expr1 = expr1->right_child;
+    }
+
+    return store_expr1;
 }
 
 // Node* get_op(Tree* tree_ptr, token* tok_arr_ptr)
@@ -141,15 +144,12 @@ Node* get_decl_var(Tree* tree_ptr, token* tok_arr_ptr)
             return ERROR_NODE()
         }
         TREE_CUR_TOK++;
-        equal->left_child  = decl_var;
-        equal->right_child = val;
+        equal->left_child->left_child  = decl_var;
+        equal->left_child->right_child = val;
         return equal;
     }
     return nullptr;
 }
-
-    
-
 
 
 Node* get_recur_tree(Tree* tree_ptr, token* tok_arr_ptr) // ok

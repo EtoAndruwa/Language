@@ -9,26 +9,27 @@
 
 /*####################################################################################################################################################################*/    
 
-#define VAL_NODE(value)                   create_node(tree_ptr, 0, VAL_HEAD, nullptr, create_node(tree_ptr, value, VAL), nullptr);
-#define VAR_NODE(text)                    create_node(tree_ptr, 0, VAR_HEAD, nullptr, create_node(tree_ptr, 0, VAR,  text), nullptr);
-#define DECL_VAR_NODE(text)               create_node(tree_ptr, 0, DECL_VAR_HEAD, nullptr, create_node(tree_ptr, 0, VAR_HEAD, nullptr, create_node(tree_ptr, 0, VAR,  text), nullptr), nullptr);
+#define VAL_NODE(value)                    create_node(tree_ptr, 0, VAL_HEAD, nullptr, create_node(tree_ptr, value, VAL), nullptr);
+#define VAR_NODE(text)                     create_node(tree_ptr, 0, VAR_HEAD, nullptr, create_node(tree_ptr, 0, VAR,  text), nullptr);
+#define DECL_VAR_NODE(text)                create_node(tree_ptr, 0, DECL_VAR_HEAD, nullptr, create_node(tree_ptr, 0, VAR_HEAD, nullptr, create_node(tree_ptr, 0, VAR,  text), nullptr), nullptr);
 
-#define IF_NODE(text)                     create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, If, LOGIC_OP, nullptr, left_child, right_child), nullptr);
-#define FOR_NODE(text)                    create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, For, LOGIC_OP, nullptr, left_child, right_child), nullptr);
-#define WHILE_NODE(text)                  create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, While, LOGIC_OP, nullptr, left_child, right_child), nullptr);
-#define ELSE_NODE(text)                   create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, Else, LOGIC_OP, nullptr, left_child, right_child), nullptr);
-#define ELSE_IF_NODE(text)                create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, Else_if, LOGIC_OP, nullptr, left_child, right_child), nullptr);
+#define IF_NODE(text)                      create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, If, LOGIC_OP, nullptr, left_child, right_child), nullptr);
+#define FOR_NODE(text)                     create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, For, LOGIC_OP, nullptr, left_child, right_child), nullptr);
+#define WHILE_NODE(text)                   create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, While, LOGIC_OP, nullptr, left_child, right_child), nullptr);
+#define ELSE_NODE(text)                    create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, Else, LOGIC_OP, nullptr, left_child, right_child), nullptr);
+#define ELSE_IF_NODE(text)                 create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, Else_if, LOGIC_OP, nullptr, left_child, right_child), nullptr);
 
-#define MUL_NODE(left_child, right_child) create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Mul, OP, nullptr, left_child, right_child), nullptr);
-#define ADD_NODE(left_child, right_child) create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Add, OP, nullptr, left_child, right_child), nullptr);
-#define SUB_NODE(left_child, right_child) create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Sub, OP, nullptr, left_child, right_child), nullptr);
-#define DIV_NODE(left_child, right_child) create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Div, OP, nullptr, left_child, right_child), nullptr);
-#define POW_NODE(left_child, right_child) create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Pow, OP, nullptr, left_child, right_child), nullptr);
-#define EQ_NODE(left_child, right_child)  create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Eq, OP, nullptr, left_child, right_child), nullptr);
+#define MUL_NODE(left_child, right_child)  create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Mul, OP, nullptr, left_child, right_child), nullptr);
+#define ADD_NODE(left_child, right_child)  create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Add, OP, nullptr, left_child, right_child), nullptr);
+#define SUB_NODE(left_child, right_child)  create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Sub, OP, nullptr, left_child, right_child), nullptr);
+#define DIV_NODE(left_child, right_child)  create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Div, OP, nullptr, left_child, right_child), nullptr);
+#define POW_NODE(left_child, right_child)  create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Pow, OP, nullptr, left_child, right_child), nullptr);
+#define EQ_NODE(left_child, right_child)   create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Eq, OP, nullptr, left_child, right_child), nullptr);
 
-#define MAIN_NODE(left_child)             create_node(tree_ptr, 0, MAIN, nullptr, left_child, nullptr);
-#define EMPTY_NODE()                      create_node(tree_ptr, 0, EMPTY, nullptr, nullptr, nullptr);
-#define ERROR_NODE()                      create_node(tree_ptr, 0, ERROR, nullptr, nullptr, nullptr);
+#define MAIN_NODE(left_child)              create_node(tree_ptr, 0, MAIN, nullptr, left_child, nullptr);
+#define EMPTY_NODE()                       create_node(tree_ptr, 0, EMPTY, nullptr, nullptr, nullptr);
+#define ERROR_NODE()                       create_node(tree_ptr, 0, ERROR, nullptr, nullptr, nullptr);
+#define EXPR_NODE(left_child, right_child) create_node(tree_ptr, 0, EXPR_HEAD, nullptr, left_child, right_child);
 
 // #define POW_NODE(base, exp)               create_node(tree_ptr, Pow, FUNC_NAME, nullptr, base, exp);
 // #define SIN_NODE(left_child)              create_node(tree_ptr, Sin, FUNC_NAME, nullptr, left_child);

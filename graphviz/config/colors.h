@@ -25,18 +25,18 @@
 //LANG COLORS
 
 #define OP_HEAD_COLOR   "#7668F6" // OP_HEAD
-#define OP_COLOR        "#2E19E4" // OP
+#define OP_COLOR        "#9CC4FF" // OP
 
 #define DECL_VAR_COLOR  "#C07C07" // DECL VAR HEAD
 #define VAR_HEAD_COLOR  "#FCC76C" // VAR_HEAD
 #define VAR_COLOR       "#FFA70D" // Var
 
 #define VAL_HEAD_COLOR  "#AA6CFC" // VAL_HEAD
-#define VAL_COLOR       "#710FF2" // VAL    
+#define VAL_COLOR       "#CD8BDE" // VAL    
 
 #define EMPTY_COLOR     "#FFFFFF" // EMPTY
 #define MAIN_COLOR      "#7CF699" // MAIN
-#define EXPR_COLOR      "#F0F040" // EXPR
+#define EXPR_COLOR      "#BDBCBC" // EXPR
 #define ERROR_COLOR     "#FF0000" // ERROR
 
 
