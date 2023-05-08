@@ -39,6 +39,12 @@
 #define EXPR_COLOR      "#BDBCBC" // EXPR
 #define ERROR_COLOR     "#FF0000" // ERROR
 
+#define FUNC_ARGS_COLOR "#87CEFA"
+#define FUNC_INFO_COLOR "#7FFFD4"
+#define FUNC_HEAD_COLOR "#1E90FF"
+#define FUNC_CALL_COLOR "#4682B4"
+#define FUNC_NAME_COLOR "#AFEEEE"
+
 
 /*####################################################################################################################################################################*/
 

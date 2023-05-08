@@ -39,6 +39,7 @@ enum node_type_tree
     DECL_VAR_HEAD  = 7, //
 
     DECL_FUNC_HEAD = 8, //
+    FUNC_HEAD      = 17,
     FUNC_INFO      = 9, // 
     FUNC_ARGS      = 10, //
     FUNC_NAME      = 11, //

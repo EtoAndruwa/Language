@@ -69,7 +69,7 @@ Node* get_express(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
         return inner_of_expr1;
     }
 
-    Node* expr1 = EXPR_NODE(inner_of_expr1, nullptr);
+    Node* expr1 = EXPR_NODE(inner_of_expr1, nullptr)
     Node* store_expr1 = expr1;
 
     Node* expr2 = nullptr;
@@ -96,7 +96,7 @@ Node* get_express(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
             return inner_of_expr2;
         }
 
-        expr2 = EXPR_NODE(inner_of_expr2, nullptr);
+        expr2 = EXPR_NODE(inner_of_expr2, nullptr)
         expr1->right_child = expr2;
         expr1 = expr1->right_child;
     }
@@ -121,12 +121,12 @@ Node* rule_E(Tree* tree_ptr, token* tok_arr_ptr) // ok
         if(tok_arr_ptr[TREE_CUR_TOK].token_type == Sub)
         {
             TREE_CUR_TOK++;
-            comb_node = SUB_NODE(left_child, nullptr);
+            comb_node = SUB_NODE(left_child, nullptr)
         }
         else
         {
             TREE_CUR_TOK++;
-            comb_node = ADD_NODE(left_child, nullptr);
+            comb_node = ADD_NODE(left_child, nullptr)
         }
          
         printf("Rule_T2");
@@ -154,12 +154,12 @@ Node* rule_T(Tree* tree_ptr, token* tok_arr_ptr) // ok
         if(tok_arr_ptr[TREE_CUR_TOK].token_type == Mul)
         {
             TREE_CUR_TOK++;
-            comb_node = MUL_NODE(left_child, nullptr);
+            comb_node = MUL_NODE(left_child, nullptr)
         }
         else
         {
             TREE_CUR_TOK++;
-            comb_node = DIV_NODE(left_child, nullptr);
+            comb_node = DIV_NODE(left_child, nullptr)
         }
          
         right_child = rule_Pow(tree_ptr, tok_arr_ptr);
@@ -190,7 +190,7 @@ Node* rule_P(Tree* tree_ptr, token* tok_arr_ptr) //
         inner_node = rule_N(tree_ptr, tok_arr_ptr);
         if(inner_node == nullptr)
         {
-            
+            inner_node = rule_V(tree_ptr, tok_arr_ptr);
         }
     }
     return inner_node;
@@ -200,99 +200,85 @@ Node* rule_N(Tree* tree_ptr, token* tok_arr_ptr) //
 {
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Val)
     {   
-        printf("Rule_N if");
+        printf("Rule_N if\n");
         Node* val = VAL_NODE(tok_arr_ptr[TREE_CUR_TOK].token_value.flt_val)
         TREE_CUR_TOK++;
         return val;
     }
-    return ERROR_NODE();
+    return nullptr;
 }
 
-// Node* rule_V(Tree* tree_ptr, token* tok_arr_ptr) // 
-// {
+Node* rule_V(Tree* tree_ptr, token* tok_arr_ptr) // 
+{
+    if(tok_arr_ptr[TREE_CUR_TOK].token_type == Word && tok_arr_ptr[TREE_CUR_TOK + 1].token_type != Brack_l) // closing bracket is on pos old_pos if func
+    {
+        printf("Rule v if\n");
+        Node* var = VAR_NODE(tok_arr_ptr[TREE_CUR_TOK].token_text)
+        TREE_CUR_TOK++;
+        return var;
+    }   
+    return rule_F(tree_ptr, tok_arr_ptr);
+}
 
-//     if(tok_arr_ptr(POSITION) != '(' && old_pos != POSITION) // closing bracket is on pos old_pos if func
-//     {
-//         log_ptr, RULE_V, RULE_V_WAIT, RULE_OK);
+Node* rule_F(Tree* tree_ptr, token* tok_arr_ptr) // 
+{
+    printf("Rule F\n");
+    if(tok_arr_ptr[TREE_CUR_TOK].token_type == Word && tok_arr_ptr[TREE_CUR_TOK + 1].token_type == Brack_l)
+    {
+        Node* func_call = FUNC_CALL_NODE(nullptr)
+        Node* func_name = FUNC_NAME_NODE(tok_arr_ptr[TREE_CUR_TOK].token_text)
+        Node* func_info = FUNC_INFO_NODE(nullptr, nullptr)
+        TREE_CUR_TOK += 2;
+        if(tok_arr_ptr[TREE_CUR_TOK].token_type == Brack_r)
+        {
+            Node* func_args = FUNC_ARGS_NODE(nullptr, nullptr);
+            func_args->left_child = EMPTY_NODE()
+            func_info->left_child = func_args;
+        }
+        else
+        {
+            printf("\nHERE!\n");
+            Node* func_args = FUNC_ARGS_NODE(nullptr, nullptr);
+            Node* first_arg = rule_E(tree_ptr, tok_arr_ptr);
+            Node* save_func_args = func_args;
+            func_args->left_child = first_arg;
 
-//         for(size_t cur_var = 0; cur_var < tree_ptr->num_of_vars; cur_var++)
-//         {
-//             if(strcmp(var_name, tree_ptr->vars_arr[cur_var].var_text) == 0)
-//             {
-//                 return create_node(tree_ptr, 0, IS_VARIB, var_name);
-//             }
-//         }
+            while(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_r)
+            {
+                if(tok_arr_ptr[TREE_CUR_TOK].token_type == Comma)
+                {
+                    if(tok_arr_ptr[TREE_CUR_TOK + 1].token_type == Brack_r)
+                    {
+                        ERROR_MESSAGE(stderr, ERR_FRT_INV_ARGS_FUNC)
+                        tree_ptr->error_code = ERR_FRT_INV_ARGS_FUNC;
+                        return ERROR_NODE()
+                    }
+                    TREE_CUR_TOK++;
+                    continue;
+                }
 
-//         return create_node(tree_ptr, 0, IS_CNST_VAR, var_name);
-//     }
-//     else
-//     {
-//         POSITION = old_pos;
-//         log_ptr, RULE_V, RULE_V_WAIT, RULE_OK)
-//         return rule_F(tree_ptr, tok_arr_ptr);
-//     }
-// }
-
-// Node* rule_F(Tree* tree_ptr, token* tok_arr_ptr) // 
-// {
-//     char var_name[MAX_LEN_VARIB];
-//     size_t var_name_pos = 0;
-//     size_t svd_pos = POSITION;
-//     Node* inner_func = nullptr;
-//     Node* func_node = nullptr;
-
-//     while(isalpha(tok_arr_ptr(POSITION)) != 0)
-//     {
-//         var_name[var_name_pos] = tok_arr_ptr(POSITION);
-//         var_name_pos++;
-//         POSITION++;
-//     }
-//     var_name[var_name_pos] = '\0';
-     
-
-//     if(tok_arr_ptr(POSITION) == '(' && POSITION != svd_pos)
-//     {    
-//         log_ptr, RULE_F, RULE_F_WAIT, RULE_OK)
-//         int ex_func = NON_EXIST_FUNC;
-        
-//         POSITION += 1;
-         
-//         inner_func = rule_E(tree_ptr, tok_arr_ptr);
-         
-
-//         func_node  = nullptr;
-
-//         #define DEF_FUNC(name, code, str_val)                                           \
-//             if(strcasecmp(var_name, str_val) == 0)                                      \
-//             {                                                                           \
-//                 func_node = create_node(tree_ptr, name, IS_FUNC, "", inner_func);       \
-//                 ex_func = EXISTING_FUNC;                                                \
-//             }                                                                           \
-
-//         #define DEF_OP(name, code, str_val)
-
-//         #include "def_cmd.h"
-//         #undef DEF_FUNC
-//         #undef DEF_OP
-
-//         if(ex_func == NON_EXIST_FUNC)
-//         {
-//             log_ptr, RULE_F, RULE_F_WAIT, RULE_F_ERR)
-//             ERROR_MESSAGE(stderr, NON_EXIST_FUNC);
-//             return nullptr;
-//         }
-
-//         if(tok_arr_ptr(POSITION) != ')')
-//         {
-//             log_ptr, RULE_F, RULE_F_WAIT, RULE_F_ERR)
-//             ERROR_MESSAGE(stderr, ERR_NO_CLOSING_BRACKETS)
-//             return nullptr;
-//         } 
-//         POSITION++;
-         
-//         return func_node;
-//     }
-// }
+                Node* func_args2 = FUNC_ARGS_NODE(nullptr, nullptr);
+                Node* second_arg = rule_E(tree_ptr, tok_arr_ptr);
+                func_args2->left_child = second_arg;
+                func_args->right_child = func_args2;
+                func_args = func_args2;
+                if(tok_arr_ptr[TREE_CUR_TOK].token_type != Comma && tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_r)
+                {
+                    ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_BR)
+                    tree_ptr->error_code = ERR_FRT_NO_CLOS_BR;
+                    return ERROR_NODE()
+                }
+            }
+            
+            func_info->left_child = save_func_args;
+        }
+        func_info->right_child = EMPTY_NODE();
+        Node* func_head = FUNC_HEAD_NODE(func_name, func_info)
+        TREE_CUR_TOK++;
+        return FUNC_CALL_NODE(func_head)
+    }
+    return ERROR_NODE();
+}
 
 Node* rule_Pow(Tree* tree_ptr, token* tok_arr_ptr) // 
 {

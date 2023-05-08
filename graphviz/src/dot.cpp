@@ -61,7 +61,36 @@ int print_tree_data(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // O
             fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>var} | {<f0> }}\"];\n", 
                 node_ptr, DECL_VAR_COLOR);
         }
-    
+        else if(node_ptr->type == DECL_VAR_HEAD)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>var} | {<f0> }}\"];\n", 
+                node_ptr, DECL_VAR_COLOR);
+        }
+        else if(node_ptr->type == FUNC_HEAD)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>FUNC_HEAD} | {<f0> }}\"];\n", 
+                node_ptr, FUNC_HEAD_COLOR);
+        }
+        else if(node_ptr->type == FUNC_INFO)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>FUNC_INFO} | {<f0> }}\"];\n", 
+                node_ptr, FUNC_INFO_COLOR);
+        }
+        else if(node_ptr->type == FUNC_ARGS)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>FUNC_ARGS} | {<f0> }}\"];\n", 
+                node_ptr, FUNC_ARGS_COLOR);
+        }
+        else if(node_ptr->type == FUNC_CALL)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>FUNC_CALL} | {<f0> }}\"];\n", 
+                node_ptr, FUNC_CALL_COLOR);
+        }
+        else if(node_ptr->type == FUNC_NAME)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>FUNC_NAME} | {<f0> }}\"];\n", 
+                node_ptr, FUNC_NAME_COLOR);
+        }
         
         if(node_ptr->left_child != nullptr)
         {

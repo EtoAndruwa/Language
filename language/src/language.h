@@ -44,6 +44,7 @@ enum error_codes_front
     ERR_FRT_NO_END_LINE    = -9,
     ERR_FRT_INV_VAR_DECL   = -10,
     ERR_FRT_INV_ASSIGNMENT = -11,
+    ERR_FRT_INV_ARGS_FUNC  = -12,
 };
 
 enum error_codes_back
@@ -61,5 +62,7 @@ Node* rule_N(Tree* tree_ptr, token* tok_arr_ptr);
 Node* rule_P(Tree* tree_ptr, token* tok_arr_ptr);
 Node* rule_T(Tree* tree_ptr, token* tok_arr_ptr);
 Node* rule_E(Tree* tree_ptr, token* tok_arr_ptr);
+Node* rule_F(Tree* tree_ptr, token* tok_arr_ptr);
+Node* rule_V(Tree* tree_ptr, token* tok_arr_ptr);
 
 #endif
