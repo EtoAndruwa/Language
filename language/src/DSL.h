@@ -38,9 +38,9 @@
 #define TREE_CUR_TOK    tree_ptr->cur_tok
 #define TREE_ERR        tree_ptr->error_code
 
-#define FUNC_NAME                         __func__
-#define NODE_LEFT_CHILD                   node_ptr->left_child
-#define NODE_RIGHT_CHILD                  node_ptr->right_child
+
+#define NODE_LEFT_CHILD   node_ptr->left_child
+#define NODE_RIGHT_CHILD  node_ptr->right_child
 
 /*####################################################################################################################################################################*/
 

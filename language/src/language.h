@@ -16,8 +16,7 @@
 const int TREE_POISON = 0xDEAD;
 
 /*####################################################################################################################################################################*/
-
-#include "tree.h"                         // The tree header with struct                        
+                    
 #include "../../graphviz/src/graphviz.h"  // The graphviz lib's header with funcs
 #include "DSL.h"
 #include "lexer.h"
@@ -49,6 +48,14 @@ enum error_codes_back
 
 };
 
+enum error_codes_tree
+{
+    TREE_OK                 = 0,
+    ERR_TREE_NULL_STR_PTR   = -1,
+    ERR_TREE_TO_CALLOC_NODE = -2,
+    ERR_VAL_VAR_HAS_CHILD   = -4,
+};
+
 
 typedef union Node_data
 {
@@ -64,31 +71,38 @@ typedef union Tok_data
     double flt_val; /// \brief This type of data is used to store the value of constant node
 }Tok_data;
 
-enum error_codes_tree
-{
-    TREE_OK                = 0,
-    ERR_TO_CALLOC_ROOT     = 1,
-    ERR_TO_CALLOC_NODE     = 2,
-    ERR_TO_CALLOC_TREE     = 3,
-    ERR_VAL_VAR_HAS_CHILD  = 4,
-};
-
-
 enum node_type_tree
 {
-    IS_OP       = 1,    /// \brief Operator
-    IS_VAL      = 2,    /// \brief Value
-    IS_VARIB    = 3,    /// \brief Variable
-    IS_FUNC     = 4,    /// \brief Function
-    IS_EXPRESS  = 5,    
-    IS_MAIN     = 6,    
-    IS_LOGIC    = 7,    
+    EMPTY          = 0,
+    OP_HEAD        = 1, //
+    OP             = 2,
+
+    VAL_HEAD       = 3, //
+    VAL            = 4, 
+
+    VAR_HEAD       = 5, //
+    VAR            = 6,
+
+    DECL_VAR_HEAD  = 7, //
+
+    DECL_FUNC_HEAD = 8, //
+    FUNC_INFO      = 9, // 
+    FUNC_ARGS      = 10, //
+    FUNC_NAME      = 11, //
+    FUNC_CALL      = 12, //
+
+    EXPR_HEAD      = 13, //
+
+    LOGIC_OP_HEAD  = 14,
+    LOGIC_OP       = 15,
+
+    MAIN           = 16,
 };
 
 typedef struct Node
 {
     Node_data value;                 /// \brief The value of the node which is union
-    char      type        = IS_VAL;  /// \brief The type of the node
+    char      type        = EMPTY;   /// \brief The type of the node
     Node*     left_child  = nullptr; /// \brief The pointer to the left child of the node
     Node*     right_child = nullptr; /// \brief The pointer to the right child of the node
 }Node;
@@ -96,21 +110,15 @@ typedef struct Node
 typedef struct Tree
 {
     Node*   root           = nullptr;  /// \brief The pointer to the root node of the tree 
-    char*   tree_buff      = nullptr;  /// \brief The pointer to the buffer with the tree equation
-    FILE*   file_ptr       = nullptr;  /// \brief The pointer to the file with the tree equation
-
-    size_t  num_of_toks    = 1;        /// \brief (OLD) The total number of tokens 
+    size_t  num_of_toks    = 0;        /// \brief (OLD) The total number of tokens 
     size_t  cur_tok        = 0;        /// \brief (OLD) The current number of tok in the array of tokens
     size_t  error_code     = TREE_OK;  /// \brief The error code of the struct
 }Tree;
 
 /*####################################################################################################################################################################*/
-
-// Tree* tree_ctor();
-void tree_dtor(Tree* tree_ptr);
+int tree_ctor(Tree* tree_str_ptr);
+void tree_dtor(Tree* tree_str_ptr);
 void dtor_childs(Node* node_ptr);
-Node* create_node(Tree* tree_ptr, double node_value, int node_type = IS_VAL, char* text = nullptr, Node* left_child = nullptr, Node* right_child = nullptr);
-void print_leaves(Node* node_ptr);
-void print_preorder(Node* node_ptr);
+Node* create_node(Tree* tree_ptr, double node_value, int node_type = EMPTY, char* text = nullptr, Node* left_child = nullptr, Node* right_child = nullptr);
 
 #endif
