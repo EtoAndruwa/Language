@@ -21,7 +21,7 @@ $(PREF_OBJ)%.o : $(PREF_SRC)%.cpp
 clean: 
 	rm $(TARGET).exe $(PREF_OBJ)*.o ./graph_dumps/images/*.jpg ./graph_dumps/txt/*.txt ./graph_dumps/diff_tree.html ./graph_dumps/image_list.txt 	
 clean_files:
-	rm ./graph_dumps/images/*.jpg ./graph_dumps/txt/*.txt ./graph_dumps/giff_tree.html ./graph_dumps/image_list.txt ./graph_dumps/diff_tree.html
+	rm ./graph_dumps/images/*.jpg ./graph_dumps/txt/*.txt ./graph_dumps/image_list.txt ./graph_dumps/prog_struct.html
 
 run:
 	$(EXE_FLAG) ./dot.exe 

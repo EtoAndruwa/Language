@@ -2,6 +2,7 @@
 #define COLORS_h
 
 /*####################################################################################################################################################################*/
+//DIFF COLORS
 
 #define DEFAULT_COLOR_DOT   "black"   
 #define RED_COLOR_DOT       "#FF0000" // Used as color for right child's indication arrow bg color
@@ -20,10 +21,13 @@
 #define PURP_BG_COLOR_DOT   "#9370DB" // Used as bg color for functions' nodes
 #define RED_BG_COLOR_DOT    "#FC9696" // Used as bg color for values' nodes
 
+/*####################################################################################################################################################################*/
+//LANG COLORS
 
 #define OP_HEAD_COLOR   "#7668F6" // OP_HEAD
 #define OP_COLOR        "#2E19E4" // OP
 
+#define DECL_VAR_COLOR  "#C07C07" // DECL VAR HEAD
 #define VAR_HEAD_COLOR  "#FCC76C" // VAR_HEAD
 #define VAR_COLOR       "#FFA70D" // Var
 
@@ -32,6 +36,9 @@
 
 #define EMPTY_COLOR     "#FFFFFF" // EMPTY
 #define MAIN_COLOR      "#7CF699" // MAIN
+#define EXPR_COLOR      "#F0F040" // EXPR
+#define ERROR_COLOR     "#FF0000" // ERROR
+
 
 /*####################################################################################################################################################################*/
 

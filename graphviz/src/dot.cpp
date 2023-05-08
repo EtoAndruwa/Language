@@ -8,42 +8,60 @@ int print_tree_data(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // O
     {  
         if(node_ptr->type == MAIN)                                                                                                                       
         {
-            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = FUNCTION} | { <f0> value = %s \\n}}\"];\n", 
-        node_ptr, MAIN_COLOR, "main");
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = main} | { <f0> value = main \\n}}\"];\n", 
+        node_ptr, MAIN_COLOR);
         }  
-
-        // if(node_ptr->type == VAL)
-        // {
-        //     fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"  {{<here> type = VALUE} | { <f0> value = %lf \\n }}\"];\n", 
-        //         node_ptr, RED_BG_COLOR_DOT,node_ptr->value.node_value);
-        // }
-        // else if(node_ptr->type == OP)
-        // {
-        //     fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = OPERATOR} | { <f0> value = %c \\n}}\"];\n", 
-        //         node_ptr, BLUE_BG_COLOR_DOT,node_ptr->value.op_number);
-        // }
-        // else if(node_ptr->type == IS_CNST_VAR)
-        // {
-        //     fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = CONST VARIABLE} | { <f0> value = %s \\n}}\"];\n", 
-        //         node_ptr, L_BLUE_BG_COLOR_DOT,node_ptr->value.text);
-        // }
-        // else if(node_ptr->type == IS_FUNC)
-        // {
-        //     char* str_value = nullptr;
-
-        //     #define DEF_FUNC(name, ...)                                                                                                                                     \
-        //         if(node_ptr->value.op_number == name)                                                                                                                       \
-        //             {fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = FUNCTION} | { <f0> value = %s \\n}}\"];\n", \
-        //             node_ptr, PURP_BG_COLOR_DOT, #name);}                                                                                                                   \   
-
-
-        // }
-        // else
-        // {
-        //     fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = VARIABLE} | { <f0> value = %s \\n}}\"];\n", 
-        //         node_ptr, ORAN_BG_COLOR_DOT, node_ptr->value.text);
-        // }
-        
+        else if(node_ptr->type == VAL)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"  {{<here> type = VALUE} | { <f0> value = %lf \\n }}\"];\n", 
+                node_ptr, VAL_COLOR, node_ptr->value.node_value);
+        }
+        else if(node_ptr->type == VAL_HEAD)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"  {{<here> type = VAL_HEAD} | { <f0> value = VAL_HEAD \\n }}\"];\n", 
+                node_ptr, VAL_HEAD_COLOR);
+        }
+        else if(node_ptr->type == VAR_HEAD)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"  {{<here> type = VAL_HEAD} | { <f0> value = VAR_HEAD \\n }}\"];\n", 
+                node_ptr, VAR_HEAD_COLOR);
+        }
+        else if(node_ptr->type == VAR)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = VARIABLE} | { <f0> value = %s \\n}}\"];\n", 
+                node_ptr, VAR_COLOR, node_ptr->value.text);
+        }
+        else if(node_ptr->type == EXPR_HEAD)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = EXPR_HEAD} | { <f0> value = EXPR_HEAD \\n}}\"];\n", 
+                node_ptr, EXPR_COLOR);
+        }
+        else if(node_ptr->type == OP_HEAD)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = OP_HEAD} | { <f0> value = OP_HEAD \\n}}\"];\n", 
+                node_ptr, OP_HEAD_COLOR);
+        }
+        else if(node_ptr->type == OP)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = OPERATOR} | { <f0> value = %c \\n}}\"];\n", 
+                node_ptr, OP_COLOR,node_ptr->value.op_number);
+        }
+        else if(node_ptr->type == EMPTY)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = EMPTY} | { <f0> value = EMPTY \\n}}\"];\n", 
+                node_ptr, EMPTY_COLOR);
+        }
+        else if(node_ptr->type == ERROR)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = ERROR} | { <f0> value = ERROR \\n}}\"];\n", 
+                node_ptr, ERROR_COLOR);
+        }
+        else if(node_ptr->type == DECL_VAR_HEAD)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> type = var} | { <f0> value = var \\n}}\"];\n", 
+                node_ptr, DECL_VAR_COLOR);
+        }
+    
         
         if(node_ptr->left_child != nullptr)
         {

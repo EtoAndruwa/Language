@@ -42,6 +42,7 @@ enum error_codes_front
     ERR_FRT_NO_OPEN_FIG_BR = -7,
     ERR_FRT_NO_CLOS_FIG_BR = -8,
     ERR_FRT_NO_END_LINE    = -9,
+    ERR_FRT_INV_VAR_DECL   = -10,
 };
 
 enum error_codes_back
@@ -50,5 +51,8 @@ enum error_codes_back
 };
 
 Node* get_recur_tree(Tree* tree_ptr, token* tok_arr_ptr);
+Node* get_express(Tree* tree_ptr, token* tok_arr_ptr);
+Node* get_main(Tree* tree_ptr, token* tok_arr_ptr);
+Node* get_decl_var(Tree* tree_ptr, token* tok_arr_ptr);
 
 #endif

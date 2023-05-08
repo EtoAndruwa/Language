@@ -17,6 +17,9 @@ clean_gf:
 clean_g:
 	cd $(DIR_GRAPHVIZ) && make clean
 
+clean_l:
+	cd $(DIR_LANG) && make clean
+
 Make_g: 
 	cd $(DIR_GRAPHVIZ) && make
 

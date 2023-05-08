@@ -25,6 +25,7 @@ typedef union Node_data
 
 enum node_type_tree
 {
+    ERROR          = -1,
     EMPTY          = 0,
     OP_HEAD        = 1, //
     OP             = 2,

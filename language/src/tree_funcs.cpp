@@ -46,7 +46,7 @@ void dtor_childs(Node* node_ptr) // CHECKED
 
 Node* create_node(Tree* tree_str_ptr, double node_value, int node_type, char* text, Node* left_child, Node* right_child) // ok
 {
-    if((node_type == VAL || node_type == VAR || node_type == Empty) && (left_child != nullptr || right_child != nullptr))
+    if((node_type == VAL || node_type == VAR || node_type == EMPTY || node_type == ERROR) && (left_child != nullptr || right_child != nullptr))
     {
         tree_str_ptr->error_code = ERR_VAL_VAR_EMPT_HAS_CHILD;
         ERROR_MESSAGE(stderr, ERR_VAL_VAR_EMPT_HAS_CHILD)
@@ -127,6 +127,11 @@ Node* create_node(Tree* tree_str_ptr, double node_value, int node_type, char* te
             return new_node_ptr;
         case EMPTY:
             new_node_ptr->type = EMPTY;
+            new_node_ptr->left_child  = nullptr;
+            new_node_ptr->right_child = nullptr;
+            return new_node_ptr;
+        case ERROR:
+            new_node_ptr->type = ERROR;
             new_node_ptr->left_child  = nullptr;
             new_node_ptr->right_child = nullptr;
             return new_node_ptr;
