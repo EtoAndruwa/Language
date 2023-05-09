@@ -37,6 +37,7 @@
 #define FUNC_NAME_NODE(text)                    create_node(tree_ptr, 0, FUNC_NAME, text, nullptr, nullptr);
 #define FUNC_INFO_NODE(left_child, right_child) create_node(tree_ptr, 0, FUNC_INFO, nullptr, left_child, right_child);
 #define FUNC_ARGS_NODE(left_child, right_child) create_node(tree_ptr, 0, FUNC_ARGS, nullptr, left_child, right_child);
+#define RETURN_NODE(left_child)                 create_node(tree_ptr, 0, RETURN, nullptr, left_child, nullptr);
 
 // #define POW_NODE(base, exp)               create_node(tree_ptr, Pow, FUNC_NAME, nullptr, base, exp);
 // #define SIN_NODE(left_child)              create_node(tree_ptr, Sin, FUNC_NAME, nullptr, left_child);

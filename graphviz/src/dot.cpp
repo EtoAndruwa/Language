@@ -96,6 +96,11 @@ int print_tree_data(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // O
             fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>DECL_FUNC_HEAD} | {<f0>}}\"];\n", 
                 node_ptr, DECL_FUNC_COLOR);
         }
+        else if(node_ptr->type == RETURN)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>return} | {<f0>}}\"];\n", 
+                node_ptr, RETURN_COLOR);
+        }
         
         if(node_ptr->left_child != nullptr)
         {

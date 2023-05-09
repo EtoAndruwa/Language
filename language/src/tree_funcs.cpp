@@ -110,6 +110,11 @@ Node* create_node(Tree* tree_str_ptr, double node_value, int node_type, char* te
             new_node_ptr->left_child  = left_child;
             new_node_ptr->right_child = right_child;
             return new_node_ptr;
+        case RETURN:
+            new_node_ptr->type = RETURN;
+            new_node_ptr->left_child  = left_child;
+            new_node_ptr->right_child = right_child;
+            return new_node_ptr;
         case EXPR_HEAD:
             new_node_ptr->type = EXPR_HEAD;
             new_node_ptr->left_child  = left_child;

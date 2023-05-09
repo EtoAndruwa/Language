@@ -51,6 +51,7 @@ enum node_type_tree
     LOGIC_OP       = 15,
 
     MAIN           = 16,
+    RETURN         = 18,
 };
 
 typedef struct Node
