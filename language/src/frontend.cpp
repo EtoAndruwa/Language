@@ -60,6 +60,8 @@ Node* get_main(Tree* tree_ptr, token* tok_arr_ptr)
 
 Node* get_express(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
 {
+    int num_rets = 0;
+
     Node* inner_of_expr1 = get_decl_var(tree_ptr, tok_arr_ptr);
     if(inner_of_expr1 == nullptr)
     {
@@ -74,6 +76,7 @@ Node* get_express(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
                 ERROR_MESSAGE(stderr, ERR_FRT_INV_VAR_DECL)
                 return inner_of_expr1;
             }
+            num_rets++;
         }
         else if(inner_of_expr1->type == ERROR)
         {   
@@ -111,6 +114,7 @@ Node* get_express(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
                     ERROR_MESSAGE(stderr, ERR_FRT_INV_VAR_DECL)
                     return inner_of_expr2;
                 }
+                num_rets++;
             }
             else if(inner_of_expr2->type == ERROR)
             {   
@@ -129,6 +133,13 @@ Node* get_express(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
         expr2 = EXPR_NODE(inner_of_expr2, nullptr)
         expr1->right_child = expr2;
         expr1 = expr1->right_child;
+    }
+
+    if(num_rets == 0)
+    {
+        TREE_ERR = ERR_FRT_NO_RETURN_FUNC;
+        ERROR_MESSAGE(stderr, ERR_FRT_NO_RETURN_FUNC)
+        return ERROR_NODE()
     }
 
     return store_expr1;
@@ -626,10 +637,8 @@ Node* get_func_decl(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
 
 Node* get_return(Tree* tree_ptr, token* tok_arr_ptr)
 {
-    printf("HERE1!\n");
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Return)
     {
-        printf("HERE2!\n");
         TREE_CUR_TOK++;
         if(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_l)
         {
