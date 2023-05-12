@@ -87,7 +87,6 @@ Node* create_node(Tree* tree_str_ptr, double node_value, int node_type, char* te
     }
     else if((node_type == VAR) && text != nullptr)
     {
-        printf("VAR TEXT: %s\n",text);
         strcpy(new_node_ptr->value.text, text);
         new_node_ptr->type = node_type;
         new_node_ptr->left_child  = left_child;

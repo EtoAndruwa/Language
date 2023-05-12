@@ -707,7 +707,6 @@ Node* get_logic(Tree* tree_ptr, token* tok_arr_ptr)
     {
         case If:
         {
-            printf("get logic if\n");
             Node* else_body = nullptr;
             TREE_CUR_TOK++;
             if(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_l)
@@ -737,8 +736,8 @@ Node* get_logic(Tree* tree_ptr, token* tok_arr_ptr)
 
             if(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_l)
             {
-                ERROR_MESSAGE(stderr, ERR_FRT_NO_OPEN_SQR_BR)
-                TREE_ERR = ERR_FRT_NO_OPEN_SQR_BR;
+                ERROR_MESSAGE(stderr, ERR_FRT_NO_OPEN_FIG_BR)
+                TREE_ERR = ERR_FRT_NO_OPEN_FIG_BR;
                 return ERROR_NODE()
             }
             TREE_CUR_TOK++;
@@ -752,16 +751,10 @@ Node* get_logic(Tree* tree_ptr, token* tok_arr_ptr)
 
             Node* if_body = get_express(tree_ptr, tok_arr_ptr, CALLED_BY_LOGIC_OP);
 
-            Node* save_root = tree_ptr->root;
-            Node* return_node = if_body;
-            tree_ptr->root = return_node;
-            create_graph_jpg(tree_ptr, "if_body");
-            tree_ptr->root = save_root;
-
             if(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_r)
             {
-                ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_SQR_BR)
-                TREE_ERR = ERR_FRT_NO_CLOS_SQR_BR;
+                ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_FIG_BR)
+                TREE_ERR = ERR_FRT_NO_CLOS_FIG_BR;
                 return ERROR_NODE()
             }
             TREE_CUR_TOK++;
@@ -795,8 +788,8 @@ Node* get_logic(Tree* tree_ptr, token* tok_arr_ptr)
 
                 if(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_r)
                 {
-                    ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_SQR_BR)
-                    TREE_ERR = ERR_FRT_NO_CLOS_SQR_BR;
+                    ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_FIG_BR)
+                    TREE_ERR = ERR_FRT_NO_CLOS_FIG_BR;
                     return ERROR_NODE()
                 }
                 TREE_CUR_TOK++;
@@ -813,28 +806,71 @@ Node* get_logic(Tree* tree_ptr, token* tok_arr_ptr)
                 else_body = EMPTY_NODE()
             }
 
-            save_root = tree_ptr->root;
-            return_node = IF_NODE(if_statm, if_body, else_body);
-            tree_ptr->root = return_node;
-            create_graph_jpg(tree_ptr, "if_node");
-            tree_ptr->root = save_root;
-
-            printf("return logic if\n");
-            return return_node;
+            return IF_NODE(if_statm, if_body, else_body);;
         }    
-        // case While:
-            
+        case While:
+        {
+            TREE_CUR_TOK++;
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_l)
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_NO_OPEN_BR)
+                TREE_ERR = ERR_FRT_NO_CLOS_BR;
+                return ERROR_NODE()
+            }
+            TREE_CUR_TOK++;
 
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type == Brack_r || (tok_arr_ptr[TREE_CUR_TOK + 1].token_type == Brack_r && 
+                tok_arr_ptr[TREE_CUR_TOK].token_type == End_line))
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_EMPTY_LOG_STATM)
+                TREE_ERR = ERR_FRT_EMPTY_LOG_STATM;
+                return ERROR_NODE()
+            }
 
-        //     if(tok_arr_ptr[TREE_CUR_TOK].token_type != End_line)
-        //     {
-        //         ERROR_MESSAGE(stderr, ERR_FRT_NO_END_LINE)
-        //         TREE_ERR = ERR_FRT_NO_END_LINE;
-        //         return ERROR_NODE()
-        //     }
-        //     TREE_CUR_TOK++;
-        //     break;
+            Node* while_statm = rule_E(tree_ptr, tok_arr_ptr); 
 
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_r)
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_BR)
+                TREE_ERR = ERR_FRT_NO_CLOS_BR;
+                return ERROR_NODE()
+            }
+            TREE_CUR_TOK++;
+
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_l)
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_NO_OPEN_FIG_BR)
+                TREE_ERR = ERR_FRT_NO_OPEN_FIG_BR;
+                return ERROR_NODE()
+            }
+            TREE_CUR_TOK++;
+            if((tok_arr_ptr[TREE_CUR_TOK].token_type == End_line && tok_arr_ptr[TREE_CUR_TOK + 1].token_type == Fig_brack_r) || 
+                tok_arr_ptr[TREE_CUR_TOK].token_type == Fig_brack_r)
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_EMPTY_LOG_BODY)
+                TREE_ERR = ERR_FRT_EMPTY_LOG_BODY;
+                return ERROR_NODE()
+            }
+
+            Node* while_body = get_express(tree_ptr, tok_arr_ptr, CALLED_BY_LOGIC_OP);
+
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_r)
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_FIG_BR)
+                TREE_ERR = ERR_FRT_NO_CLOS_FIG_BR;
+                return ERROR_NODE()
+            }
+            TREE_CUR_TOK++;
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type != End_line)
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_NO_END_LINE)
+                TREE_ERR = ERR_FRT_NO_END_LINE;
+                return ERROR_NODE()
+            }
+            TREE_CUR_TOK++;
+
+            return WHILE_NODE(while_statm, while_body)
+        }
         // case For:
             
 

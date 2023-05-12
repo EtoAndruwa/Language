@@ -15,7 +15,7 @@
 
 #define IF_NODE(statement, if_body, else_body)  create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, If, LOGIC_OP, nullptr, statement, ELSE_NODE(if_body, else_body)), nullptr);
 #define FOR_NODE(left_child, right_child)       create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, For, LOGIC_OP, nullptr, left_child, right_child), nullptr);
-#define WHILE_NODE(left_child, right_child)     create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, While, LOGIC_OP, nullptr, left_child, right_child), nullptr);
+#define WHILE_NODE(statement, while_body)     create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, While, LOGIC_OP, nullptr, statement, while_body), nullptr);
 #define ELSE_NODE(if_body, else_body)           create_node(tree_ptr, Else, LOGIC_OP, nullptr, if_body, else_body)
 
 #define MUL_NODE(left_child, right_child)  create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Mul, OP, nullptr, left_child, right_child), nullptr);
