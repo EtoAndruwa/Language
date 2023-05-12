@@ -275,6 +275,16 @@ int get_word(Lexer_struct* lexer_str_ptr) // CHECKED
         LEX_TOKS[LEX_CUR_TOK].token_type = Break;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Break;
     }
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "scanf")))
+    {
+        LEX_TOKS[LEX_CUR_TOK].token_type = Scanf;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Scanf;
+    }
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "printf")))
+    {
+        LEX_TOKS[LEX_CUR_TOK].token_type = Printf;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Printf;
+    }
     else
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Word;

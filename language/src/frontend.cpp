@@ -73,14 +73,25 @@ Node* get_express(Tree* tree_ptr, token* tok_arr_ptr, size_t control_flag) // CH
 
             if(inner_of_expr1 == nullptr)
             {   
-                inner_of_expr1 = get_return(tree_ptr, tok_arr_ptr);
-                if(inner_of_expr1->type == ERROR)
-                {   
-                    TREE_ERR = ERR_RFT_INVALID_SYNTAX;
-                    ERROR_MESSAGE(stderr, ERR_RFT_INVALID_SYNTAX)
-                    return inner_of_expr1;
+                inner_of_expr1 = get_lib_funcs(tree_ptr, tok_arr_ptr);
+
+                if(inner_of_expr1 == nullptr)
+                {
+                    inner_of_expr1 = get_return(tree_ptr, tok_arr_ptr);
+                    if(inner_of_expr1->type == ERROR)
+                    {   
+                        TREE_ERR = ERR_RFT_INVALID_SYNTAX;
+                        ERROR_MESSAGE(stderr, ERR_RFT_INVALID_SYNTAX)
+                        return inner_of_expr1;
+                    }
+                    num_rets++;
                 }
-                num_rets++;
+                else if(inner_of_expr1->type == ERROR)
+                {   
+                    TREE_ERR = ERR_FRT_IVAL_LIB_FUNC_CALL;
+                    ERROR_MESSAGE(stderr, ERR_FRT_IVAL_LIB_FUNC_CALL)
+                    return inner_of_expr1;
+                }  
             }
             else if(inner_of_expr1->type == ERROR)
             {   
@@ -122,14 +133,25 @@ Node* get_express(Tree* tree_ptr, token* tok_arr_ptr, size_t control_flag) // CH
 
                 if(inner_of_expr2 == nullptr)
                 {   
-                    inner_of_expr2 = get_return(tree_ptr, tok_arr_ptr);
-                    if(inner_of_expr2->type == ERROR)
-                    {   
-                        TREE_ERR = ERR_RFT_INVALID_SYNTAX;
-                        ERROR_MESSAGE(stderr, ERR_RFT_INVALID_SYNTAX)
-                        return inner_of_expr2;
+                    inner_of_expr2 = get_lib_funcs(tree_ptr, tok_arr_ptr);
+
+                    if(inner_of_expr2 == nullptr)
+                    {
+                        inner_of_expr2 = get_return(tree_ptr, tok_arr_ptr);
+                        if(inner_of_expr2->type == ERROR)
+                        {   
+                            TREE_ERR = ERR_RFT_INVALID_SYNTAX;
+                            ERROR_MESSAGE(stderr, ERR_RFT_INVALID_SYNTAX)
+                            return inner_of_expr2;
+                        }
+                        num_rets++;
                     }
-                    num_rets++;
+                    else if(inner_of_expr2->type == ERROR)
+                    {   
+                        TREE_ERR = ERR_FRT_IVAL_LIB_FUNC_CALL;
+                        ERROR_MESSAGE(stderr, ERR_FRT_IVAL_LIB_FUNC_CALL)
+                        return inner_of_expr2;
+                    }  
                 }
                 else if(inner_of_expr2->type == ERROR)
                 {   
@@ -967,38 +989,22 @@ Node* get_logic(Tree* tree_ptr, token* tok_arr_ptr)
     }
 }
 
-// Node* get_lib_funcs(Tree* tree_ptr, token* tok_arr_ptr)
-// {
-//     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Scanf || tok_arr_ptr[TREE_CUR_TOK].token_type == Printf)
-//     {
-//         size_t save_tok_type = tok_arr_ptr[TREE_CUR_TOK].token_type;
-//         TREE_CUR_TOK++;
+Node* get_lib_funcs(Tree* tree_ptr, token* tok_arr_ptr)
+{
+    if(tok_arr_ptr[TREE_CUR_TOK].token_type == Scanf || tok_arr_ptr[TREE_CUR_TOK].token_type == Printf)
+    {
+        tok_arr_ptr[TREE_CUR_TOK].token_type = Word; // is needed, because rule_F identifies the funcs auto by token type word
+        Node* lib_func_node = rule_F(tree_ptr, tok_arr_ptr);
 
-//         if(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_l)
-//         {
-//             ERROR_MESSAGE(stderr, ERR_FRT_NO_OPEN_BR)
-//             TREE_ERR = ERR_FRT_NO_OPEN_BR;
-//             return ERROR_NODE()
-//         }
+        if(tok_arr_ptr[TREE_CUR_TOK].token_type != End_line)
+        {
+            ERROR_MESSAGE(stderr, ERR_FRT_NO_END_LINE)
+            TREE_ERR = ERR_FRT_NO_END_LINE;
+            return ERROR_NODE()
+        }
+        TREE_CUR_TOK++;
 
-
-
-
-//         if(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_r)
-//         {
-//             ERROR_MESSAGE(stderr, ERR_FRT_NO_OPEN_BR)
-//             TREE_ERR = ERR_FRT_NO_OPEN_BR;
-//             return ERROR_NODE()
-//         }
-//         TREE_CUR_TOK++;
-
-//         if(tok_arr_ptr[TREE_CUR_TOK].token_type != End_line)
-//         {
-//             ERROR_MESSAGE(stderr, ERR_FRT_NO_END_LINE)
-//             TREE_ERR = ERR_FRT_NO_END_LINE;
-//             return ERROR_NODE();
-//         }
-//         TREE_CUR_TOK++;
-//     }
-//     return nullptr;
-// }
+        return lib_func_node;
+    }
+    return nullptr;
+}
