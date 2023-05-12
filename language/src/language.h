@@ -57,6 +57,7 @@ enum error_codes_front
     ERR_FRT_EMPTY_LOG_STATM     = -21,
     ERR_FRT_EMPTY_LOG_BODY      = -22,
     ERR_FRT_INVALID_LOG_STATM   = -23,
+    ERR_FRT_NO_COMMA_SEPARATOR  = -24,
 };
 
 enum error_codes_back
@@ -79,5 +80,6 @@ Node* rule_V(Tree* tree_ptr, token* tok_arr_ptr);
 Node* get_func_decl(Tree* tree_ptr, token* tok_arr_ptr);
 Node* get_return(Tree* tree_ptr, token* tok_arr_ptr);
 Node* get_logic(Tree* tree_ptr, token* tok_arr_ptr);
+
 
 #endif

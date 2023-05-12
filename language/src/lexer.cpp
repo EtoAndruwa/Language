@@ -189,6 +189,11 @@ int get_toks(Lexer_struct* lexer_str_ptr) // CHECKED
         }
         get_val(lexer_str_ptr);
     }
+    if(POSITION == lexer_str_ptr->buff_size - 1)
+    {
+        return 0;
+    }
+
     if(STRING[POSITION] != '$')
     {
         LEX_ERROR = ERR_LEX_NO_END_LINE;
