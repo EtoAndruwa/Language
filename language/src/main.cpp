@@ -18,9 +18,11 @@ int main()
     create_graph_jpg(&tree_str_ptr, "tree_str_ptr");
     create_html(OUTPUT_NAME);
 
+
+    find_main_node(&backend_str_ptr, &tree_str_ptr, tree_str_ptr.root);
+    print_decls(&backend_str_ptr);
     print_funcs(&backend_str_ptr);
     print_vars(&backend_str_ptr);
-
 
 
     dtor_backend(&backend_str_ptr);

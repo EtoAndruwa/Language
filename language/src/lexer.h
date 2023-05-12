@@ -84,6 +84,6 @@ int get_val(Lexer_struct* lexer_str_ptr);
 int check_op(char op_char);
 int realloc_toks(Lexer_struct* lexer_str_ptr);
 
-// int get_string(Tree* const tree_ptr, char* file_name);
+// int get_string(Tree* const tree_str_ptr, char* file_name);
 
 #endif

@@ -7,6 +7,9 @@ int ctor_backend(Backend_struct* backend_str_ptr)
     RAM_CUR_ID  = 0;
     CUR_FUNC_ID = 0;
     CUR_VAR_ID  = 0;
+    CUR_DECL_ID = 0;
+    DECL_NUM    = 10;
+    backend_str_ptr->main_node_id = 0;
 
     backend_str_ptr->funcs = (func_info*)calloc(FUNC_NUM, sizeof(func_info));
     if(backend_str_ptr->funcs == nullptr)
@@ -37,10 +40,22 @@ int ctor_backend(Backend_struct* backend_str_ptr)
         VARS_ARR[i].var_ram_id = 0;
     }
     
+    backend_str_ptr->decl_nodes = (Node**)calloc(DECL_NUM, sizeof(Node*));
+    if(backend_str_ptr->decl_nodes == nullptr)
+    {
+        BACK_ERROR = ERR_BCK_CALLOC_DECL_NODS;
+        ERROR_MESSAGE(stderr, ERR_BCK_CALLOC_DECL_NODS)
+        return ERR_BCK_CALLOC_DECL_NODS;
+    }
+
+    for(size_t i = 0; i < DECL_NUM; i++)
+    {
+        backend_str_ptr->decl_nodes[i] = nullptr;
+    }
+
     BACK_ERROR = BACK_OK;
     return BACK_OK;
 }
-
 
 int dtor_backend(Backend_struct* backend_str_ptr)
 {
@@ -57,7 +72,6 @@ int dtor_backend(Backend_struct* backend_str_ptr)
 
     return BACK_OK;
 }
-
 
 void print_vars(Backend_struct* backend_str_ptr)
 {
@@ -77,4 +91,67 @@ void print_funcs(Backend_struct* backend_str_ptr)
         printf("FUNC[%ld].name = %s, FUNC[%ld].num_of_vars = %ld\n", i, FUNCS_ARR[i].func_name, i, FUNCS_ARR[i].num_of_vars);
     }
     printf("--------------------FUNCS--------------------\n");
+}
+
+// int create_asm(Backend_struct* backend_str_ptr, Tree_struct* tree_str_ptr)
+// {
+//     FILE* asm_file_ptr = fopen(ASM_FILE_NAME, "w");
+//     if(asm_file_ptr == nullptr)
+//     {
+//         ERROR_MESSAGE(stderr, ERR_BCK_OPEN_ASM_FILE)
+//         BACK_ERROR = ERR_BCK_OPEN_ASM_FILE;
+//         return ERR_BCK_OPEN_ASM_FILE;
+//     }
+
+
+
+
+//     if(fclose(asm_file_ptr) == EOF)
+//     {
+//         ERROR_MESSAGE(stderr, ERR_BCK_CLOSE_ASM_FILE)
+//         BACK_ERROR = ERR_BCK_CLOSE_ASM_FILE;
+//         return ERR_BCK_CLOSE_ASM_FILE;
+//     }
+//     return BACK_OK;
+// }
+
+// int translate_var_decl(Backend_struct* backend_str_ptr, Tree_struct* tree_str_ptr)
+// {
+
+// }
+
+Node* find_main_node(Backend_struct* backend_str_ptr, Tree_struct* tree_str_ptr, Node* node_ptr)
+{
+    if(node_ptr == nullptr)
+    {
+        return nullptr;
+    }
+
+    if(node_ptr->type == EXPR_HEAD)
+    {
+        if(NODE_LEFT_CHILD->type == MAIN)
+        {
+            DECL_NODES[CUR_DECL_ID] = NODE_LEFT_CHILD;
+            backend_str_ptr->main_node_id = CUR_DECL_ID;
+            CUR_DECL_ID++;
+        }
+
+        if(NODE_LEFT_CHILD->type == DECL_FUNC_HEAD)
+        {
+            DECL_NODES[CUR_DECL_ID] = NODE_LEFT_CHILD;
+            CUR_DECL_ID++;
+        }
+        
+        return find_main_node(backend_str_ptr, tree_str_ptr, NODE_RIGHT_CHILD);
+    }
+}
+
+void print_decls(Backend_struct* backend_str_ptr)
+{
+    printf("\n--------------------DECLS--------------------\n");
+    for(size_t i = 0; i < DECL_NUM; i++)
+    {
+        printf("backend_str_ptr->decl_nodes[%ld] = %p\n", i, backend_str_ptr->decl_nodes[i]);
+    }
+    printf("--------------------DECLS--------------------\n");
 }
