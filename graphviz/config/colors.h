@@ -46,6 +46,9 @@
 #define FUNC_CALL_COLOR "#4682B4"
 #define FUNC_NAME_COLOR "#AFEEEE"
 #define RETURN_COLOR    "#79F660"
+#define LOGIC_OP_HEAD_COLOR "#F27193"
+#define LOGIC_OP_COLOR      "#F3B0C2"
+
 
 
 /*####################################################################################################################################################################*/

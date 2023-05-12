@@ -54,7 +54,6 @@ Node* create_node(Tree* tree_str_ptr, double node_value, int node_type, char* te
     }
 
     Node* new_node_ptr = (Node*)calloc(1, sizeof(Node));
-
     if(new_node_ptr == nullptr)
     {   
         tree_str_ptr->error_code = ERR_TREE_TO_CALLOC_NODE;
@@ -62,121 +61,44 @@ Node* create_node(Tree* tree_str_ptr, double node_value, int node_type, char* te
         return nullptr;
     }
 
-    switch(node_type)
+    if(node_type == FUNC_NAME)
     {
-        case OP_HEAD:
-            new_node_ptr->type = OP_HEAD;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case VAL_HEAD:
-            new_node_ptr->type = VAL_HEAD;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case VAR_HEAD:
-            new_node_ptr->type = VAR_HEAD;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case DECL_VAR_HEAD:
-            new_node_ptr->type = DECL_VAR_HEAD;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case DECL_FUNC_HEAD:
-            new_node_ptr->type = DECL_FUNC_HEAD;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case FUNC_HEAD:
-            new_node_ptr->type = FUNC_HEAD;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case FUNC_ARGS:
-            new_node_ptr->type = FUNC_ARGS;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case FUNC_NAME:
-            new_node_ptr->type = FUNC_NAME;
-            strcpy(new_node_ptr->value.text, text);
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case FUNC_CALL:
-            new_node_ptr->type = FUNC_CALL;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case RETURN:
-            new_node_ptr->type = RETURN;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case EXPR_HEAD:
-            new_node_ptr->type = EXPR_HEAD;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case LOGIC_OP_HEAD:
-            new_node_ptr->type = LOGIC_OP_HEAD;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case MAIN:
-            new_node_ptr->type = MAIN;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case FUNC_INFO:
-            new_node_ptr->type = FUNC_INFO;
-            new_node_ptr->left_child  = left_child;
-            new_node_ptr->right_child = right_child;
-            return new_node_ptr;
-        case EMPTY:
-            new_node_ptr->type = EMPTY;
-            new_node_ptr->left_child  = nullptr;
-            new_node_ptr->right_child = nullptr;
-            return new_node_ptr;
-        case ERROR:
-            new_node_ptr->type = ERROR;
-            new_node_ptr->left_child  = nullptr;
-            new_node_ptr->right_child = nullptr;
-            return new_node_ptr;
-        default:
-            break;
+        new_node_ptr->type = FUNC_NAME;
+        strcpy(new_node_ptr->value.text, text);
+        new_node_ptr->left_child  = left_child;
+        new_node_ptr->right_child = right_child;
+        return new_node_ptr;
     }
-   
-    if(node_type == VAL)
+    else if(node_type == EMPTY || node_type == ERROR)
+    {
+        new_node_ptr->type = node_type;
+        new_node_ptr->value.op_number = node_type;
+        new_node_ptr->left_child  = nullptr;
+        new_node_ptr->right_child = nullptr;
+        return new_node_ptr;
+    }
+    else if(node_type == VAL)
     {
         new_node_ptr->value.node_value = node_value;
         new_node_ptr->type = node_type;
         new_node_ptr->left_child  = left_child;
         new_node_ptr->right_child = right_child;
+        return new_node_ptr;
     }
     else if((node_type == VAR) && text != nullptr)
     {
+        printf("VAR TEXT: %s\n",text);
         strcpy(new_node_ptr->value.text, text);
         new_node_ptr->type = node_type;
         new_node_ptr->left_child  = left_child;
         new_node_ptr->right_child = right_child; 
-    }
-    else if(node_type == OP)
-    {
-        new_node_ptr->value.op_number = int(node_value);
-        new_node_ptr->type = node_type;
-        new_node_ptr->left_child  = left_child;
-        new_node_ptr->right_child = right_child; 
-    }
-    else if(node_type == LOGIC_OP)
-    {
-        new_node_ptr->value.op_number = int(node_value);
-        new_node_ptr->type = node_type;
-        new_node_ptr->left_child  = left_child;
-        new_node_ptr->right_child = right_child; 
+        return new_node_ptr;
     }
 
+    new_node_ptr->value.op_number = int(node_value);
+    new_node_ptr->type = node_type;
+    new_node_ptr->left_child  = left_child;
+    new_node_ptr->right_child = right_child; 
+    
     return new_node_ptr;
 }

@@ -265,6 +265,11 @@ int get_word(Lexer_struct* lexer_str_ptr) // CHECKED
         LEX_TOKS[LEX_CUR_TOK].token_type = While;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = While;
     }
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "break")))
+    {
+        LEX_TOKS[LEX_CUR_TOK].token_type = Break;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Break;
+    }
     else
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Word;
@@ -324,22 +329,6 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
             LEX_TOKS[LEX_CUR_TOK].token_type = Brack_r;
             LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Brack_r;
-            POSITION++;
-            LEX_CUR_TOK++;
-            break;
-        case Sqr_brack_l:
-            LEX_TOKS[LEX_CUR_TOK].token_text[0] = '[';
-            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[LEX_CUR_TOK].token_type = Sqr_brack_l;
-            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Sqr_brack_l;
-            POSITION++;
-            LEX_CUR_TOK++;
-            break;
-        case Sqr_brack_r:
-            LEX_TOKS[LEX_CUR_TOK].token_text[0] = ']';
-            LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
-            LEX_TOKS[LEX_CUR_TOK].token_type = Sqr_brack_r;
-            LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Sqr_brack_r;
             POSITION++;
             LEX_CUR_TOK++;
             break;
@@ -520,12 +509,6 @@ void print_toks(Lexer_struct* lexer_str_ptr) // CHECKED
             case Brack_r:
                 printf("Token type: %d (%s)\n", Brack_r, "Brack_r"); 
                 break;
-            case Sqr_brack_l:
-                printf("Token type: %d (%s)\n", Sqr_brack_l, "Sqr_brack_l"); 
-                break;            
-            case Sqr_brack_r:
-                printf("Token type: %d (%s)\n", Sqr_brack_r, "Sqr_brack_r"); 
-                break;
             case Fig_brack_l:
                 printf("Token type: %d (%s)\n", Fig_brack_l, "Fig_brack_l"); 
                 break;
@@ -576,6 +559,9 @@ void print_toks(Lexer_struct* lexer_str_ptr) // CHECKED
                 break;
             case For:
                 printf("Token type: %d (%s)\n", For, "for"); 
+                break;
+            case Break:
+                printf("Token type: %d (%s)\n", Break, "break"); 
                 break;
             default:
                 ERROR_MESSAGE(stderr, ERR_LEX_NEW_TOK_TYPE)

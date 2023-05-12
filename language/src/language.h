@@ -26,7 +26,8 @@ const int TREE_POISON = 0xDEAD;
 
 enum return_codes
 {
-
+    CALLED_BY_LOGIC_OP = 1,
+    CALLED_BY_FUNC     = 2,
 };
 
 
@@ -53,6 +54,9 @@ enum error_codes_front
     ERR_FRT_RECUR_RULE_POW      = -18,
     ERR_FRT_NO_RETURN_FUNC      = -19,
     ERR_RFT_INVALID_SYNTAX      = -20,
+    ERR_FRT_EMPTY_LOG_STATM     = -21,
+    ERR_FRT_EMPTY_LOG_BODY      = -22,
+    ERR_FRT_INVALID_LOG_STATM   = -23,
 };
 
 enum error_codes_back
@@ -61,7 +65,7 @@ enum error_codes_back
 };
 
 Node* get_recur_tree(Tree* tree_ptr, Lexer_struct* lexer_str_ptr,token* tok_arr_ptr);
-Node* get_express(Tree* tree_ptr, token* tok_arr_ptr);
+Node* get_express(Tree* tree_ptr, token* tok_arr_ptr, size_t control_flag); 
 Node* get_main(Tree* tree_ptr, token* tok_arr_ptr);
 Node* get_decl_var(Tree* tree_ptr, token* tok_arr_ptr);
 Node* get_assign(Tree* tree_ptr, token* tok_arr_ptr);
@@ -74,5 +78,6 @@ Node* rule_F(Tree* tree_ptr, token* tok_arr_ptr);
 Node* rule_V(Tree* tree_ptr, token* tok_arr_ptr);
 Node* get_func_decl(Tree* tree_ptr, token* tok_arr_ptr);
 Node* get_return(Tree* tree_ptr, token* tok_arr_ptr);
+Node* get_logic(Tree* tree_ptr, token* tok_arr_ptr);
 
 #endif

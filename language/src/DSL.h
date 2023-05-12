@@ -13,11 +13,10 @@
 #define VAR_NODE(text)                     create_node(tree_ptr, 0, VAR_HEAD, nullptr, create_node(tree_ptr, 0, VAR,  text), nullptr);
 #define DECL_VAR_NODE(text)                create_node(tree_ptr, 0, DECL_VAR_HEAD, nullptr, create_node(tree_ptr, 0, VAR_HEAD, nullptr, create_node(tree_ptr, 0, VAR,  text), nullptr), nullptr);
 
-#define IF_NODE(text)                      create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, If, LOGIC_OP, nullptr, left_child, right_child), nullptr);
-#define FOR_NODE(text)                     create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, For, LOGIC_OP, nullptr, left_child, right_child), nullptr);
-#define WHILE_NODE(text)                   create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, While, LOGIC_OP, nullptr, left_child, right_child), nullptr);
-#define ELSE_NODE(text)                    create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, Else, LOGIC_OP, nullptr, left_child, right_child), nullptr);
-#define ELSE_IF_NODE(text)                 create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, Else_if, LOGIC_OP, nullptr, left_child, right_child), nullptr);
+#define IF_NODE(statement, if_body, else_body)  create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, If, LOGIC_OP, nullptr, statement, ELSE_NODE(if_body, else_body)), nullptr);
+#define FOR_NODE(left_child, right_child)       create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, For, LOGIC_OP, nullptr, left_child, right_child), nullptr);
+#define WHILE_NODE(left_child, right_child)     create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, While, LOGIC_OP, nullptr, left_child, right_child), nullptr);
+#define ELSE_NODE(if_body, else_body)           create_node(tree_ptr, Else, LOGIC_OP, nullptr, if_body, else_body)
 
 #define MUL_NODE(left_child, right_child)  create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Mul, OP, nullptr, left_child, right_child), nullptr);
 #define ADD_NODE(left_child, right_child)  create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Add, OP, nullptr, left_child, right_child), nullptr);

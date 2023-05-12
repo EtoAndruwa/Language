@@ -23,11 +23,10 @@ DEF_LOGIC(If, 10, "if")
 DEF_LOGIC(Else, 11, "else")
 DEF_LOGIC(For, 13, "for")
 DEF_LOGIC(While, 14, "while")
+DEF_LOGIC(Break, 33, "break")
 
 DEF_BRACK(Brack_l, (int)'(', '(')
 DEF_BRACK(Brack_r, (int)')', ')')
-DEF_BRACK(Sqr_brack_l, (int)'[', '[')
-DEF_BRACK(Sqr_brack_r, (int)']', ']')
 DEF_BRACK(Fig_brack_l, (int)'{', '{')
 DEF_BRACK(Fig_brack_r, (int)'}', '}')
 

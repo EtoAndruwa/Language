@@ -37,7 +37,7 @@ Node* get_main(Tree* tree_ptr, token* tok_arr_ptr)
     }
     TREE_CUR_TOK++;
 
-    Node* express = get_express(tree_ptr, tok_arr_ptr);
+    Node* express = get_express(tree_ptr, tok_arr_ptr, CALLED_BY_FUNC);
 
     if(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_r)
     {
@@ -58,7 +58,7 @@ Node* get_main(Tree* tree_ptr, token* tok_arr_ptr)
     return MAIN_NODE(express);
 }
 
-Node* get_express(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
+Node* get_express(Tree* tree_ptr, token* tok_arr_ptr, size_t control_flag) // CHECKED
 {
     int num_rets = 0;
 
@@ -69,19 +69,30 @@ Node* get_express(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
 
         if(inner_of_expr1 == nullptr)
         {   
-            inner_of_expr1 = get_return(tree_ptr, tok_arr_ptr);
-            if(inner_of_expr1->type == ERROR)
+            inner_of_expr1 = get_logic(tree_ptr, tok_arr_ptr);
+
+            if(inner_of_expr1 == nullptr)
             {   
-                TREE_ERR = ERR_FRT_INV_VAR_DECL;
-                ERROR_MESSAGE(stderr, ERR_FRT_INV_VAR_DECL)
+                inner_of_expr1 = get_return(tree_ptr, tok_arr_ptr);
+                if(inner_of_expr1->type == ERROR)
+                {   
+                    TREE_ERR = ERR_RFT_INVALID_SYNTAX;
+                    ERROR_MESSAGE(stderr, ERR_RFT_INVALID_SYNTAX)
+                    return inner_of_expr1;
+                }
+                num_rets++;
+            }
+            else if(inner_of_expr1->type == ERROR)
+            {   
+                TREE_ERR = ERR_FRT_INVALID_LOG_STATM;
+                ERROR_MESSAGE(stderr, ERR_FRT_INVALID_LOG_STATM)
                 return inner_of_expr1;
             }
-            num_rets++;
         }
         else if(inner_of_expr1->type == ERROR)
         {   
-            TREE_ERR = ERR_FRT_INV_VAR_DECL;
-            ERROR_MESSAGE(stderr, ERR_FRT_INV_VAR_DECL)
+            TREE_ERR = ERR_FRT_INV_ASSIGNMENT;
+            ERROR_MESSAGE(stderr, ERR_FRT_INV_ASSIGNMENT)
             return inner_of_expr1;
         }
     }
@@ -106,20 +117,31 @@ Node* get_express(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
             inner_of_expr2 = get_assign(tree_ptr, tok_arr_ptr);
 
             if(inner_of_expr2 == nullptr)
-            {   
-                inner_of_expr2 = get_return(tree_ptr, tok_arr_ptr);
-                if(inner_of_expr2->type == ERROR)
+            {
+                inner_of_expr2 = get_logic(tree_ptr, tok_arr_ptr);
+
+                if(inner_of_expr2 == nullptr)
                 {   
-                    TREE_ERR = ERR_FRT_INV_VAR_DECL;
-                    ERROR_MESSAGE(stderr, ERR_FRT_INV_VAR_DECL)
+                    inner_of_expr2 = get_return(tree_ptr, tok_arr_ptr);
+                    if(inner_of_expr2->type == ERROR)
+                    {   
+                        TREE_ERR = ERR_RFT_INVALID_SYNTAX;
+                        ERROR_MESSAGE(stderr, ERR_RFT_INVALID_SYNTAX)
+                        return inner_of_expr2;
+                    }
+                    num_rets++;
+                }
+                else if(inner_of_expr2->type == ERROR)
+                {   
+                    TREE_ERR = ERR_FRT_INVALID_LOG_STATM;
+                    ERROR_MESSAGE(stderr, ERR_FRT_INVALID_LOG_STATM)
                     return inner_of_expr2;
                 }
-                num_rets++;
             }
             else if(inner_of_expr2->type == ERROR)
             {   
-                TREE_ERR = ERR_FRT_INV_VAR_DECL;
-                ERROR_MESSAGE(stderr, ERR_FRT_INV_VAR_DECL)
+                TREE_ERR = ERR_FRT_INV_ASSIGNMENT;
+                ERROR_MESSAGE(stderr, ERR_FRT_INV_ASSIGNMENT)
                 return inner_of_expr2;
             }
         }
@@ -135,7 +157,7 @@ Node* get_express(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
         expr1 = expr1->right_child;
     }
 
-    if(num_rets == 0)
+    if(num_rets == 0 && control_flag == CALLED_BY_FUNC)
     {
         TREE_ERR = ERR_FRT_NO_RETURN_FUNC;
         ERROR_MESSAGE(stderr, ERR_FRT_NO_RETURN_FUNC)
@@ -604,7 +626,7 @@ Node* get_func_decl(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
                     return ERROR_NODE()
                 }
                 TREE_CUR_TOK++;
-                func_info->right_child = get_express(tree_ptr, tok_arr_ptr);
+                func_info->right_child = get_express(tree_ptr, tok_arr_ptr, CALLED_BY_FUNC);
                 if(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_r)
                 {
                     TREE_ERR = ERR_FRT_NO_CLOS_FIG_BR;
@@ -677,4 +699,155 @@ Node* get_return(Tree* tree_ptr, token* tok_arr_ptr)
         return RETURN_NODE(expr)
     }
     return ERROR_NODE()
+}
+
+Node* get_logic(Tree* tree_ptr, token* tok_arr_ptr)
+{
+    switch(tok_arr_ptr[TREE_CUR_TOK].token_type)
+    {
+        case If:
+        {
+            printf("get logic if\n");
+            Node* else_body = nullptr;
+            TREE_CUR_TOK++;
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_l)
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_NO_OPEN_BR)
+                TREE_ERR = ERR_FRT_NO_CLOS_BR;
+                return ERROR_NODE()
+            }
+            TREE_CUR_TOK++;
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type == Brack_r || (tok_arr_ptr[TREE_CUR_TOK + 1].token_type == Brack_r && 
+                tok_arr_ptr[TREE_CUR_TOK].token_type == End_line))
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_EMPTY_LOG_STATM)
+                TREE_ERR = ERR_FRT_EMPTY_LOG_STATM;
+                return ERROR_NODE()
+            }
+
+            Node* if_statm = rule_E(tree_ptr, tok_arr_ptr); 
+
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_r)
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_BR)
+                TREE_ERR = ERR_FRT_NO_CLOS_BR;
+                return ERROR_NODE()
+            }
+            TREE_CUR_TOK++;
+
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_l)
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_NO_OPEN_SQR_BR)
+                TREE_ERR = ERR_FRT_NO_OPEN_SQR_BR;
+                return ERROR_NODE()
+            }
+            TREE_CUR_TOK++;
+            if((tok_arr_ptr[TREE_CUR_TOK].token_type == End_line && tok_arr_ptr[TREE_CUR_TOK + 1].token_type == Fig_brack_r) || 
+                tok_arr_ptr[TREE_CUR_TOK].token_type == Fig_brack_r)
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_EMPTY_LOG_BODY)
+                TREE_ERR = ERR_FRT_EMPTY_LOG_BODY;
+                return ERROR_NODE()
+            }
+
+            Node* if_body = get_express(tree_ptr, tok_arr_ptr, CALLED_BY_LOGIC_OP);
+
+            Node* save_root = tree_ptr->root;
+            Node* return_node = if_body;
+            tree_ptr->root = return_node;
+            create_graph_jpg(tree_ptr, "if_body");
+            tree_ptr->root = save_root;
+
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_r)
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_SQR_BR)
+                TREE_ERR = ERR_FRT_NO_CLOS_SQR_BR;
+                return ERROR_NODE()
+            }
+            TREE_CUR_TOK++;
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type != End_line)
+            {
+                ERROR_MESSAGE(stderr, ERR_FRT_NO_END_LINE)
+                TREE_ERR = ERR_FRT_NO_END_LINE;
+                return ERROR_NODE()
+            }
+            TREE_CUR_TOK++;
+
+            if(tok_arr_ptr[TREE_CUR_TOK].token_type == Else)
+            {
+                TREE_CUR_TOK++;
+                if(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_l)
+                {
+                    ERROR_MESSAGE(stderr, ERR_FRT_NO_OPEN_FIG_BR)  
+                    TREE_ERR = ERR_FRT_NO_OPEN_FIG_BR;
+                    return ERROR_NODE()
+                }
+                TREE_CUR_TOK++;
+                if(tok_arr_ptr[TREE_CUR_TOK].token_type == Fig_brack_r || (tok_arr_ptr[TREE_CUR_TOK].token_type == End_line && 
+                    tok_arr_ptr[TREE_CUR_TOK + 1].token_type == Fig_brack_r))
+                {
+                    ERROR_MESSAGE(stderr, ERR_FRT_EMPTY_LOG_BODY)  
+                    TREE_ERR = ERR_FRT_EMPTY_LOG_BODY;
+                    return ERROR_NODE()
+                }
+
+                else_body = get_express(tree_ptr, tok_arr_ptr, CALLED_BY_LOGIC_OP);
+
+                if(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_r)
+                {
+                    ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_SQR_BR)
+                    TREE_ERR = ERR_FRT_NO_CLOS_SQR_BR;
+                    return ERROR_NODE()
+                }
+                TREE_CUR_TOK++;
+                if(tok_arr_ptr[TREE_CUR_TOK].token_type != End_line)
+                {
+                    ERROR_MESSAGE(stderr, ERR_FRT_NO_END_LINE)
+                    TREE_ERR = ERR_FRT_NO_END_LINE;
+                    return ERROR_NODE()
+                }
+                TREE_CUR_TOK++;
+            }
+            else
+            {
+                else_body = EMPTY_NODE()
+            }
+
+            save_root = tree_ptr->root;
+            return_node = IF_NODE(if_statm, if_body, else_body);
+            tree_ptr->root = return_node;
+            create_graph_jpg(tree_ptr, "if_node");
+            tree_ptr->root = save_root;
+
+            printf("return logic if\n");
+            return return_node;
+        }    
+        // case While:
+            
+
+
+        //     if(tok_arr_ptr[TREE_CUR_TOK].token_type != End_line)
+        //     {
+        //         ERROR_MESSAGE(stderr, ERR_FRT_NO_END_LINE)
+        //         TREE_ERR = ERR_FRT_NO_END_LINE;
+        //         return ERROR_NODE()
+        //     }
+        //     TREE_CUR_TOK++;
+        //     break;
+
+        // case For:
+            
+
+        //     if(tok_arr_ptr[TREE_CUR_TOK].token_type != End_line)
+        //     {
+        //         ERROR_MESSAGE(stderr, ERR_FRT_NO_END_LINE)
+        //         TREE_ERR = ERR_FRT_NO_END_LINE;
+        //         return ERROR_NODE()
+        //     }
+        //     TREE_CUR_TOK++;
+        //     break;
+        default:
+            printf("return nullptr, because token type is %ld\n",  tok_arr_ptr[TREE_CUR_TOK].token_type);
+            return nullptr;
+    }
 }

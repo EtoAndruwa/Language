@@ -23,7 +23,7 @@ int print_tree_data(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // O
         }
         else if(node_ptr->type == VAR_HEAD)
         {
-            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"  {{<here>VAL_HEAD} | {<f0>}}\"];\n", 
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"  {{<here>VAR_HEAD} | {<f0>}}\"];\n", 
                 node_ptr, VAR_HEAD_COLOR);
         }
         else if(node_ptr->type == VAR)
@@ -101,6 +101,43 @@ int print_tree_data(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // O
             fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>return} | {<f0>}}\"];\n", 
                 node_ptr, RETURN_COLOR);
         }
+        else if(node_ptr->type == LOGIC_OP_HEAD)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>LOGIC_OP_HEAD} | {<f0>}}\"];\n", 
+                node_ptr, LOGIC_OP_HEAD_COLOR);
+        }
+        else if(node_ptr->type == LOGIC_OP)
+        {
+            switch(node_ptr->value.op_number)
+            {
+                case If:
+                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> if} | {<f0>}}\"];\n", 
+                    node_ptr, LOGIC_OP_COLOR);
+                    break;
+                case Else:
+                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> else} | {<f0>}}\"];\n", 
+                    node_ptr, LOGIC_OP_COLOR);  
+                    break;
+                case While:
+                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> while} | {<f0>}}\"];\n", 
+                    node_ptr, LOGIC_OP_COLOR);
+                    break;
+                case For:
+                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> for} | {<f0>}}\"];\n", 
+                    node_ptr, LOGIC_OP_COLOR);
+                    break;
+                default:
+                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>NEW LOGIC OP} | {<f0>}}\"];\n", 
+                    node_ptr, ERROR_COLOR);
+                    break;
+            }
+        }
+        else
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>NEW NODE} | {<f0>}}\"];\n", 
+                node_ptr, ERROR_COLOR);
+        }
+
         
         if(node_ptr->left_child != nullptr)
         {
