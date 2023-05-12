@@ -160,6 +160,10 @@ void translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
     {
         return;
     }
+    if(node_ptr->type == EXPR_HEAD && NODE_LEFT_CHILD->type == RETURN)
+    {
+        return;
+    }
 
     if(node_ptr->type == EXPR_HEAD)
     {
@@ -169,6 +173,7 @@ void translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
             printf("HERE2\n");
             translate_var_decl(backend_str_ptr, NODE_LEFT_CHILD->left_child, asm_file_ptr);
         }
+        translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
     }
 }
 
@@ -183,6 +188,11 @@ void translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* a
             fprintf(asm_file_ptr, "PUSH %f\n", NODE_RIGHT_CHILD->left_child->value.node_value);
             fprintf(asm_file_ptr, "POP [%ld]\n", RAM_CUR_ID);
         }
+        else
+        {
+            print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
+        }
+
         strcpy(VARS_ARR[CUR_VAR_ID].var_text, NODE_LEFT_CHILD->left_child->left_child->value.text);
         VARS_ARR[CUR_VAR_ID].var_ram_id = RAM_CUR_ID;
         RAM_CUR_ID++;
@@ -192,6 +202,48 @@ void translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* a
     // {
     //     translate_var_assign(backend_str_ptr, node_ptr, asm_file_ptr);
     // }
+}
+
+void print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+{
+    if(node_ptr == nullptr)
+    {
+        return;
+    }
+
+    if(node_ptr->type == VAL_HEAD)
+    {
+        fprintf(asm_file_ptr, "PUSH %f\n", NODE_LEFT_CHILD->value.node_value);
+        return;
+    }
+
+    if(node_ptr->type == OP_HEAD)
+    {
+        print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr);
+        return;
+    }
+
+    print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr);
+    print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
+    
+    switch(node_ptr->value.op_number)
+    {
+        case Add:
+            fprintf(asm_file_ptr, "ADD\n");
+            break;
+        case Sub:
+            fprintf(asm_file_ptr, "SUB\n");
+            break;
+        case Div:
+            fprintf(asm_file_ptr, "DIV\n");
+            break;
+        case Mul:
+            fprintf(asm_file_ptr, "MUL\n");
+            break;
+        default:
+            fprintf(asm_file_ptr, "ERROR_OP\n");
+            break;
+    }
 }
 
 // void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
