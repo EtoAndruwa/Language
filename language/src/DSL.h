@@ -14,8 +14,8 @@
 #define DECL_VAR_NODE(text)                create_node(tree_ptr, 0, DECL_VAR_HEAD, nullptr, create_node(tree_ptr, 0, VAR_HEAD, nullptr, create_node(tree_ptr, 0, VAR,  text), nullptr), nullptr);
 
 #define IF_NODE(statement, if_body, else_body)  create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, If, LOGIC_OP, nullptr, statement, ELSE_NODE(if_body, else_body)), nullptr);
-#define FOR_NODE(left_child, right_child)       create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, For, LOGIC_OP, nullptr, left_child, right_child), nullptr);
-#define WHILE_NODE(statement, while_body)     create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, While, LOGIC_OP, nullptr, statement, while_body), nullptr);
+#define FOR_NODE(statement, for_body)           create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, For, LOGIC_OP, nullptr, statement, for_body), nullptr);
+#define WHILE_NODE(statement, while_body)       create_node(tree_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_ptr, While, LOGIC_OP, nullptr, statement, while_body), nullptr);
 #define ELSE_NODE(if_body, else_body)           create_node(tree_ptr, Else, LOGIC_OP, nullptr, if_body, else_body)
 
 #define MUL_NODE(left_child, right_child)  create_node(tree_ptr, 0, OP_HEAD, nullptr, create_node(tree_ptr, Mul, OP, nullptr, left_child, right_child), nullptr);
@@ -28,7 +28,7 @@
 #define MAIN_NODE(left_child)              create_node(tree_ptr, 0, MAIN, nullptr, left_child, nullptr);
 #define EMPTY_NODE()                       create_node(tree_ptr, 0, EMPTY, nullptr, nullptr, nullptr);
 #define ERROR_NODE()                       create_node(tree_ptr, 0, ERROR, nullptr, nullptr, nullptr);
-#define EXPR_NODE(left_child, right_child) create_node(tree_ptr, 0, EXPR_HEAD, nullptr, left_child, right_child);
+#define EXPR_NODE(left_child, right_child) create_node(tree_ptr, 0, EXPR_HEAD, nullptr, left_child, right_child)
 
 #define FUNC_CALL_NODE(left_child)              create_node(tree_ptr, 0, FUNC_CALL, nullptr, left_child, nullptr);
 #define FUNC_DECL_NODE(left_child)              create_node(tree_ptr, 0, DECL_FUNC_HEAD, nullptr, left_child, nullptr);
