@@ -245,6 +245,26 @@ int get_word(Lexer_struct* lexer_str_ptr) // CHECKED
         LEX_TOKS[LEX_CUR_TOK].token_type = Decl;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Decl;
     }
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "else")))
+    {
+        LEX_TOKS[LEX_CUR_TOK].token_type = Else;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Else;
+    }
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "if")))
+    {
+        LEX_TOKS[LEX_CUR_TOK].token_type = If;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = If;
+    }
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "for")))
+    {
+        LEX_TOKS[LEX_CUR_TOK].token_type = For;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = For;
+    }
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "while")))
+    {
+        LEX_TOKS[LEX_CUR_TOK].token_type = While;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = While;
+    }
     else
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Word;
@@ -544,6 +564,18 @@ void print_toks(Lexer_struct* lexer_str_ptr) // CHECKED
                 break;
             case Decl:
                 printf("Token type: %d (%s)\n", Decl, "Decl"); 
+                break;
+            case If:
+                printf("Token type: %d (%s)\n", If, "if"); 
+                break;
+            case Else:
+                printf("Token type: %d (%s)\n", Else, "else"); 
+                break;
+            case While:
+                printf("Token type: %d (%s)\n", While, "while"); 
+                break;
+            case For:
+                printf("Token type: %d (%s)\n", For, "for"); 
                 break;
             default:
                 ERROR_MESSAGE(stderr, ERR_LEX_NEW_TOK_TYPE)

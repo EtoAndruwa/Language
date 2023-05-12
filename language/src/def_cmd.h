@@ -15,12 +15,12 @@ DEF_FUNC(Sqrt, 6, "sqrt")
 DEF_FUNC(Exp,  7, "exp") 
 DEF_FUNC(Log,  8, "log") 
 DEF_FUNC(Cot,  9, "cot")
+
 DEF_FUNC(Scanf,  24, "scanf")
 DEF_FUNC(Printf,  25, "printf")    
 
 DEF_LOGIC(If, 10, "if")
 DEF_LOGIC(Else, 11, "else")
-DEF_LOGIC(Else_if, 12, "else_if")
 DEF_LOGIC(For, 13, "for")
 DEF_LOGIC(While, 14, "while")
 
