@@ -18,13 +18,13 @@ int print_tree_data(Tree_struct* tree_struct, Node* node_ptr, FILE* graph_txt_pt
         }
         else if(node_ptr->type == VAL_HEAD)
         {
-            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"  {{<here>VAL_HEAD} | {<f0>}}\"];\n", 
-                node_ptr, VAL_HEAD_COLOR);
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"  {{<here>VAL_HEAD} | {<f0> value = %ld}}\"];\n", 
+                node_ptr, VAL_HEAD_COLOR, node_ptr->type);
         }
         else if(node_ptr->type == VAR_HEAD)
         {
-            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"  {{<here>VAR_HEAD} | {<f0>}}\"];\n", 
-                node_ptr, VAR_HEAD_COLOR);
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"  {{<here>VAR_HEAD} | {<f0> value = %ld}}\"];\n", 
+                node_ptr, VAR_HEAD_COLOR, node_ptr->type);
         }
         else if(node_ptr->type == VAR)
         {
@@ -58,13 +58,8 @@ int print_tree_data(Tree_struct* tree_struct, Node* node_ptr, FILE* graph_txt_pt
         }
         else if(node_ptr->type == DECL_VAR_HEAD)
         {
-            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>var} | {<f0> }}\"];\n", 
-                node_ptr, DECL_VAR_COLOR);
-        }
-        else if(node_ptr->type == DECL_VAR_HEAD)
-        {
-            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>var} | {<f0> }}\"];\n", 
-                node_ptr, DECL_VAR_COLOR);
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>var} | {<f0> value = %ld}}\"];\n", 
+                node_ptr, DECL_VAR_COLOR, node_ptr->type);
         }
         else if(node_ptr->type == FUNC_HEAD)
         {

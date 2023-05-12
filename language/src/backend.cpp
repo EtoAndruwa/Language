@@ -67,6 +67,9 @@ int dtor_backend(Backend_struct* backend_str_ptr)
     free(backend_str_ptr->vars);
     backend_str_ptr->vars = nullptr;
 
+    free(backend_str_ptr->decl_nodes);
+    backend_str_ptr->decl_nodes = nullptr;
+
     backend_str_ptr->num_of_funcs = LEX_POISON;
     backend_str_ptr->num_of_vars = LEX_POISON;
 
@@ -93,34 +96,29 @@ void print_funcs(Backend_struct* backend_str_ptr)
     printf("--------------------FUNCS--------------------\n");
 }
 
-// int create_asm(Backend_struct* backend_str_ptr, Tree_struct* tree_str_ptr)
-// {
-//     FILE* asm_file_ptr = fopen(ASM_FILE_NAME, "w");
-//     if(asm_file_ptr == nullptr)
-//     {
-//         ERROR_MESSAGE(stderr, ERR_BCK_OPEN_ASM_FILE)
-//         BACK_ERROR = ERR_BCK_OPEN_ASM_FILE;
-//         return ERR_BCK_OPEN_ASM_FILE;
-//     }
+int create_asm(Backend_struct* backend_str_ptr)
+{
+    FILE* asm_file_ptr = fopen(FILE_ASM_NAME, "w");
+    if(asm_file_ptr == nullptr)
+    {
+        ERROR_MESSAGE(stderr, ERR_BCK_OPEN_ASM_FILE)
+        BACK_ERROR = ERR_BCK_OPEN_ASM_FILE;
+        return ERR_BCK_OPEN_ASM_FILE;
+    }
 
+    printf("Main id = %ld\n", backend_str_ptr->main_node_id);
+    translate_expr(backend_str_ptr, DECL_NODES[backend_str_ptr->main_node_id]->left_child, asm_file_ptr);
 
+    if(fclose(asm_file_ptr) == EOF)
+    {
+        ERROR_MESSAGE(stderr, ERR_BCK_CLOSE_ASM_FILE)
+        BACK_ERROR = ERR_BCK_CLOSE_ASM_FILE;
+        return ERR_BCK_CLOSE_ASM_FILE;
+    }
+    return BACK_OK;
+}
 
-
-//     if(fclose(asm_file_ptr) == EOF)
-//     {
-//         ERROR_MESSAGE(stderr, ERR_BCK_CLOSE_ASM_FILE)
-//         BACK_ERROR = ERR_BCK_CLOSE_ASM_FILE;
-//         return ERR_BCK_CLOSE_ASM_FILE;
-//     }
-//     return BACK_OK;
-// }
-
-// int translate_var_decl(Backend_struct* backend_str_ptr, Tree_struct* tree_str_ptr)
-// {
-
-// }
-
-Node* find_main_node(Backend_struct* backend_str_ptr, Tree_struct* tree_str_ptr, Node* node_ptr)
+Node* find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr)
 {
     if(node_ptr == nullptr)
     {
@@ -142,7 +140,7 @@ Node* find_main_node(Backend_struct* backend_str_ptr, Tree_struct* tree_str_ptr,
             CUR_DECL_ID++;
         }
         
-        return find_main_node(backend_str_ptr, tree_str_ptr, NODE_RIGHT_CHILD);
+        return find_main_node(backend_str_ptr, NODE_RIGHT_CHILD);
     }
 }
 
@@ -155,3 +153,51 @@ void print_decls(Backend_struct* backend_str_ptr)
     }
     printf("--------------------DECLS--------------------\n");
 }
+
+void translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+{
+    if(node_ptr == nullptr)
+    {
+        return;
+    }
+
+    if(node_ptr->type == EXPR_HEAD)
+    {
+        printf("HERE1\n");
+        if(NODE_LEFT_CHILD->type == OP_HEAD)
+        {
+            printf("HERE2\n");
+            translate_var_decl(backend_str_ptr, NODE_LEFT_CHILD->left_child, asm_file_ptr);
+        }
+    }
+}
+
+void translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+{
+    printf("HERE3\n");
+    if(NODE_LEFT_CHILD->type == DECL_VAR_HEAD)
+    {
+        printf("\nfirst translate\n");
+        if(NODE_RIGHT_CHILD->type == VAL_HEAD)
+        {
+            fprintf(asm_file_ptr, "PUSH %f\n", NODE_RIGHT_CHILD->left_child->value.node_value);
+            fprintf(asm_file_ptr, "POP [%ld]\n", RAM_CUR_ID);
+        }
+        strcpy(VARS_ARR[CUR_VAR_ID].var_text, NODE_LEFT_CHILD->left_child->left_child->value.text);
+        VARS_ARR[CUR_VAR_ID].var_ram_id = RAM_CUR_ID;
+        RAM_CUR_ID++;
+        CUR_VAR_ID++;
+    }
+    // else
+    // {
+    //     translate_var_assign(backend_str_ptr, node_ptr, asm_file_ptr);
+    // }
+}
+
+// void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+// {
+
+
+    
+// }
+

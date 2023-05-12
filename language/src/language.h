@@ -127,8 +127,11 @@ void print_funcs(Backend_struct* backend_str_ptr);
 void print_vars(Backend_struct* backend_str_ptr);
 int dtor_backend(Backend_struct* backend_str_ptr);
 int ctor_backend(Backend_struct* backend_str_ptr);
-Node* find_main_node(Backend_struct* backend_str_ptr, Tree_struct* tree_str_ptr, Node* node_ptr);
+Node* find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr);
 void print_decls(Backend_struct* backend_str_ptr);
+void translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
+void translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
+int create_asm(Backend_struct* backend_str_ptr);
 
 /*####################################################################################################################################################################*/
 
