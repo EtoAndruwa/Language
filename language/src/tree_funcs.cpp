@@ -1,6 +1,6 @@
 #include "language.h"
 
-int ctor_tree(Tree* tree_str_ptr) // CHECKED
+int ctor_tree(Tree_struct* tree_str_ptr) // CHECKED
 {
     if(tree_str_ptr == nullptr)
     {
@@ -17,7 +17,7 @@ int ctor_tree(Tree* tree_str_ptr) // CHECKED
     return TREE_OK;
 }
 
-void dtor_tree(Tree* tree_str_ptr) // CHECKED
+void dtor_tree(Tree_struct* tree_str_ptr) // CHECKED
 {
     dtor_childs(tree_str_ptr->root);
 
@@ -44,7 +44,7 @@ void dtor_childs(Node* node_ptr) // CHECKED
     node_ptr = nullptr;
 }
 
-Node* create_node(Tree* tree_str_ptr, double node_value, int node_type, char* text, Node* left_child, Node* right_child) // ok
+Node* create_node(Tree_struct* tree_str_ptr, double node_value, int node_type, char* text, Node* left_child, Node* right_child) // ok
 {
     if((node_type == VAL || node_type == VAR || node_type == EMPTY || node_type == ERROR) && (left_child != nullptr || right_child != nullptr))
     {

@@ -63,13 +63,13 @@ int add_to_image_list(char* file_name);
 /*####################################################################################################################################################################*/
 
 /**
- * @brief Creates the images from the Tree 
+ * @brief Creates the images from the Tree_struct 
  * 
- * @param tree_struct The pointer to the struct of the Tree
+ * @param tree_struct The pointer to the struct of the Tree_struct
  * @param legend The pointer to the image's legend text
  * @return Returns the error code 
  */
-int create_graph_jpg(Tree* tree_struct, char* legend); // prints all data about the list into the .txt file
+int create_graph_jpg(Tree_struct* tree_struct, char* legend); // prints all data about the list into the .txt file
 /*####################################################################################################################################################################*/
 
 /**
@@ -203,7 +203,7 @@ char* create_legend(const char* func_name, int new_node_index, int node_index, i
  * @param graph_txt_ptr The pointer to the file
  * @return The error code
  */
-int print_tree_links(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr);
+int print_tree_links(Tree_struct* tree_struct, Node* node_ptr, FILE* graph_txt_ptr);
 /*####################################################################################################################################################################*/
 
 /**
@@ -214,7 +214,7 @@ int print_tree_links(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr);
  * @param graph_txt_ptr The pointer to the file 
  * @return The error code
  */
-int print_tree_data(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr);
+int print_tree_data(Tree_struct* tree_struct, Node* node_ptr, FILE* graph_txt_ptr);
 /*####################################################################################################################################################################*/
 
 #endif

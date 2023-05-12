@@ -61,9 +61,18 @@
 #define TREE_CUR_TOK    tree_ptr->cur_tok
 #define TREE_ERR        tree_ptr->error_code
 
-
 #define NODE_LEFT_CHILD   node_ptr->left_child
 #define NODE_RIGHT_CHILD  node_ptr->right_child
+
+#define BACK_ERROR      backend_str_ptr->error_code
+#define RAM_CUR_ID      backend_str_ptr->cur_ram_id
+
+#define VARS_ARR        backend_str_ptr->vars
+#define FUNCS_ARR       backend_str_ptr->funcs
+#define CUR_VAR_ID      backend_str_ptr->cur_var_id
+#define CUR_FUNC_ID     backend_str_ptr->cur_func_id
+#define VAR_NUM         backend_str_ptr->num_of_vars
+#define FUNC_NUM        backend_str_ptr->num_of_funcs
 
 /*####################################################################################################################################################################*/
 

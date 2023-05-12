@@ -2,7 +2,7 @@
 
 static size_t number_of_images = 0; // global variable in order to count the number of jpg files
 
-int print_tree_data(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // OK
+int print_tree_data(Tree_struct* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // OK
 {
     if(node_ptr != nullptr)
     {  
@@ -159,7 +159,7 @@ int print_tree_data(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // O
     return RETURN_OK;
 }
 
-int print_tree_links(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // OK
+int print_tree_links(Tree_struct* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // OK
 {
     if(node_ptr->left_child != nullptr)
     {
@@ -182,7 +182,7 @@ int print_tree_links(Tree* tree_struct, Node* node_ptr, FILE* graph_txt_ptr) // 
     return RETURN_OK;
 }
 
-int create_graph_jpg(Tree* tree_struct, char* legend) // OK
+int create_graph_jpg(Tree_struct* tree_struct, char* legend) // OK
 {
     int error_code = 0;
 

@@ -2,7 +2,7 @@
 
 int num_main = 0; // global value for counting main funcs
 
-Node* get_main(Tree* tree_ptr, token* tok_arr_ptr)
+Node* get_main(Tree_struct* tree_ptr, token* tok_arr_ptr)
 {   
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == End_line)
     {
@@ -58,7 +58,7 @@ Node* get_main(Tree* tree_ptr, token* tok_arr_ptr)
     return MAIN_NODE(express);
 }
 
-Node* get_express(Tree* tree_ptr, token* tok_arr_ptr, size_t control_flag) // CHECKED
+Node* get_express(Tree_struct* tree_ptr, token* tok_arr_ptr, size_t control_flag) // CHECKED
 {
     int num_rets = 0;
 
@@ -189,7 +189,7 @@ Node* get_express(Tree* tree_ptr, token* tok_arr_ptr, size_t control_flag) // CH
     return store_expr1;
 }
 
-Node* rule_E(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
+Node* rule_E(Tree_struct* tree_ptr, token* tok_arr_ptr) // CHECKED
 {
     Node* right_child = nullptr;
     Node* comb_node   = nullptr;
@@ -229,7 +229,7 @@ Node* rule_E(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
     return left_child; 
 }
 
-Node* rule_T(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
+Node* rule_T(Tree_struct* tree_ptr, token* tok_arr_ptr) // CHECKED
 {
     Node*  right_child = nullptr;
     Node*  comb_node   = nullptr;
@@ -269,7 +269,7 @@ Node* rule_T(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
     return left_child; 
 }
 
-Node* rule_P(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
+Node* rule_P(Tree_struct* tree_ptr, token* tok_arr_ptr) // CHECKED
 {
     Node* inner_node = nullptr;
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Brack_l)
@@ -306,7 +306,7 @@ Node* rule_P(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
     return inner_node;
 }
 
-Node* rule_N(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
+Node* rule_N(Tree_struct* tree_ptr, token* tok_arr_ptr) // CHECKED
 {
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Val)
     {   
@@ -317,7 +317,7 @@ Node* rule_N(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
     return nullptr;
 }
 
-Node* rule_V(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
+Node* rule_V(Tree_struct* tree_ptr, token* tok_arr_ptr) // CHECKED
 {
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Word && tok_arr_ptr[TREE_CUR_TOK + 1].token_type != Brack_l) // closing bracket is on pos old_pos if func
     {
@@ -328,7 +328,7 @@ Node* rule_V(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
     return nullptr;
 }
 
-Node* rule_F(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
+Node* rule_F(Tree_struct* tree_ptr, token* tok_arr_ptr) // CHECKED
 {
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Word && tok_arr_ptr[TREE_CUR_TOK + 1].token_type == Brack_l)
     {
@@ -400,7 +400,7 @@ Node* rule_F(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
     return ERROR_NODE();
 }
 
-Node* rule_Pow(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
+Node* rule_Pow(Tree_struct* tree_ptr, token* tok_arr_ptr) // CHECKED
 {
     Node* pow = rule_P(tree_ptr, tok_arr_ptr);
     if(pow->type == ERROR)
@@ -426,7 +426,7 @@ Node* rule_Pow(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
     return pow;
 }
 
-Node* get_assign(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
+Node* get_assign(Tree_struct* tree_ptr, token* tok_arr_ptr) // CHECKED
 {
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Word && tok_arr_ptr[TREE_CUR_TOK + 1].token_type != Brack_l)
     {
@@ -474,7 +474,7 @@ Node* get_assign(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
     return nullptr;
 }
 
-Node* get_decl_var(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
+Node* get_decl_var(Tree_struct* tree_ptr, token* tok_arr_ptr) // CHECKED
 {
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Var)
     {
@@ -529,7 +529,7 @@ Node* get_decl_var(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
     return nullptr;
 }
 
-Node* get_recur_tree(Tree* tree_ptr, Lexer_struct* lexer_str_ptr,token* tok_arr_ptr) // CHECKED
+Node* get_recur_tree(Tree_struct* tree_ptr, Lexer_struct* lexer_str_ptr,token* tok_arr_ptr) // CHECKED
 {
     Node* root_inner = get_main(tree_ptr, tok_arr_ptr);
     if(root_inner == nullptr)
@@ -589,7 +589,7 @@ Node* get_recur_tree(Tree* tree_ptr, Lexer_struct* lexer_str_ptr,token* tok_arr_
     return svd_root_node;
 }
 
-Node* get_func_decl(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
+Node* get_func_decl(Tree_struct* tree_ptr, token* tok_arr_ptr) // CHECKED
 {
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Decl)
     {
@@ -679,7 +679,7 @@ Node* get_func_decl(Tree* tree_ptr, token* tok_arr_ptr) // CHECKED
     return nullptr;
 }
 
-Node* get_return(Tree* tree_ptr, token* tok_arr_ptr)
+Node* get_return(Tree_struct* tree_ptr, token* tok_arr_ptr)
 {
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Return)
     {
@@ -723,7 +723,7 @@ Node* get_return(Tree* tree_ptr, token* tok_arr_ptr)
     return ERROR_NODE()
 }
 
-Node* get_logic(Tree* tree_ptr, token* tok_arr_ptr)
+Node* get_logic(Tree_struct* tree_ptr, token* tok_arr_ptr)
 {
     switch(tok_arr_ptr[TREE_CUR_TOK].token_type)
     {
@@ -989,7 +989,7 @@ Node* get_logic(Tree* tree_ptr, token* tok_arr_ptr)
     }
 }
 
-Node* get_lib_funcs(Tree* tree_ptr, token* tok_arr_ptr)
+Node* get_lib_funcs(Tree_struct* tree_ptr, token* tok_arr_ptr)
 {
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Scanf || tok_arr_ptr[TREE_CUR_TOK].token_type == Printf)
     {

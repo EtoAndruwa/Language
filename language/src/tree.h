@@ -62,18 +62,18 @@ typedef struct Node
     Node*     right_child = nullptr; /// \brief The pointer to the right child of the node
 }Node;
 
-typedef struct Tree
+typedef struct Tree_struct
 {
     Node*   root           = nullptr;  /// \brief The pointer to the root node of the tree 
     size_t  num_of_toks    = 0;        /// \brief (OLD) The total number of tokens 
     size_t  cur_tok        = 0;        /// \brief (OLD) The current number of tok in the array of tokens
     size_t  error_code     = TREE_OK;  /// \brief The error code of the struct
-}Tree;
+}Tree_struct;
 
 /*####################################################################################################################################################################*/
-int ctor_tree(Tree* tree_str_ptr);
-void dtor_tree(Tree* tree_str_ptr);
+int ctor_tree(Tree_struct* tree_str_ptr);
+void dtor_tree(Tree_struct* tree_str_ptr);
 void dtor_childs(Node* node_ptr);
-Node* create_node(Tree* tree_ptr, double node_value, int node_type = EMPTY, char* text = nullptr, Node* left_child = nullptr, Node* right_child = nullptr);
+Node* create_node(Tree_struct* tree_ptr, double node_value, int node_type = EMPTY, char* text = nullptr, Node* left_child = nullptr, Node* right_child = nullptr);
 
 #endif
