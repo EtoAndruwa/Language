@@ -7,7 +7,7 @@ DIR_LANG = ./language
 DIR_CPU = ./CPU
 
 
-all:  Make_l
+all:  Make_l Make_c
 
 clean_files: clean_df clean_gf
 
@@ -25,3 +25,6 @@ Make_g:
 
 Make_l: 
 	cd $(DIR_LANG) && make
+
+Make_c: 
+	cd $(DIR_CPU) && make

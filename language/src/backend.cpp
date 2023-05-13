@@ -136,7 +136,7 @@ int create_asm(Backend_struct* backend_str_ptr) // CHECKED
         ERROR_MESSAGE(stderr, ERR_BCK_TRANSLATE_MAIN)
         return ERR_BCK_TRANSLATE_MAIN;
     }
-    fprintf(asm_file_ptr, "HTL\n");
+    fprintf(asm_file_ptr, "HLT\n");
 
 
     for(size_t i = 0; i < DECL_NUM; i++)
