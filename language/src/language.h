@@ -108,14 +108,15 @@ typedef struct Backend_struct
     var_info* vars    = nullptr;
     Node** decl_nodes = nullptr;
 
-    size_t num_of_decls = 10;
-    size_t num_of_funcs = 10;
-    size_t num_of_vars  = 10;
+    size_t num_of_decls = 5;
+    size_t num_of_funcs = 5;
+    size_t num_of_vars  = 5;
 
     size_t cur_ram_id   = 0;
     size_t cur_decl_id  = 0;
     size_t cur_var_id   = 0;
     size_t cur_func_id  = 0;
+    size_t cur_flag_id  = 1;
     
     size_t main_node_id = 0;
     int error_code      = BACK_OK;
@@ -162,7 +163,8 @@ int print_call_func(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
 int realloc_vars(Backend_struct* backend_str_ptr);
 int realloc_funcs(Backend_struct* backend_str_ptr);
 int realloc_decls(Backend_struct* backend_str_ptr);
+int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 
-/*####################################################################################################################################################################*/
+/*##################################################x##################################################################################################################*/
 
 #endif

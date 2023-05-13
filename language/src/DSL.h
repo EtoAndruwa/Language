@@ -77,6 +77,7 @@
 #define FUNC_NUM        backend_str_ptr->num_of_funcs
 #define CUR_DECL_ID     backend_str_ptr->cur_decl_id
 #define DECL_NUM        backend_str_ptr->num_of_decls
+#define FLAG_ID         backend_str_ptr->cur_flag_id
 
 
 /*####################################################################################################################################################################*/

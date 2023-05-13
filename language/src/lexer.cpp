@@ -202,6 +202,7 @@ int get_toks(Lexer_struct* lexer_str_ptr) // CHECKED
 
     if(STRING[POSITION] != '$')
     {
+        printf("char on this pos %c, pos %ld, lexer_str_ptr->buff_size - 1 = %ld\n", STRING[POSITION-1], POSITION -1, lexer_str_ptr->buff_size - 1);
         LEX_ERROR = ERR_LEX_NO_END_LINE;
         ERROR_MESSAGE(stderr, ERR_LEX_NO_END_LINE)
         return ERR_LEX_NO_END_LINE;

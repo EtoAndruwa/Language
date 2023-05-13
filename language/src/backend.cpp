@@ -2,14 +2,15 @@
 
 int ctor_backend(Backend_struct* backend_str_ptr) // CHECKED
 {
-    VAR_NUM     = 1;
-    FUNC_NUM    = 1;
+    VAR_NUM     = 5;
+    FUNC_NUM    = 5;
     CUR_RAM_ID  = 0;
     CUR_FUNC_ID = 0;
     CUR_VAR_ID  = 0;
     CUR_DECL_ID = 0;
-    DECL_NUM    = 1;
+    DECL_NUM    = 5;
     backend_str_ptr->main_node_id = 0;
+    FLAG_ID     = 1;
 
     backend_str_ptr->funcs = (func_info*)calloc(FUNC_NUM, sizeof(func_info));
     if(backend_str_ptr->funcs == nullptr)
@@ -94,6 +95,7 @@ int dtor_backend(Backend_struct* backend_str_ptr) // CHECKED
     backend_str_ptr->cur_func_id  = LEX_POISON;
     backend_str_ptr->cur_ram_id   = LEX_POISON;
     backend_str_ptr->cur_var_id   = LEX_POISON;
+    backend_str_ptr->cur_flag_id  = LEX_POISON;
 
     backend_str_ptr->error_code   = LEX_POISON;
     backend_str_ptr->main_node_id = LEX_POISON;
@@ -258,7 +260,11 @@ int translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_fi
                 return ERR_BCK_TRANSLATE_SUB_EQ;
             }
             fprintf(asm_file_ptr, "POP ax\n");
-        }   
+        }
+        else if(NODE_LEFT_CHILD->type == LOGIC_OP_HEAD)
+        {
+            print_logic(backend_str_ptr, NODE_LEFT_CHILD->left_child, asm_file_ptr);
+        }      
         
         if(translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr) != BACK_OK)
         {
@@ -543,4 +549,29 @@ int realloc_decls(Backend_struct* backend_str_ptr) // CHECKED
         }
     }
     return BACK_OK;
+}
+
+int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+{
+    if(node_ptr->value.op_number == If)
+    {
+        print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr);
+        fprintf(asm_file_ptr, "POP ix\n");
+
+        size_t save_cur_flag_1 = FLAG_ID; // allows inner ifs in the body of logic op
+        size_t save_cur_flag_2 = FLAG_ID + 1;
+        FLAG_ID += 2;
+
+        fprintf(asm_file_ptr, "JZ :%ld\n", save_cur_flag_1);
+
+        if(NODE_RIGHT_CHILD->right_child->type != EMPTY)
+        {
+            translate_expr(backend_str_ptr, NODE_RIGHT_CHILD->right_child, asm_file_ptr);
+        }
+        fprintf(asm_file_ptr, "JMP :%ld\n", save_cur_flag_2);
+        fprintf(asm_file_ptr, ":%ld\n", save_cur_flag_1);
+
+        translate_expr(backend_str_ptr, NODE_RIGHT_CHILD->left_child, asm_file_ptr);
+        fprintf(asm_file_ptr, ":%ld\n", save_cur_flag_2);
+    }
 }
