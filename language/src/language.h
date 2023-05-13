@@ -82,6 +82,7 @@ enum error_codes_back
     ERR_BCK_TRANSLATE_EXPR      = -15, 
     ERR_BCK_NEW_TYPE_EXPR       = -16,
     ERR_BCK_TRANSLATE_FUNC_DECL = -17,
+    ERR_BCK_NEW_TYPE_FUNC_CALL  = -18,
 
 };
 
@@ -89,6 +90,7 @@ typedef struct var_info
 {
     char var_text[MAX_LEN_TOK_TEXT];
     size_t var_ram_id = 0;
+    char name_parent_func[MAX_LEN_TOK_TEXT];
 }var_info;
 
 typedef struct func_info
@@ -153,6 +155,7 @@ int create_asm(Backend_struct* backend_str_ptr);
 int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 int translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 int print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
+int print_call_func(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 
 /*####################################################################################################################################################################*/
 
