@@ -466,8 +466,9 @@ int check_op(char op_char) // CHECKED
     {
         return Mul;
     }
-    else if(op_char == '\\')
+    else if(op_char == '/')
     {
+        printf("DIV WORKS\n");
         return Div;
     }
     else if(op_char == ',')
@@ -494,6 +495,7 @@ int check_op(char op_char) // CHECKED
     {
         return New_line_r;
     }
+    printf("Div does not work, char is %c\n", op_char);
     return ERR_LEX_INVALID_OP;
 }
 
