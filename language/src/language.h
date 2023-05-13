@@ -86,6 +86,7 @@ enum error_codes_back
     ERR_BCK_REALLOC_VARS        = -19,
     ERR_BCK_REALLOC_FUNCS       = -20,
     ERR_BCK_REALLOC_DECLS       = -21,
+    ERR_BCK_FUNC_REDECL         = -22,
 };
 
 typedef struct var_info

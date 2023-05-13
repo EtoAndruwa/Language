@@ -192,6 +192,29 @@ int find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr) // CHECKED f
 
         if(NODE_LEFT_CHILD->type == DECL_FUNC_HEAD)
         {
+            for(size_t i = 0; i < DECL_NUM; i++)
+            {
+                if(!strcmp(NODE_LEFT_CHILD->left_child->left_child->value.text, FUNCS_ARR[i].func_name))
+                {
+                    ERROR_MESSAGE(stderr, ERR_BCK_FUNC_REDECL)
+                    BACK_ERROR = ERR_BCK_FUNC_REDECL;
+                    return ERR_BCK_FUNC_REDECL;
+                }
+            }
+
+            strcpy(FUNCS_ARR[CUR_FUNC_ID].func_name, NODE_LEFT_CHILD->left_child->left_child->value.text);
+
+            Node* args_node_ptr = NODE_LEFT_CHILD->left_child->right_child->left_child;
+            size_t count_vars = 0;
+
+            while(args_node_ptr != nullptr)
+            {
+                count_vars++;
+                args_node_ptr = args_node_ptr->right_child;
+            }
+            FUNCS_ARR[CUR_FUNC_ID].num_of_vars = count_vars;
+
+            CUR_FUNC_ID++;
             DECL_NODES[CUR_DECL_ID] = NODE_LEFT_CHILD;
             CUR_DECL_ID++;
         }
@@ -453,7 +476,7 @@ int print_call_func(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
     return ERR_BCK_NEW_TYPE_FUNC_CALL;
 }
 
-int realloc_vars(Backend_struct* backend_str_ptr)
+int realloc_vars(Backend_struct* backend_str_ptr) // CHECKED
 {
     if(CUR_VAR_ID == VAR_NUM)
     {
@@ -477,7 +500,7 @@ int realloc_vars(Backend_struct* backend_str_ptr)
     return BACK_OK;
 }
 
-int realloc_funcs(Backend_struct* backend_str_ptr)
+int realloc_funcs(Backend_struct* backend_str_ptr) // CHECKED
 {
     if(CUR_FUNC_ID == FUNC_NUM)
     {
@@ -500,7 +523,7 @@ int realloc_funcs(Backend_struct* backend_str_ptr)
     return BACK_OK;
 }
 
-int realloc_decls(Backend_struct* backend_str_ptr) 
+int realloc_decls(Backend_struct* backend_str_ptr) // CHECKED
 {
     if(CUR_DECL_ID == DECL_NUM)
     {
