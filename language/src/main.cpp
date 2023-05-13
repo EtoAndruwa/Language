@@ -22,8 +22,8 @@ int main()
     find_main_node(&backend_str_ptr, tree_str_ptr.root);
     create_asm(&backend_str_ptr);
     print_decls(&backend_str_ptr);
-    // print_funcs(&backend_str_ptr);
-    // print_vars(&backend_str_ptr);
+    print_funcs(&backend_str_ptr);
+    print_vars(&backend_str_ptr);
 
 
     dtor_backend(&backend_str_ptr);

@@ -37,7 +37,7 @@ int ctor_backend(Backend_struct* backend_str_ptr)
     for(size_t i = 0; i < VAR_NUM; i++)
     {
         strcpy(VARS_ARR[i].var_text, "EMPTY");
-        VARS_ARR[i].var_ram_id = 0;
+        VARS_ARR[i].var_ram_id = -1;
     }
     
     backend_str_ptr->decl_nodes = (Node**)calloc(DECL_NUM, sizeof(Node*));
@@ -106,9 +106,9 @@ int create_asm(Backend_struct* backend_str_ptr)
         return ERR_BCK_OPEN_ASM_FILE;
     }
 
-    printf("Main id = %ld\n", backend_str_ptr->main_node_id);
     translate_expr(backend_str_ptr, DECL_NODES[backend_str_ptr->main_node_id]->left_child, asm_file_ptr);
-    printf("\n\n\n\nHere\n");
+    fprintf(asm_file_ptr, "HTL\n");
+
 
     for(size_t i = 0; i < DECL_NUM; i++)
     {
@@ -116,10 +116,8 @@ int create_asm(Backend_struct* backend_str_ptr)
         {
             if(backend_str_ptr->main_node_id == i)
             {
-                printf("skippped main\n");
                 continue;
             }
-            printf("print decl now\n");
             print_decl_funcs(backend_str_ptr, DECL_NODES[i], asm_file_ptr);
         }
         else
@@ -180,18 +178,17 @@ void translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
     {
         return;
     }
-    if(node_ptr->type == EXPR_HEAD && NODE_LEFT_CHILD->type == RETURN)
-    {
-        return;
-    }
 
     if(node_ptr->type == EXPR_HEAD)
     {
-        printf("HERE1\n");
         if(NODE_LEFT_CHILD->type == OP_HEAD)
         {
-            printf("HERE2\n");
             translate_var_decl(backend_str_ptr, NODE_LEFT_CHILD->left_child, asm_file_ptr);
+        }
+        if(NODE_LEFT_CHILD->type == RETURN)
+        {
+            print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->left_child->left_child, asm_file_ptr);
+            fprintf(asm_file_ptr, "POP ax\n", RAM_CUR_ID);
         }
         translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
     }
@@ -201,7 +198,6 @@ void translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* a
 {
     if(NODE_LEFT_CHILD->type == DECL_VAR_HEAD)
     {
-
         print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
         fprintf(asm_file_ptr, "POP [%ld]\n\n", RAM_CUR_ID);
 
@@ -229,8 +225,25 @@ void print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_fil
         fprintf(asm_file_ptr, "PUSH %f\n", NODE_LEFT_CHILD->value.node_value);
         return;
     }
-
-    if(node_ptr->type == OP_HEAD)
+    else if(node_ptr->type == VAR_HEAD)
+    {
+        printf("VAR_HEAD\n");
+        for(size_t i = 0; i < VAR_NUM; i++)
+        {
+            if(VARS_ARR[i].var_ram_id == -1)
+            {
+                break;
+            }
+            
+            if(!strcmp(VARS_ARR[i].var_text, NODE_LEFT_CHILD->value.text))
+            {
+                fprintf(asm_file_ptr, "PUSH [%ld]\n", i);
+                break;
+            }
+        }
+        return;
+    }   
+    else if(node_ptr->type == OP_HEAD)
     {
         print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr);
         return;
@@ -265,6 +278,10 @@ void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE*
 
     for(size_t i = 0; i < VAR_NUM; i++)
     {
+        if(VARS_ARR[i].var_ram_id == -1)
+        {
+            break;
+        }
         if(!strcmp(VARS_ARR[i].var_text, NODE_LEFT_CHILD->left_child->value.text))
         {
             var_id = i;  
@@ -285,14 +302,14 @@ void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE*
 
 void print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
 {
-    printf("func_decl print 2, NODE_LEFT_CHILD->type  %ld\n", node_ptr->type );
     if(node_ptr->type == DECL_FUNC_HEAD)
     {
-        printf("func_decl print\n");
-        fprintf(asm_file_ptr, "%s:\n", NODE_LEFT_CHILD->left_child->value.text);
+        fprintf(asm_file_ptr, "\n\n%s:\n", NODE_LEFT_CHILD->left_child->value.text);
         translate_expr(backend_str_ptr, NODE_LEFT_CHILD->right_child->right_child, asm_file_ptr);
         fprintf(asm_file_ptr, "RET\n");
     }
 }
+
+
 
 
