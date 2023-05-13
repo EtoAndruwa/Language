@@ -573,8 +573,10 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
 
         translate_expr(backend_str_ptr, NODE_RIGHT_CHILD->left_child, asm_file_ptr);
         fprintf(asm_file_ptr, ":%ld\n", save_cur_flag_2);
+
+        return BACK_OK;
     }
-    if(node_ptr->value.op_number == For)
+    else if(node_ptr->value.op_number == For)
     {
         translate_var_decl(backend_str_ptr, NODE_LEFT_CHILD->left_child->left_child, asm_file_ptr);
 
@@ -594,5 +596,25 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
         fprintf(asm_file_ptr, ":%ld\n", save_cur_flag_2);
         CUR_VAR_ID--;
         CUR_RAM_ID--;
+
+        return BACK_OK;
+    }
+    else if(node_ptr->value.op_number == While)
+    {
+        size_t save_cur_flag_1 = FLAG_ID; // allows inner ifs in the body of logic op
+        size_t save_cur_flag_2 = FLAG_ID + 1;
+        FLAG_ID += 2;
+
+        fprintf(asm_file_ptr, "\n:%ld\n", save_cur_flag_1);
+        print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->left_child, asm_file_ptr);
+        fprintf(asm_file_ptr, "POP ix\n\n");
+        fprintf(asm_file_ptr, "JZ :%ld\n", save_cur_flag_2);
+
+        translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
+
+        fprintf(asm_file_ptr, "JMP :%ld\n", save_cur_flag_1);
+        fprintf(asm_file_ptr, ":%ld\n\n", save_cur_flag_2);
+
+        return BACK_OK;
     }
 }
