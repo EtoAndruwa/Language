@@ -579,6 +579,7 @@ Node* get_recur_tree(Tree_struct* tree_str_ptr, Lexer_struct* lexer_str_ptr,toke
         root_node = root_node->right_child;
     }
 
+    printf(" get_recur_tree -  CUR %ld CHAR type = %ld (%s)\n", TREE_CUR_TOK, tok_arr_ptr[TREE_CUR_TOK].token_type , tok_arr_ptr[TREE_CUR_TOK].token_text);
     if(num_main == 0)
     {
         TREE_ERR = ERR_FRT_NO_MAIN;
@@ -659,6 +660,7 @@ Node* get_func_decl(Tree_struct* tree_str_ptr, token* tok_arr_ptr) // CHECKED
                 TREE_CUR_TOK++;
                 if(tok_arr_ptr[TREE_CUR_TOK].token_type != End_line)
                 {
+                    printf("CUR %ld CHAR type = %ld (%s)\n", TREE_CUR_TOK, tok_arr_ptr[TREE_CUR_TOK].token_type , tok_arr_ptr[TREE_CUR_TOK].token_text);
                     ERROR_MESSAGE(stderr, ERR_FRT_NO_END_LINE)
                     TREE_ERR = ERR_FRT_NO_END_LINE;
                     return ERROR_NODE();

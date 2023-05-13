@@ -157,8 +157,14 @@ int get_toks(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION += 2;
             while(STRING[POSITION] != '*' && STRING[POSITION + 1] != '\\')
             {
+                // printf("skipped %c\n", STRING[POSITION]);
                 POSITION++;
             }
+
+            if(POSITION + 2 > lexer_str_ptr->buff_size - 1)
+            {
+                return 0;
+            }   
             POSITION += 2;
             continue;
         }
@@ -189,7 +195,7 @@ int get_toks(Lexer_struct* lexer_str_ptr) // CHECKED
         }
         get_val(lexer_str_ptr);
     }
-    if(POSITION == lexer_str_ptr->buff_size - 1)
+    if(POSITION == lexer_str_ptr->buff_size - 1 && STRING[POSITION] == '\\' && STRING[POSITION - 1] == '*')
     {
         return 0;
     }
@@ -441,6 +447,7 @@ int get_val(Lexer_struct* lexer_str_ptr) // CHECKED
     LEX_TOKS[LEX_CUR_TOK].token_text[length_val] = '\0';
     if((check_op(STRING[POSITION]) == ERR_LEX_INVALID_OP) && isspace(STRING[POSITION]) == 0)
     {   
+        printf("STRING[%ld]  %c\n", POSITION, STRING[POSITION]);
         LEX_ERROR = ERR_LEX_INVALID_VAL;
         ERROR_MESSAGE(stderr, ERR_LEX_INVALID_VAL)
         return ERR_LEX_INVALID_VAL;
@@ -468,7 +475,6 @@ int check_op(char op_char) // CHECKED
     }
     else if(op_char == '/')
     {
-        printf("DIV WORKS\n");
         return Div;
     }
     else if(op_char == ',')
@@ -495,7 +501,6 @@ int check_op(char op_char) // CHECKED
     {
         return New_line_r;
     }
-    printf("Div does not work, char is %c\n", op_char);
     return ERR_LEX_INVALID_OP;
 }
 

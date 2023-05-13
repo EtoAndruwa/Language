@@ -108,6 +108,7 @@ int create_asm(Backend_struct* backend_str_ptr)
 
     printf("Main id = %ld\n", backend_str_ptr->main_node_id);
     translate_expr(backend_str_ptr, DECL_NODES[backend_str_ptr->main_node_id]->left_child, asm_file_ptr);
+    
 
     if(fclose(asm_file_ptr) == EOF)
     {
@@ -262,4 +263,17 @@ void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE*
         ERROR_MESSAGE(stderr, ERR_BCK_FOUND_UNDECL_VAR)
     }
 }
+
+// void print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+// {
+//     if()
+//     {
+
+
+
+//     }
+
+
+// }
+
 
