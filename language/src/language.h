@@ -14,7 +14,7 @@
 #define EPS 1e-7        // Used in comparisson of doubles
 #define PI  3.14159265  // Used in calculations
 const int TREE_POISON = 0xDEAD;
-static const char* FILE_ASM_NAME     = "asm_code.asm";    /// \brief Defines the name of assembly file
+static const char* FILE_ASM_NAME = "asm_code.asm";    /// \brief Defines the name of assembly file
 
 /*####################################################################################################################################################################*/
                     
@@ -64,13 +64,18 @@ enum error_codes_front
 
 enum error_codes_back
 {
-    BACK_OK     = 0,
-    ERR_BCK_CALLOC_VARS = -1,
-    ERR_BCK_CALLOC_FUNCS = -2,
-    ERR_BCK_OPEN_ASM_FILE  = -3,
-    ERR_BCK_CLOSE_ASM_FILE = -4,
-    ERR_BCK_CALLOC_DECL_NODS = -5,
-    ERR_BCK_FOUND_UNDECL_VAR = -6,
+    BACK_OK                     = 0,
+    ERR_BCK_CALLOC_VARS         = -1,
+    ERR_BCK_CALLOC_FUNCS        = -2,
+    ERR_BCK_OPEN_ASM_FILE       = -3,
+    ERR_BCK_CLOSE_ASM_FILE      = -4,
+    ERR_BCK_CALLOC_DECL_NODS    = -5,
+    ERR_BCK_FOUND_UNDECL_VAR    = -6,
+    ERR_BCK_FOUND_NEW_OP        = -7,
+    ERR_BCK_VAR_ASSIGN          = -8,
+    ERR_BCK_NEW_TYPE_VAR_DECL   = -9,
+    ERR_BCK_NEW_TYPE_DECL_FUNC  = -10,
+    ERR_BCK_NEW_TYPE_SUB_EQ     = -11,
 };
 
 typedef struct var_info
@@ -87,23 +92,26 @@ typedef struct func_info
 
 typedef struct Backend_struct
 {
-    size_t cur_ram_id = 0;
-    func_info* funcs = nullptr;
-    var_info* vars = nullptr;
+    func_info* funcs  = nullptr;
+    var_info* vars    = nullptr;
     Node** decl_nodes = nullptr;
 
     size_t num_of_decls = 10;
     size_t num_of_funcs = 10;
-    size_t num_of_vars = 10;
+    size_t num_of_vars  = 10;
 
-    size_t cur_decl_id = 0;
-    size_t cur_var_id = 0;
-    size_t cur_func_id = 0;
+    size_t cur_ram_id   = 0;
+    size_t cur_decl_id  = 0;
+    size_t cur_var_id   = 0;
+    size_t cur_func_id  = 0;
+    
     size_t main_node_id = 0;
-    int error_code = BACK_OK;
+    int error_code      = BACK_OK;
 }Backend_struct;
 
 /*####################################################################################################################################################################*/
+
+// FRONTEND FUNCS
 
 Node* get_recur_tree(Tree_struct* tree_str_ptr, Lexer_struct* lexer_str_ptr,token* tok_arr_ptr);
 Node* get_express(Tree_struct* tree_str_ptr, token* tok_arr_ptr, size_t control_flag); 
@@ -124,6 +132,8 @@ Node* get_lib_funcs(Tree_struct* tree_str_ptr, token* tok_arr_ptr);
 
 /*####################################################################################################################################################################*/
 
+// BACKEND FUNCS
+
 void print_funcs(Backend_struct* backend_str_ptr);
 void print_vars(Backend_struct* backend_str_ptr);
 int dtor_backend(Backend_struct* backend_str_ptr);
@@ -131,11 +141,11 @@ int ctor_backend(Backend_struct* backend_str_ptr);
 Node* find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr);
 void print_decls(Backend_struct* backend_str_ptr);
 void translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
-void translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
+int translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 int create_asm(Backend_struct* backend_str_ptr);
-void print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
-void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
-void print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
+int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
+int translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
+int print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 
 /*####################################################################################################################################################################*/
 

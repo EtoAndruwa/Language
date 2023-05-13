@@ -65,7 +65,7 @@
 #define NODE_RIGHT_CHILD  node_ptr->right_child
 
 #define BACK_ERROR      backend_str_ptr->error_code
-#define RAM_CUR_ID      backend_str_ptr->cur_ram_id
+#define CUR_RAM_ID      backend_str_ptr->cur_ram_id
 
 #define VARS_ARR        backend_str_ptr->vars
 #define FUNCS_ARR       backend_str_ptr->funcs

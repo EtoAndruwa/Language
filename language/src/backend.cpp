@@ -1,10 +1,10 @@
 #include "language.h"
 
-int ctor_backend(Backend_struct* backend_str_ptr)
+int ctor_backend(Backend_struct* backend_str_ptr) // CHECKED
 {
     VAR_NUM     = 10;
     FUNC_NUM    = 10;
-    RAM_CUR_ID  = 0;
+    CUR_RAM_ID  = 0;
     CUR_FUNC_ID = 0;
     CUR_VAR_ID  = 0;
     CUR_DECL_ID = 0;
@@ -19,11 +19,10 @@ int ctor_backend(Backend_struct* backend_str_ptr)
         return ERR_BCK_CALLOC_FUNCS;
     }
 
-    printf("%ld\n", FUNC_NUM);
     for(size_t i = 0; i < VAR_NUM; i++)
     {
         strcpy(FUNCS_ARR[i].func_name, "EMPTY");
-        FUNCS_ARR[i].num_of_vars = 0;
+        FUNCS_ARR[i].num_of_vars = -1;
     }
 
     backend_str_ptr->vars = (var_info*)calloc(VAR_NUM, sizeof(var_info));
@@ -57,26 +56,50 @@ int ctor_backend(Backend_struct* backend_str_ptr)
     return BACK_OK;
 }
 
-int dtor_backend(Backend_struct* backend_str_ptr)
+int dtor_backend(Backend_struct* backend_str_ptr) // CHECKED
 {
-    backend_str_ptr->cur_ram_id = LEX_POISON;
+    for(size_t i = 0; i < FUNC_NUM; i++)
+    {
+        backend_str_ptr->funcs[i].num_of_vars = LEX_POISON;
+        strcpy(backend_str_ptr->funcs[i].func_name, "POISON");
+    }
 
     free(backend_str_ptr->funcs);
     backend_str_ptr->funcs = nullptr;
 
+    for(size_t i = 0; i < VAR_NUM; i++)
+    {
+        backend_str_ptr->vars[i].var_ram_id = LEX_POISON;
+        strcpy(backend_str_ptr->vars[i].var_text, "POISON");
+    }
+
     free(backend_str_ptr->vars);
     backend_str_ptr->vars = nullptr;
+
+    for(size_t i = 0; i < DECL_NUM; i++)
+    {
+        backend_str_ptr->decl_nodes[i] = nullptr;
+    }
 
     free(backend_str_ptr->decl_nodes);
     backend_str_ptr->decl_nodes = nullptr;
 
+    backend_str_ptr->num_of_decls = LEX_POISON;
     backend_str_ptr->num_of_funcs = LEX_POISON;
-    backend_str_ptr->num_of_vars = LEX_POISON;
+    backend_str_ptr->num_of_vars  = LEX_POISON;
+
+    backend_str_ptr->cur_decl_id  = LEX_POISON;
+    backend_str_ptr->cur_func_id  = LEX_POISON;
+    backend_str_ptr->cur_ram_id   = LEX_POISON;
+    backend_str_ptr->cur_var_id   = LEX_POISON;
+
+    backend_str_ptr->error_code   = LEX_POISON;
+    backend_str_ptr->main_node_id = LEX_POISON;
 
     return BACK_OK;
 }
 
-void print_vars(Backend_struct* backend_str_ptr)
+void print_vars(Backend_struct* backend_str_ptr) // CHECKED
 {
     printf("\n--------------------VARS--------------------\n");
     for(size_t i = 0; i < VAR_NUM; i++)
@@ -86,7 +109,7 @@ void print_vars(Backend_struct* backend_str_ptr)
     printf("--------------------VARS--------------------\n");
 }
 
-void print_funcs(Backend_struct* backend_str_ptr)
+void print_funcs(Backend_struct* backend_str_ptr) // CHECKED
 {
     printf("\n--------------------FUNCS--------------------\n");
     for(size_t i = 0; i < FUNC_NUM; i++)
@@ -187,94 +210,134 @@ void translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
         }
         if(NODE_LEFT_CHILD->type == RETURN)
         {
-            print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->left_child->left_child, asm_file_ptr);
-            fprintf(asm_file_ptr, "POP ax\n", RAM_CUR_ID);
+            if(print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->left_child->left_child, asm_file_ptr) != BACK_OK)
+            {
+
+
+            }
+
+            fprintf(asm_file_ptr, "POP ax\n");
         }
         translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
     }
 }
 
-void translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+int translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr) // CHECKED
 {
     if(NODE_LEFT_CHILD->type == DECL_VAR_HEAD)
     {
-        print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
-        fprintf(asm_file_ptr, "POP [%ld]\n\n", RAM_CUR_ID);
+        if(print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr) != BACK_OK)
+        {
+            ERROR_MESSAGE(stderr, BACK_ERROR)
+            BACK_ERROR = DECL_VAR_HEAD;
+            return BACK_ERROR;
+        }
+        fprintf(asm_file_ptr, "POP [%ld]\n\n", CUR_RAM_ID);
 
         strcpy(VARS_ARR[CUR_VAR_ID].var_text, NODE_LEFT_CHILD->left_child->left_child->value.text);
-        VARS_ARR[CUR_VAR_ID].var_ram_id = RAM_CUR_ID;
-        RAM_CUR_ID++;
-        CUR_VAR_ID++;
-        return;
+        VARS_ARR[CUR_VAR_ID].var_ram_id = CUR_RAM_ID;
+
+        CUR_RAM_ID++; // empty index for the new var in the CPU's RAM
+        CUR_VAR_ID++; // empty index in the inner var's array of backend
+        return BACK_OK;
     }
     else if(NODE_LEFT_CHILD->type == VAR_HEAD)
     {
-        translate_var_assign(backend_str_ptr, node_ptr, asm_file_ptr);
+        if(translate_var_assign(backend_str_ptr, node_ptr, asm_file_ptr) != BACK_OK)
+        {
+            ERROR_MESSAGE(stderr, ERR_BCK_VAR_ASSIGN)
+            BACK_ERROR = ERR_BCK_VAR_ASSIGN;
+            return ERR_BCK_VAR_ASSIGN;
+        }
+        return BACK_OK;
     }
+
+    BACK_ERROR = ERR_BCK_NEW_TYPE_VAR_DECL;
+    ERROR_MESSAGE(stderr, ERR_BCK_NEW_TYPE_VAR_DECL)
+    return ERR_BCK_NEW_TYPE_VAR_DECL;
 }
 
-void print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr) // CHECKED
 {
     if(node_ptr == nullptr)
     {
-        return;
+        return BACK_OK;
     }
 
     if(node_ptr->type == VAL_HEAD)
     {
         fprintf(asm_file_ptr, "PUSH %f\n", NODE_LEFT_CHILD->value.node_value);
-        return;
+        return BACK_OK;
     }
     else if(node_ptr->type == VAR_HEAD)
     {
-        printf("VAR_HEAD\n");
         for(size_t i = 0; i < VAR_NUM; i++)
         {
             if(VARS_ARR[i].var_ram_id == -1)
             {
-                break;
+                BACK_ERROR = ERR_BCK_FOUND_UNDECL_VAR;
+                ERROR_MESSAGE(stderr, ERR_BCK_FOUND_UNDECL_VAR)
+                return ERR_BCK_FOUND_UNDECL_VAR;
             }
-            
+        
             if(!strcmp(VARS_ARR[i].var_text, NODE_LEFT_CHILD->value.text))
             {
                 fprintf(asm_file_ptr, "PUSH [%ld]\n", i);
-                break;
+                return BACK_OK;
             }
         }
-        return;
+        return BACK_OK; 
     }   
     else if(node_ptr->type == OP_HEAD)
     {
-        print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr);
-        return;
+        if(print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr) != BACK_OK)
+        {
+            ERROR_MESSAGE(stderr, BACK_ERROR)
+            return BACK_ERROR;
+        }
+        return BACK_OK;
     }
 
-    print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr);
-    print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
+    if(print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr) != BACK_OK)
+    {
+        ERROR_MESSAGE(stderr, BACK_ERROR)
+        return BACK_ERROR;   
+    }
+    if(print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr) != BACK_OK)
+    {
+        ERROR_MESSAGE(stderr, BACK_ERROR)
+        return BACK_ERROR;   
+    }
     
     switch(node_ptr->value.op_number)
     {
         case Add:
             fprintf(asm_file_ptr, "ADD\n");
-            break;
+            return BACK_OK;
         case Sub:
             fprintf(asm_file_ptr, "SUB\n");
-            break;
+            return BACK_OK;
         case Div:
             fprintf(asm_file_ptr, "DIV\n");
-            break;
+            return BACK_OK;
         case Mul:
             fprintf(asm_file_ptr, "MUL\n");
-            break;
+            return BACK_OK;
         default:
+            BACK_ERROR = ERR_BCK_FOUND_NEW_OP;
+            ERROR_MESSAGE(stderr, ERR_BCK_FOUND_NEW_OP)
             fprintf(asm_file_ptr, "ERROR_OP\n");
-            break;
+            return ERR_BCK_FOUND_NEW_OP;
     }
+
+    ERROR_MESSAGE(stderr, ERR_BCK_NEW_TYPE_SUB_EQ)
+    BACK_ERROR = ERR_BCK_NEW_TYPE_SUB_EQ;
+    return ERR_BCK_NEW_TYPE_SUB_EQ;
 }
 
-void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+int translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr) // CHECKED
 {
-    int var_id = -1; 
+    int var_id = -1;  // flag for found_var_id
 
     for(size_t i = 0; i < VAR_NUM; i++)
     {
@@ -291,23 +354,36 @@ void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE*
 
     if(var_id != -1)
     {
-        print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
+        if(print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr) != BACK_OK)
+        {
+            ERROR_MESSAGE(stderr, BACK_ERROR)
+            return BACK_ERROR;
+        }
+
         fprintf(asm_file_ptr, "POP [%ld]\n\n", var_id);
+        return BACK_OK;
     }
-    else
-    {
-        ERROR_MESSAGE(stderr, ERR_BCK_FOUND_UNDECL_VAR)
-    }
+
+    ERROR_MESSAGE(stderr, ERR_BCK_FOUND_UNDECL_VAR)
+    BACK_ERROR = ERR_BCK_FOUND_UNDECL_VAR;
+    return ERR_BCK_FOUND_UNDECL_VAR;
 }
 
-void print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+int print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr) // CHECKED
 {
     if(node_ptr->type == DECL_FUNC_HEAD)
     {
         fprintf(asm_file_ptr, "\n\n%s:\n", NODE_LEFT_CHILD->left_child->value.text);
         translate_expr(backend_str_ptr, NODE_LEFT_CHILD->right_child->right_child, asm_file_ptr);
         fprintf(asm_file_ptr, "RET\n");
+
+        return BACK_OK;
     }
+
+    BACK_ERROR = ERR_BCK_NEW_TYPE_DECL_FUNC;
+    ERROR_MESSAGE(stderr, ERR_BCK_NEW_TYPE_DECL_FUNC)
+    return ERR_BCK_NEW_TYPE_DECL_FUNC;
+
 }
 
 
