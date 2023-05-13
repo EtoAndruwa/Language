@@ -108,6 +108,25 @@ int create_asm(Backend_struct* backend_str_ptr)
 
     printf("Main id = %ld\n", backend_str_ptr->main_node_id);
     translate_expr(backend_str_ptr, DECL_NODES[backend_str_ptr->main_node_id]->left_child, asm_file_ptr);
+    printf("\n\n\n\nHere\n");
+
+    for(size_t i = 0; i < DECL_NUM; i++)
+    {
+        if(DECL_NODES[i] != nullptr)
+        {
+            if(backend_str_ptr->main_node_id == i)
+            {
+                printf("skippped main\n");
+                continue;
+            }
+            printf("print decl now\n");
+            print_decl_funcs(backend_str_ptr, DECL_NODES[i], asm_file_ptr);
+        }
+        else
+        {
+            break;
+        }
+    }
     
 
     if(fclose(asm_file_ptr) == EOF)
@@ -264,16 +283,16 @@ void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE*
     }
 }
 
-// void print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
-// {
-//     if()
-//     {
-
-
-
-//     }
-
-
-// }
+void print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+{
+    printf("func_decl print 2, NODE_LEFT_CHILD->type  %ld\n", node_ptr->type );
+    if(node_ptr->type == DECL_FUNC_HEAD)
+    {
+        printf("func_decl print\n");
+        fprintf(asm_file_ptr, "%s:\n", NODE_LEFT_CHILD->left_child->value.text);
+        translate_expr(backend_str_ptr, NODE_LEFT_CHILD->right_child->right_child, asm_file_ptr);
+        fprintf(asm_file_ptr, "RET\n");
+    }
+}
 
 

@@ -135,6 +135,7 @@ void translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* a
 int create_asm(Backend_struct* backend_str_ptr);
 void print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
+void print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 
 /*####################################################################################################################################################################*/
 
