@@ -83,7 +83,9 @@ enum error_codes_back
     ERR_BCK_NEW_TYPE_EXPR       = -16,
     ERR_BCK_TRANSLATE_FUNC_DECL = -17,
     ERR_BCK_NEW_TYPE_FUNC_CALL  = -18,
-
+    ERR_BCK_REALLOC_VARS        = -19,
+    ERR_BCK_REALLOC_FUNCS       = -20,
+    ERR_BCK_REALLOC_DECLS       = -21,
 };
 
 typedef struct var_info
@@ -147,7 +149,7 @@ void print_funcs(Backend_struct* backend_str_ptr);
 void print_vars(Backend_struct* backend_str_ptr);
 int dtor_backend(Backend_struct* backend_str_ptr);
 int ctor_backend(Backend_struct* backend_str_ptr);
-Node* find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr);
+int find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr);
 void print_decls(Backend_struct* backend_str_ptr);
 int translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 int translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
@@ -156,6 +158,9 @@ int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file
 int translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 int print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 int print_call_func(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
+int realloc_vars(Backend_struct* backend_str_ptr);
+int realloc_funcs(Backend_struct* backend_str_ptr);
+int realloc_decls(Backend_struct* backend_str_ptr);
 
 /*####################################################################################################################################################################*/
 

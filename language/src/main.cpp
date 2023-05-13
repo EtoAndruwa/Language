@@ -18,10 +18,11 @@ int main()
     create_html(OUTPUT_NAME);
 
 
-    find_main_node(&backend_str_ptr, tree_str_ptr.root);
+    find_main_node(&backend_str_ptr, tree_str_ptr.root); // puts all decls and main into right order
     create_asm(&backend_str_ptr);
-    // print_decls(&backend_str_ptr);
-    // print_funcs(&backend_str_ptr);
+    
+    print_decls(&backend_str_ptr);
+    print_funcs(&backend_str_ptr);
     print_vars(&backend_str_ptr);
 
 

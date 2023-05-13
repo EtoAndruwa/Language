@@ -2,13 +2,13 @@
 
 int ctor_backend(Backend_struct* backend_str_ptr) // CHECKED
 {
-    VAR_NUM     = 10;
-    FUNC_NUM    = 10;
+    VAR_NUM     = 1;
+    FUNC_NUM    = 1;
     CUR_RAM_ID  = 0;
     CUR_FUNC_ID = 0;
     CUR_VAR_ID  = 0;
     CUR_DECL_ID = 0;
-    DECL_NUM    = 10;
+    DECL_NUM    = 1;
     backend_str_ptr->main_node_id = 0;
 
     backend_str_ptr->funcs = (func_info*)calloc(FUNC_NUM, sizeof(func_info));
@@ -168,20 +168,26 @@ int create_asm(Backend_struct* backend_str_ptr) // CHECKED
     return BACK_OK;
 }
 
-Node* find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr) // CHECKED finds the main and decl head nodes in the tree form expr_head nodes
+int find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr) // CHECKED finds the main and decl head nodes in the tree form expr_head nodes
 {
     if(node_ptr == nullptr)
     {
-        return nullptr;
+        return BACK_OK;
     }
 
     if(node_ptr->type == EXPR_HEAD)
     {
+        if(realloc_decls(backend_str_ptr) != BACK_OK)
+        {
+            ERROR_MESSAGE(stderr, ERR_BCK_REALLOC_DECLS);
+            return ERR_BCK_REALLOC_DECLS;
+        }
+
         if(NODE_LEFT_CHILD->type == MAIN)
         {
             DECL_NODES[CUR_DECL_ID] = NODE_LEFT_CHILD;
             backend_str_ptr->main_node_id = CUR_DECL_ID;
-            CUR_DECL_ID++;
+            CUR_DECL_ID++; 
         }
 
         if(NODE_LEFT_CHILD->type == DECL_FUNC_HEAD)
@@ -246,6 +252,12 @@ int translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_fi
 
 int translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr) // CHECKED
 {
+    if(realloc_vars(backend_str_ptr) != BACK_OK)
+    {
+        ERROR_MESSAGE(stderr, ERR_BCK_REALLOC_VARS);
+        return ERR_BCK_REALLOC_VARS;
+    }
+
     if(NODE_LEFT_CHILD->type == DECL_VAR_HEAD)
     {
         if(print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr) != BACK_OK)
@@ -418,7 +430,7 @@ int print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_
     return ERR_BCK_NEW_TYPE_DECL_FUNC;
 }
 
-int print_call_func(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+int print_call_func(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr) // CHECKED
 {
     if(node_ptr->type == FUNC_HEAD)
     {
@@ -441,4 +453,71 @@ int print_call_func(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
     return ERR_BCK_NEW_TYPE_FUNC_CALL;
 }
 
+int realloc_vars(Backend_struct* backend_str_ptr)
+{
+    if(CUR_VAR_ID == VAR_NUM)
+    {
+        VAR_NUM *= 2;
+        VARS_ARR = (var_info*)realloc(VARS_ARR, VAR_NUM * sizeof(var_info));
+        
+        if(VARS_ARR == nullptr)
+        {
+            ERROR_MESSAGE(stderr, ERR_BCK_REALLOC_VARS)
+            BACK_ERROR = ERR_BCK_REALLOC_VARS;
+            return ERR_BCK_REALLOC_VARS;
+        }
 
+        for(size_t i = CUR_VAR_ID; i < VAR_NUM; i++)
+        {
+            strcpy(VARS_ARR[i].name_parent_func, "EMPTY");
+            strcpy(VARS_ARR[i].var_text, "EMPTY");
+            VARS_ARR[i].var_ram_id = -1;
+        }
+    }
+    return BACK_OK;
+}
+
+int realloc_funcs(Backend_struct* backend_str_ptr)
+{
+    if(CUR_FUNC_ID == FUNC_NUM)
+    {
+        FUNC_NUM *= 2;
+        FUNCS_ARR = (func_info*)realloc(FUNCS_ARR, FUNC_NUM * sizeof(func_info));
+        
+        if(FUNCS_ARR == nullptr)
+        {
+            ERROR_MESSAGE(stderr, ERR_BCK_REALLOC_FUNCS)
+            BACK_ERROR = ERR_BCK_REALLOC_FUNCS;
+            return ERR_BCK_REALLOC_FUNCS;
+        }
+
+        for(size_t i = CUR_FUNC_ID; i < FUNC_NUM; i++)
+        {
+            strcpy(FUNCS_ARR[i].func_name, "EMPTY");
+            FUNCS_ARR[i].num_of_vars = -1;
+        }
+    }
+    return BACK_OK;
+}
+
+int realloc_decls(Backend_struct* backend_str_ptr) 
+{
+    if(CUR_DECL_ID == DECL_NUM)
+    {
+        DECL_NUM *= 2;
+        DECL_NODES = (Node**)realloc(DECL_NODES, DECL_NUM * sizeof(Node*));
+        
+        if(FUNCS_ARR == nullptr)
+        {
+            ERROR_MESSAGE(stderr, ERR_BCK_REALLOC_FUNCS)
+            BACK_ERROR = ERR_BCK_REALLOC_FUNCS;
+            return ERR_BCK_REALLOC_FUNCS;
+        }
+
+        for(size_t i = CUR_DECL_ID; i < DECL_NUM; i++)
+        {
+            DECL_NODES[i] = nullptr;
+        }
+    }
+    return BACK_OK;
+}
