@@ -119,7 +119,7 @@ void print_funcs(Backend_struct* backend_str_ptr) // CHECKED
     printf("--------------------FUNCS--------------------\n");
 }
 
-int create_asm(Backend_struct* backend_str_ptr)
+int create_asm(Backend_struct* backend_str_ptr) // CHECKED
 {
     FILE* asm_file_ptr = fopen(FILE_ASM_NAME, "w");
     if(asm_file_ptr == nullptr)
@@ -129,7 +129,11 @@ int create_asm(Backend_struct* backend_str_ptr)
         return ERR_BCK_OPEN_ASM_FILE;
     }
 
-    translate_expr(backend_str_ptr, DECL_NODES[backend_str_ptr->main_node_id]->left_child, asm_file_ptr);
+    if(translate_expr(backend_str_ptr, DECL_NODES[backend_str_ptr->main_node_id]->left_child, asm_file_ptr) != BACK_OK)
+    {
+        ERROR_MESSAGE(stderr, ERR_BCK_TRANSLATE_MAIN)
+        return ERR_BCK_TRANSLATE_MAIN;
+    }
     fprintf(asm_file_ptr, "HTL\n");
 
 
@@ -141,14 +145,17 @@ int create_asm(Backend_struct* backend_str_ptr)
             {
                 continue;
             }
-            print_decl_funcs(backend_str_ptr, DECL_NODES[i], asm_file_ptr);
+
+            if(print_decl_funcs(backend_str_ptr, DECL_NODES[i], asm_file_ptr) != BACK_OK)
+            {
+                ERROR_MESSAGE(stderr, ERR_BCK_TRANSLATE_FUNC_DECL)
+                BACK_ERROR = ERR_BCK_TRANSLATE_FUNC_DECL;
+                return ERR_BCK_TRANSLATE_FUNC_DECL;
+            }
+            return BACK_OK;  
         }
-        else
-        {
-            break;
-        }
+        break;
     }
-    
 
     if(fclose(asm_file_ptr) == EOF)
     {
@@ -159,7 +166,7 @@ int create_asm(Backend_struct* backend_str_ptr)
     return BACK_OK;
 }
 
-Node* find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr)
+Node* find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr) // CHECKED finds the main and decl head nodes in the tree form expr_head nodes
 {
     if(node_ptr == nullptr)
     {
@@ -185,7 +192,7 @@ Node* find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr)
     }
 }
 
-void print_decls(Backend_struct* backend_str_ptr)
+void print_decls(Backend_struct* backend_str_ptr) // CHECKED
 {
     printf("\n--------------------DECLS--------------------\n");
     for(size_t i = 0; i < DECL_NUM; i++)
@@ -195,31 +202,46 @@ void print_decls(Backend_struct* backend_str_ptr)
     printf("--------------------DECLS--------------------\n");
 }
 
-void translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+int translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr) // CHECKED
 {
     if(node_ptr == nullptr)
     {
-        return;
+        return BACK_OK;
     }
 
     if(node_ptr->type == EXPR_HEAD)
     {
         if(NODE_LEFT_CHILD->type == OP_HEAD)
         {
-            translate_var_decl(backend_str_ptr, NODE_LEFT_CHILD->left_child, asm_file_ptr);
+            if(translate_var_decl(backend_str_ptr, NODE_LEFT_CHILD->left_child, asm_file_ptr) != BACK_OK)
+            {
+                ERROR_MESSAGE(stderr, ERR_BCK_TRANSLATE_VAR_DECL)
+                return ERR_BCK_TRANSLATE_VAR_DECL;
+            }
+            return BACK_OK;
         }
         if(NODE_LEFT_CHILD->type == RETURN)
         {
             if(print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->left_child->left_child, asm_file_ptr) != BACK_OK)
             {
-
-
+                ERROR_MESSAGE(stderr, ERR_BCK_TRANSLATE_SUB_EQ)
+                return ERR_BCK_TRANSLATE_SUB_EQ;
             }
-
             fprintf(asm_file_ptr, "POP ax\n");
+            return BACK_OK;
         }
-        translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
+
+        if(translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr) != BACK_OK)
+        {
+            ERROR_MESSAGE(stderr, ERR_BCK_TRANSLATE_EXPR)
+            return ERR_BCK_TRANSLATE_EXPR;
+        }
+        return BACK_OK;
     }
+
+    ERROR_MESSAGE(stderr, ERR_BCK_NEW_TYPE_EXPR)
+    BACK_ERROR = ERR_BCK_NEW_TYPE_EXPR;
+    return ERR_BCK_NEW_TYPE_EXPR;
 }
 
 int translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr) // CHECKED
@@ -383,7 +405,6 @@ int print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_
     BACK_ERROR = ERR_BCK_NEW_TYPE_DECL_FUNC;
     ERROR_MESSAGE(stderr, ERR_BCK_NEW_TYPE_DECL_FUNC)
     return ERR_BCK_NEW_TYPE_DECL_FUNC;
-
 }
 
 
