@@ -179,29 +179,22 @@ void translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
 
 void translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
 {
-    printf("HERE3\n");
     if(NODE_LEFT_CHILD->type == DECL_VAR_HEAD)
     {
-        printf("\nfirst translate\n");
-        if(NODE_RIGHT_CHILD->type == VAL_HEAD)
-        {
-            fprintf(asm_file_ptr, "PUSH %f\n", NODE_RIGHT_CHILD->left_child->value.node_value);
-            fprintf(asm_file_ptr, "POP [%ld]\n", RAM_CUR_ID);
-        }
-        else
-        {
-            print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
-        }
+
+        print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
+        fprintf(asm_file_ptr, "POP [%ld]\n\n", RAM_CUR_ID);
 
         strcpy(VARS_ARR[CUR_VAR_ID].var_text, NODE_LEFT_CHILD->left_child->left_child->value.text);
         VARS_ARR[CUR_VAR_ID].var_ram_id = RAM_CUR_ID;
         RAM_CUR_ID++;
         CUR_VAR_ID++;
+        return;
     }
-    // else
-    // {
-    //     translate_var_assign(backend_str_ptr, node_ptr, asm_file_ptr);
-    // }
+    else if(NODE_LEFT_CHILD->type == VAR_HEAD)
+    {
+        translate_var_assign(backend_str_ptr, node_ptr, asm_file_ptr);
+    }
 }
 
 void print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
@@ -246,10 +239,27 @@ void print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_fil
     }
 }
 
-// void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
-// {
+void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+{
+    int var_id = -1; 
 
+    for(size_t i = 0; i < VAR_NUM; i++)
+    {
+        if(!strcmp(VARS_ARR[i].var_text, NODE_LEFT_CHILD->left_child->value.text))
+        {
+            var_id = i;  
+            break;
+        }
+    }
 
-    
-// }
+    if(var_id != -1)
+    {
+        print_sub_eq(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
+        fprintf(asm_file_ptr, "POP [%ld]\n\n", var_id);
+    }
+    else
+    {
+        ERROR_MESSAGE(stderr, ERR_BCK_FOUND_UNDECL_VAR)
+    }
+}
 

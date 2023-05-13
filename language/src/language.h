@@ -70,6 +70,7 @@ enum error_codes_back
     ERR_BCK_OPEN_ASM_FILE  = -3,
     ERR_BCK_CLOSE_ASM_FILE = -4,
     ERR_BCK_CALLOC_DECL_NODS = -5,
+    ERR_BCK_FOUND_UNDECL_VAR = -6,
 };
 
 typedef struct var_info
@@ -133,6 +134,7 @@ void translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
 void translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 int create_asm(Backend_struct* backend_str_ptr);
 void print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
+void translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
 
 /*####################################################################################################################################################################*/
 
