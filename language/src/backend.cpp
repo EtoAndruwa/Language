@@ -363,7 +363,6 @@ int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file
     }
     else if(node_ptr->type == FUNC_CALL)
     {
-        printf("CALL\n");
         if(print_call_func(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr) != BACK_OK)
         {
             ERROR_MESSAGE(stderr, BACK_ERROR)
@@ -438,6 +437,7 @@ int translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* 
         return BACK_OK;
     }
 
+    printf("ERR_BCK_FOUND_UNDECL_VAR -  :%s (%ld)\n",  NODE_LEFT_CHILD->left_child->value.text,NODE_LEFT_CHILD->left_child->type);
     ERROR_MESSAGE(stderr, ERR_BCK_FOUND_UNDECL_VAR)
     BACK_ERROR = ERR_BCK_FOUND_UNDECL_VAR;
     return ERR_BCK_FOUND_UNDECL_VAR;
@@ -573,5 +573,26 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
 
         translate_expr(backend_str_ptr, NODE_RIGHT_CHILD->left_child, asm_file_ptr);
         fprintf(asm_file_ptr, ":%ld\n", save_cur_flag_2);
+    }
+    if(node_ptr->value.op_number == For)
+    {
+        translate_var_decl(backend_str_ptr, NODE_LEFT_CHILD->left_child->left_child, asm_file_ptr);
+
+        size_t save_cur_flag_1 = FLAG_ID; // allows inner ifs in the body of logic op
+        size_t save_cur_flag_2 = FLAG_ID + 1;
+        FLAG_ID += 2;
+
+        fprintf(asm_file_ptr, ":%ld\n", save_cur_flag_1);
+        print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->right_child->left_child, asm_file_ptr);
+        fprintf(asm_file_ptr, "POP ix\n");
+        fprintf(asm_file_ptr, "JZ :%ld\n", save_cur_flag_2);
+
+        translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr);
+
+        translate_var_assign(backend_str_ptr, NODE_LEFT_CHILD->right_child->right_child->left_child->left_child, asm_file_ptr);
+        fprintf(asm_file_ptr, "JMP :%ld\n", save_cur_flag_1);
+        fprintf(asm_file_ptr, ":%ld\n", save_cur_flag_2);
+        CUR_VAR_ID--;
+        CUR_RAM_ID--;
     }
 }
