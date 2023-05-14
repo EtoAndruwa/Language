@@ -31,6 +31,8 @@ enum return_codes
     CALLED_BY_FUNC     = 2,
     FUNC_SCANF         = 3,
     FUNC_PRINTF        = 4,
+    DECL_FUNC_ARGS     = 5, // for decl vars as args of funcs
+    NOT_FUNC_ARGS      = 6, // for common var x = 10;
 };
 
 
@@ -93,6 +95,7 @@ enum error_codes_back
     ERR_BCK_INVAL_ARGS_PRINTF   = -24,
     ERR_BCK_VAR_REDECL          = -25,
     ERR_BCK_INV_NUM_OF_ARGS     = -26,
+    ERR_BKC_FUNC_ARGS_NOT_FOUND = -27,
 };
 
 typedef struct var_info
@@ -160,7 +163,7 @@ int ctor_backend(Backend_struct* backend_str_ptr);
 int find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr);
 void print_decls(Backend_struct* backend_str_ptr);
 int translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name);
-int translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name);
+int translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name, int decl_flag = NOT_FUNC_ARGS);
 int create_asm(Backend_struct* backend_str_ptr);
 int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name);
 int translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name);
