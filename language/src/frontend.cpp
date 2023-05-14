@@ -609,7 +609,7 @@ Node* get_func_decl(Tree_struct* tree_str_ptr, token* tok_arr_ptr) // CHECKED
             else
             {
                 Node* func_args = FUNC_ARGS_NODE(nullptr, nullptr);
-                Node* first_arg = rule_V(tree_str_ptr, tok_arr_ptr);
+                Node* first_arg = get_decl_var(tree_str_ptr, tok_arr_ptr);
                 Node* save_func_args = func_args;
                 func_args->left_child = first_arg;
 
@@ -628,7 +628,7 @@ Node* get_func_decl(Tree_struct* tree_str_ptr, token* tok_arr_ptr) // CHECKED
                     }
 
                     Node* func_args2 = FUNC_ARGS_NODE(nullptr, nullptr);
-                    Node* second_arg = rule_V(tree_str_ptr, tok_arr_ptr);
+                    Node* second_arg = get_decl_var(tree_str_ptr, tok_arr_ptr);
                     func_args2->left_child = second_arg;
                     func_args->right_child = func_args2;
                     func_args = func_args2;

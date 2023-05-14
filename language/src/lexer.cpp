@@ -86,7 +86,7 @@ int get_string(Lexer_struct* lexer_str_ptr, char* file_name) // CHECKED
         return error_code;
     }
 
-    printf("Buffer: %s\n", lexer_str_ptr->buff_ptr);
+    // printf("Buffer: %s\n", lexer_str_ptr->buff_ptr);
 
     if(fclose(file_inp_ptr) == EOF)
     {   
