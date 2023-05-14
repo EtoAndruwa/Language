@@ -92,6 +92,7 @@ enum error_codes_back
     ERR_BCK_INVAL_ARGS_SCANF    = -23,
     ERR_BCK_INVAL_ARGS_PRINTF   = -24,
     ERR_BCK_VAR_REDECL          = -25,
+    ERR_BCK_INV_NUM_OF_ARGS     = -26,
 };
 
 typedef struct var_info

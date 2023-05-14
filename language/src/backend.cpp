@@ -339,7 +339,7 @@ int translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* as
 
 int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name) // CHECKED
 {
-    // printf("print_sub_eq node_ptr->type: %ld\n", node_ptr->type);
+    printf("print_sub_eq node_ptr->type: %ld\n", node_ptr->type);
     if(node_ptr == nullptr)
     {
         return BACK_OK;
@@ -361,12 +361,16 @@ int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file
                 return ERR_BCK_FOUND_UNDECL_VAR;
             }
         
-            if(!strcmp(VARS_ARR[i].var_text, NODE_LEFT_CHILD->value.text))
+            if(!strcmp(VARS_ARR[i].var_text, NODE_LEFT_CHILD->value.text) && !strcmp(VARS_ARR[i].name_parent_func, func_name))
             {
                 fprintf(asm_file_ptr, "PUSH [%ld]\n", i);
                 return BACK_OK;
             }
         }
+
+        BACK_ERROR = ERR_BCK_FOUND_UNDECL_VAR;
+        ERROR_MESSAGE(stderr, ERR_BCK_FOUND_UNDECL_VAR)
+        return ERR_BCK_FOUND_UNDECL_VAR;
     }   
     else if(node_ptr->type == OP_HEAD)
     {
@@ -414,6 +418,7 @@ int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file
             fprintf(asm_file_ptr, "MUL\n");
             return BACK_OK;
         default:
+            // printf("node_ptr->type %ld (%s)\n", node_ptr->type, node_ptr->value.text);
             BACK_ERROR = ERR_BCK_FOUND_NEW_OP;
             ERROR_MESSAGE(stderr, ERR_BCK_FOUND_NEW_OP)
             fprintf(asm_file_ptr, "ERROR_OP\n");
@@ -489,11 +494,26 @@ int print_call_func(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
     if(node_ptr->type == FUNC_HEAD)
     {
         Node* func_args_node = NODE_RIGHT_CHILD->left_child;
+        size_t count_args = 0;
 
         while(func_args_node != nullptr)
         {
             print_sub_eq(backend_str_ptr, func_args_node->left_child, asm_file_ptr, func_name);
             func_args_node = func_args_node->right_child;
+            count_args++;
+        }
+
+        for(size_t i = 0; i < CUR_FUNC_ID; i++)
+        {
+            if(!strcmp(NODE_LEFT_CHILD->value.text, FUNCS_ARR[i].func_name))
+            {
+                if(count_args != FUNCS_ARR[i].num_of_vars)
+                {
+                    ERROR_MESSAGE(stderr, ERR_BCK_INV_NUM_OF_ARGS)
+                    BACK_ERROR = ERR_BCK_INV_NUM_OF_ARGS;
+                    return ERR_BCK_INV_NUM_OF_ARGS;
+                }
+            }
         }
 
         fprintf(asm_file_ptr, "CALL %s:\n", NODE_LEFT_CHILD->value.text);
@@ -688,7 +708,6 @@ int print_lib_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
 
             if(check_func_args(backend_str_ptr, args, FUNC_PRINTF) == BACK_OK)
             {
-                printf("HER!\n");
                 while(args != nullptr)
                 {
                     print_sub_eq(backend_str_ptr, args->left_child, asm_file_ptr, func_name);
