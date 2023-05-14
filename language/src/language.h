@@ -29,6 +29,8 @@ enum return_codes
 {
     CALLED_BY_LOGIC_OP = 1,
     CALLED_BY_FUNC     = 2,
+    FUNC_SCANF         = 3,
+    FUNC_PRINTF        = 4,
 };
 
 
@@ -87,6 +89,7 @@ enum error_codes_back
     ERR_BCK_REALLOC_FUNCS       = -20,
     ERR_BCK_REALLOC_DECLS       = -21,
     ERR_BCK_FUNC_REDECL         = -22,
+    ERR_BCK_INVAL_ARGS_SCANF    = -23,
 };
 
 typedef struct var_info
@@ -164,6 +167,9 @@ int realloc_vars(Backend_struct* backend_str_ptr);
 int realloc_funcs(Backend_struct* backend_str_ptr);
 int realloc_decls(Backend_struct* backend_str_ptr);
 int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
+int count_func_args(Node* node_ptr);
+int print_lib_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr);
+int check_func_args(Backend_struct* backend_str_ptr, Node* node_ptr, int flag);
 
 /*##################################################x##################################################################################################################*/
 

@@ -264,7 +264,11 @@ int translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_fi
         else if(NODE_LEFT_CHILD->type == LOGIC_OP_HEAD)
         {
             print_logic(backend_str_ptr, NODE_LEFT_CHILD->left_child, asm_file_ptr);
-        }      
+        }
+        else if(NODE_LEFT_CHILD->type == FUNC_CALL)
+        {
+            print_lib_funcs(backend_str_ptr, NODE_LEFT_CHILD->left_child, asm_file_ptr);
+        }         
         
         if(translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr) != BACK_OK)
         {
@@ -350,7 +354,6 @@ int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file
                 return BACK_OK;
             }
         }
-        return BACK_OK; 
     }   
     else if(node_ptr->type == OP_HEAD)
     {
@@ -437,7 +440,6 @@ int translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* 
         return BACK_OK;
     }
 
-    printf("ERR_BCK_FOUND_UNDECL_VAR -  :%s (%ld)\n",  NODE_LEFT_CHILD->left_child->value.text,NODE_LEFT_CHILD->left_child->type);
     ERROR_MESSAGE(stderr, ERR_BCK_FOUND_UNDECL_VAR)
     BACK_ERROR = ERR_BCK_FOUND_UNDECL_VAR;
     return ERR_BCK_FOUND_UNDECL_VAR;
@@ -618,3 +620,89 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
         return BACK_OK;
     }
 }
+
+int print_lib_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr)
+{
+    if(node_ptr->type == FUNC_HEAD && (!(strcmp(NODE_LEFT_CHILD->value.text, "scanf")) || !(strcmp(NODE_LEFT_CHILD->value.text, "printf"))))
+    {
+        printf("HERE!\n");
+        Node* args = NODE_RIGHT_CHILD->left_child;
+        size_t num_of_args = count_func_args(args);
+        printf("num_of_args %ld\n", num_of_args);
+
+        if(!(strcmp(NODE_LEFT_CHILD->value.text, "scanf")))
+        {
+            if(check_func_args(backend_str_ptr, NODE_RIGHT_CHILD->left_child, FUNC_SCANF) == BACK_OK)
+            {
+                Node* args = NODE_RIGHT_CHILD->left_child;
+
+                while(args != nullptr)
+                {
+                    fprintf(asm_file_ptr, "\nINP bx\n");
+                    fprintf(asm_file_ptr, "PUSH bx\n");
+
+                    for(size_t i = 0; i < VAR_NUM; i++)
+                    {                   
+                        if(!strcmp(VARS_ARR[i].var_text, args->left_child->left_child->value.text))
+                        {
+                            fprintf(asm_file_ptr, "POP [%ld]\n", i);
+                            break;
+                        }
+                    }
+
+                    args = args->right_child;
+                }
+            }
+        }
+    }
+}
+
+int count_func_args(Node* node_ptr)
+{
+    size_t num_of_args = 0;
+    while(node_ptr != nullptr)
+    {
+        num_of_args++;
+        node_ptr = node_ptr->right_child;
+    }
+    return num_of_args;
+}
+
+int check_func_args(Backend_struct* backend_str_ptr, Node* node_ptr, int flag)
+{
+    Node* args = node_ptr;
+
+    if(flag == FUNC_SCANF)
+    {
+        while(args != nullptr)
+        {
+            if(NODE_LEFT_CHILD->type == VAR_HEAD)
+            {
+                for(size_t i = 0; i < VAR_NUM; i++)
+                {
+                    if(VARS_ARR[i].var_ram_id == -1)
+                    {
+                        BACK_ERROR = ERR_BCK_INVAL_ARGS_SCANF;
+                        ERROR_MESSAGE(stderr, ERR_BCK_INVAL_ARGS_SCANF)
+                        return ERR_BCK_INVAL_ARGS_SCANF;
+                    }
+                
+                    if(!strcmp(VARS_ARR[i].var_text, NODE_LEFT_CHILD->left_child->value.text))
+                    {
+
+                        args = args->right_child;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                printf("args type %ld\n", args->type);
+                BACK_ERROR = ERR_BCK_INVAL_ARGS_SCANF;
+                ERROR_MESSAGE(stderr, ERR_BCK_INVAL_ARGS_SCANF)
+                return ERR_BCK_INVAL_ARGS_SCANF;
+            }
+        }
+    }
+}
+
