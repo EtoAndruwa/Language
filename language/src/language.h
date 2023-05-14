@@ -96,6 +96,7 @@ enum error_codes_back
     ERR_BCK_VAR_REDECL          = -25,
     ERR_BCK_INV_NUM_OF_ARGS     = -26,
     ERR_BKC_FUNC_ARGS_NOT_FOUND = -27,
+    ERR_BCK_MAIN_CANNOT_BE_CLLD = -28,
 };
 
 typedef struct var_info

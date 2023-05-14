@@ -157,7 +157,6 @@ int create_asm(Backend_struct* backend_str_ptr) // CHECKED
                 BACK_ERROR = ERR_BCK_TRANSLATE_FUNC_DECL;
                 return ERR_BCK_TRANSLATE_FUNC_DECL;
             }
-            return BACK_OK;  
         }
         break;
     }
@@ -253,7 +252,7 @@ int translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_fi
                 return ERR_BCK_TRANSLATE_VAR_DECL;
             }
         }
-        else if(NODE_LEFT_CHILD->type == RETURN)
+        else if(NODE_LEFT_CHILD->type == RETURN && strcmp(func_name, "main"))
         {
             if(print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->left_child->left_child, asm_file_ptr, func_name) != BACK_OK)
             {
@@ -261,6 +260,7 @@ int translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_fi
                 return ERR_BCK_TRANSLATE_SUB_EQ;
             }
             fprintf(asm_file_ptr, "POP ax\n");
+            fprintf(asm_file_ptr, "RET\n");
         }
         else if(NODE_LEFT_CHILD->type == LOGIC_OP_HEAD)
         {
@@ -387,13 +387,53 @@ int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file
     }
     else if(node_ptr->type == FUNC_CALL)
     {
-        // printf("\n\nFUNC_CALL\n\n");
-        if(print_call_func(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr, func_name) != BACK_OK)
+        if(!strcmp(NODE_LEFT_CHILD->left_child->value.text, func_name) && (strcmp(NODE_LEFT_CHILD->left_child->value.text, "main") != 0))
         {
-            ERROR_MESSAGE(stderr, BACK_ERROR)
-            return BACK_ERROR;
+            size_t save_last_id = 0;
+            size_t num_of_args  = 0;
+
+            for(size_t i = 0; i < CUR_VAR_ID; i++)
+            {
+                if(!strcmp(VARS_ARR[i].name_parent_func, func_name))
+                {
+                    save_last_id = i;
+                    num_of_args++;
+                    fprintf(asm_file_ptr, "PUSH [%ld]\n", i);
+                }
+            }
+
+            if(print_call_func(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr, func_name) != BACK_OK)
+            {
+                ERROR_MESSAGE(stderr, BACK_ERROR)
+                return BACK_ERROR;
+            }
+
+            for(size_t i = save_last_id; i >=  (save_last_id - (num_of_args -1)); i--)
+            {
+                fprintf(asm_file_ptr, "POP [%ld]\n", i);
+            }
+
+            fprintf(asm_file_ptr, "PUSH ax\n");
+
+            return BACK_OK;
         }
-        return BACK_OK;
+        else if(!strcmp(NODE_LEFT_CHILD->left_child->value.text, "main"))
+        {
+            printf("%s", func_name);
+            ERROR_MESSAGE(stderr, ERR_BCK_MAIN_CANNOT_BE_CLLD)
+            BACK_ERROR = ERR_BCK_MAIN_CANNOT_BE_CLLD;
+            return ERR_BCK_MAIN_CANNOT_BE_CLLD;
+        }
+        else
+        {
+            printf("else\n");
+            if(print_call_func(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr, func_name) != BACK_OK)
+            {
+                ERROR_MESSAGE(stderr, BACK_ERROR)
+                return BACK_ERROR;
+            }
+            return BACK_OK;
+        }
     }
 
     if(print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr, func_name) != BACK_OK)
@@ -444,7 +484,7 @@ int translate_var_assign(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* 
         {
             break;
         }
-        if(!strcmp(VARS_ARR[i].var_text, NODE_LEFT_CHILD->left_child->value.text))
+        if(!strcmp(VARS_ARR[i].var_text, NODE_LEFT_CHILD->left_child->value.text) && !strcmp(VARS_ARR[i].name_parent_func, func_name))
         {
             var_id = i;  
             break;
@@ -483,7 +523,7 @@ int print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_
             args = args->right_child;
         }
 
-        size_t num_of_args = -1;
+        int num_of_args = -1;
         for(size_t i = 0; i < CUR_FUNC_ID; i ++)
         {
             if(!strcmp(FUNCS_ARR[i].func_name, func_name))
@@ -508,7 +548,6 @@ int print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_
 
 
         translate_expr(backend_str_ptr, NODE_LEFT_CHILD->right_child->right_child, asm_file_ptr, func_name);
-        fprintf(asm_file_ptr, "RET\n");
 
         return BACK_OK;
     }
@@ -546,7 +585,10 @@ int print_call_func(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
         }
 
         fprintf(asm_file_ptr, "CALL %s:\n", NODE_LEFT_CHILD->value.text);
-        fprintf(asm_file_ptr, "PUSH ax\n");
+        if(strcmp(func_name, NODE_LEFT_CHILD->value.text) != 0)
+        {
+            fprintf(asm_file_ptr, "PUSH ax\n");
+        }
 
         return BACK_OK;
     }

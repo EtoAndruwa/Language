@@ -7,7 +7,7 @@ DIR_LANG = ./language
 DIR_CPU = ./CPU
 
 
-all:  Make_l
+all:  Make_l Make_c
 # all:  Make_l 
 
 clean_files: clean_df clean_gf
