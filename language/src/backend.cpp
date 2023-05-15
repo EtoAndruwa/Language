@@ -460,7 +460,7 @@ int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file
             return BACK_OK;
         case Mul:
             fprintf(asm_file_ptr, "MUL\n");
-            return BACK_OK;
+            return BACK_OK; 
         default:
             // printf("node_ptr->type %ld (%s)\n", node_ptr->type, node_ptr->value.text);
             BACK_ERROR = ERR_BCK_FOUND_NEW_OP;
