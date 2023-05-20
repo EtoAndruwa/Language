@@ -251,6 +251,14 @@ int translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_fi
                 return ERR_BCK_TRANSLATE_VAR_DECL;
             }
         }
+        else if(NODE_LEFT_CHILD->type == RETURN && !strcmp(func_name, MAIN_LANG_DEF))
+        {
+            if(NODE_LEFT_CHILD->left_child->left_child->type != VAL_HEAD || check_is_positive(NODE_LEFT_CHILD->left_child->left_child->left_child->value.node_value) != IS_ZERO)
+            {
+                ERROR_MESSAGE(stderr, ERR_BKC_INV_RETURN_MAIN)
+                return ERR_BKC_INV_RETURN_MAIN;
+            }
+        }
         else if(NODE_LEFT_CHILD->type == RETURN && strcmp(func_name, MAIN_LANG_DEF))
         {
             if(print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->left_child->left_child, asm_file_ptr, func_name) != BACK_OK)
@@ -551,9 +559,9 @@ int print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_
 
         for(size_t i = svd_cur_ram_id + (num_of_args - 1); i >= svd_cur_ram_id; i--)
         {
-            fprintf(asm_file_ptr, "POP [%ld]\n\n", i);
+            fprintf(asm_file_ptr, "POP [%ld]\n", i);
         }
-
+        fprintf(asm_file_ptr, "\n");
 
         translate_expr(backend_str_ptr, NODE_LEFT_CHILD->right_child->right_child, asm_file_ptr, func_name);
 
@@ -744,7 +752,7 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
 
         fprintf(asm_file_ptr, "\n:%ld\n", save_cur_flag_1);
         print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->left_child, asm_file_ptr, func_name);
-        fprintf(asm_file_ptr, "POP ix\n\n");
+        fprintf(asm_file_ptr, "POP ix\n");
         fprintf(asm_file_ptr, "JZ :%ld\n", save_cur_flag_2);
 
         translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr, func_name, save_cur_flag_2);
@@ -926,8 +934,17 @@ int check_func_args(Backend_struct* backend_str_ptr, Node* node_ptr, int flag)
     return ERR_BCK_INVAL_ARGS_PRINTF;
 }
 
-// int clear_vars()
-// {
-
-// }
+int check_is_positive(double value) // ok
+{
+    if((fabs(value - fabs(value)) < EPS) && (fabs(value) > EPS))
+    {
+        return IS_POSITIVE;
+    }
+    else if(fabs(value) <= EPS)
+    {
+        return IS_ZERO;
+    }
+    
+    return IS_NEGATIVE;
+}
 

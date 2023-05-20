@@ -33,6 +33,9 @@ enum return_codes
     FUNC_PRINTF        = 4,
     DECL_FUNC_ARGS     = 5, // for decl vars as args of funcs
     NOT_FUNC_ARGS      = 6, // for common var x = 10;
+    IS_POSITIVE        = 7,
+    IS_ZERO            = 8,
+    IS_NEGATIVE        = 9,
 };
 
 
@@ -97,6 +100,7 @@ enum error_codes_back
     ERR_BCK_INV_NUM_OF_ARGS     = -26,
     ERR_BKC_FUNC_ARGS_NOT_FOUND = -27,
     ERR_BCK_MAIN_CANNOT_BE_CLLD = -28,
+    ERR_BKC_INV_RETURN_MAIN     = -29,
 };
 
 typedef struct var_info
@@ -177,6 +181,7 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
 int count_func_args(Node* node_ptr);
 int print_lib_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name);
 int check_func_args(Backend_struct* backend_str_ptr, Node* node_ptr, int flag);
+int check_is_positive(double value) ;
 
 /*##################################################x##################################################################################################################*/
 
