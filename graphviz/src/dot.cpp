@@ -165,6 +165,16 @@ int print_tree_data(Tree_struct* tree_struct, Node* node_ptr, FILE* graph_txt_pt
                     node_ptr, LOGIC_OP_COLOR, "greater");
                     break;
 
+                case Less_logic:
+                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> %s} | {<f0>}}\"];\n", 
+                    node_ptr, LOGIC_OP_COLOR, "less");
+                    break;
+
+                case Less_eq_logic:
+                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> %s} | {<f0>}}\"];\n", 
+                    node_ptr, LOGIC_OP_COLOR, "less or greater");
+                    break;
+
                 default:
                     fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>NEW LOGIC OP} | {<f0>}}\"];\n", 
                     node_ptr, ERROR_COLOR);

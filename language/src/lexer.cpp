@@ -309,11 +309,6 @@ int get_word(Lexer_struct* lexer_str_ptr) // CHECKED
         LEX_TOKS[LEX_CUR_TOK].token_type = Printf;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Printf;
     }
-    // else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, SQRT_LANG_DEF)))
-    // {
-    //     LEX_TOKS[LEX_CUR_TOK].token_type = Sqrt;
-    //     LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Sqrt;
-    // }
     else
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Word;
@@ -377,6 +372,31 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
 
         return LEXER_OK;
     }
+    else if(STRING[POSITION] == '<' && STRING[POSITION + 1] == '=')
+    {
+        printf("less or equal\n");
+        LEX_TOKS[LEX_CUR_TOK].token_text[0] = '<';
+        LEX_TOKS[LEX_CUR_TOK].token_text[1] = '=';
+        LEX_TOKS[LEX_CUR_TOK].token_text[2] = '\0';
+        LEX_TOKS[LEX_CUR_TOK].token_type = Less_eq_logic;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Less_eq_logic;
+        POSITION += 2;
+        LEX_CUR_TOK++;
+
+        return LEXER_OK;
+    }
+    else if(STRING[POSITION] == '<')
+    {
+        printf("less\n");
+        LEX_TOKS[LEX_CUR_TOK].token_text[0] = '<';
+        LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+        LEX_TOKS[LEX_CUR_TOK].token_type = Less_logic;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Less_logic;
+        POSITION++;
+        LEX_CUR_TOK++;
+
+        return LEXER_OK;
+    }
 
     switch((int)STRING[POSITION])
     {
@@ -388,6 +408,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION++;
             LEX_CUR_TOK++;
             break;
+
         case Sub:
             LEX_TOKS[LEX_CUR_TOK].token_text[0] = '-';
             LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
@@ -396,6 +417,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION++;
             LEX_CUR_TOK++;
             break;
+
         case Div:
             LEX_TOKS[LEX_CUR_TOK].token_text[0] = '\\';
             LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
@@ -404,6 +426,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION++;
             LEX_CUR_TOK++;
             break;
+
         case Mul:
             LEX_TOKS[LEX_CUR_TOK].token_text[0] = '*';
             LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
@@ -412,6 +435,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION++;
             LEX_CUR_TOK++;
             break;
+
         case Brack_l:
             LEX_TOKS[LEX_CUR_TOK].token_text[0] = '(';
             LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
@@ -420,6 +444,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION++;
             LEX_CUR_TOK++;
             break;
+
         case Brack_r:
             LEX_TOKS[LEX_CUR_TOK].token_text[0] = ')';
             LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
@@ -428,6 +453,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION++;
             LEX_CUR_TOK++;
             break;
+
         case Fig_brack_l:
             LEX_TOKS[LEX_CUR_TOK].token_text[0] = '{';
             LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
@@ -436,6 +462,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION++;
             LEX_CUR_TOK++;
             break;
+
         case Fig_brack_r:
             LEX_TOKS[LEX_CUR_TOK].token_text[0] = '}';
             LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
@@ -444,6 +471,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION++;
             LEX_CUR_TOK++;
             break;
+
         case End_line:
             LEX_TOKS[LEX_CUR_TOK].token_text[0] = '$';
             LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
@@ -452,6 +480,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION++;
             LEX_CUR_TOK++;
             break;
+
         case Comma:
             LEX_TOKS[LEX_CUR_TOK].token_text[0] = ',';
             LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
@@ -460,6 +489,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION++;
             LEX_CUR_TOK++;
             break;
+
         case Eq:
             LEX_TOKS[LEX_CUR_TOK].token_text[0] = '=';
             LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
@@ -468,6 +498,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION++;
             LEX_CUR_TOK++;
             break;
+
         case Pow:
             LEX_TOKS[LEX_CUR_TOK].token_text[0] = '^';
             LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
@@ -476,6 +507,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             POSITION++;
             LEX_CUR_TOK++;
             break;
+            
         default:
             printf("POSIION %ld, CHAR %c\n", POSITION, STRING[POSITION]);
             ERROR_MESSAGE(stderr, ERR_LEX_INVALID_OP)
@@ -592,93 +624,131 @@ void print_toks(Lexer_struct* lexer_str_ptr) // CHECKED
             case Add:
                 printf("Token type: %d (%s)\n", Add, "Add"); 
                 break;
+
             case Sub:
                 printf("Token type: %d (%s)\n", Sub, "Sub"); 
                 break;
+
             case Mul:
                 printf("Token type: %d (%s)\n", Add, "Mul"); 
                 break;
+
             case Div:
                 printf("Token type: %d (%s)\n", Add, "Div"); 
                 break;
+
             case Brack_l:
                 printf("Token type: %d (%s)\n", Brack_l, "Brack_l"); 
                 break;
+
             case Brack_r:
                 printf("Token type: %d (%s)\n", Brack_r, "Brack_r"); 
                 break;
+
             case Fig_brack_l:
                 printf("Token type: %d (%s)\n", Fig_brack_l, "Fig_brack_l"); 
                 break;
+
             case Fig_brack_r:
                 printf("Token type: %d (%s)\n", Fig_brack_r, "Fig_brack_r"); 
                 break;
+
             case Scanf:
                 printf("Token type: %d (%s)\n", Scanf, "Scanf"); 
                 break;
+
             case Printf:
                 printf("Token type: %d (%s)\n", Printf, "Printf"); 
                 break;
+
             case End_line:
                 printf("Token type: %d (%s)\n", End_line, "End_line"); 
                 break;
+
             case Pow:
                 printf("Token type: %d (%s)\n", Pow, "Pow"); 
-                break;            
+                break;  
+                          
             case Comma:
                 printf("Token type: %d (%s)\n", Comma, "Comma"); 
                 break;
+
             case Var:
                 printf("Token type: %d (%s)\n", Var, "Var"); 
                 break;
+
             case Val:
                 printf("Token type: %d (%s)\n", Val, "Val"); 
                 break;
+
             case Empty:
                 printf("Token type: %d (%s)\n", Empty, "Empty"); 
                 break;
+
             case Word:
                 printf("Token type: %d (%s)\n", Word, "Word"); 
-                break;            
+                break;  
+
             case Return:
                 printf("Token type: %d (%s)\n", Return, "Return"); 
                 break;
+
             case Eq:
                 printf("Token type: %d (%s)\n", Eq, "Eq"); 
                 break;
+
             case Main:
                 printf("Token type: %d (%s)\n", Main, "Main"); 
                 break;
+
             case Decl:
                 printf("Token type: %d (%s)\n", Decl, "Decl"); 
                 break;
+
             case If:
                 printf("Token type: %d (%s)\n", If, "if"); 
                 break;
+                
             case Else:
                 printf("Token type: %d (%s)\n", Else, "else"); 
                 break;
+
             case While:
                 printf("Token type: %d (%s)\n", While, "while"); 
                 break;
+
             case For:
                 printf("Token type: %d (%s)\n", For, "for"); 
                 break;
+
             case Break:
                 printf("Token type: %d (%s)\n", Break, "break"); 
                 break;
+
             case Greater_eq_logic:
                 printf("Token type: %d (%s)\n", Greater_eq_logic, ">="); 
                 break;
+
             case N_equal_logic:
                 printf("Token type: %d (%s)\n", N_equal_logic, "!="); 
                 break;
+
             case Greater_logic:
                 printf("Token type: %d (%s)\n", Greater_logic, ">"); 
                 break;
+
             case Equal_logic:
                 printf("Token type: %d (%s)\n", Equal_logic, "=="); 
                 break;
+
+            case Less_logic:
+                printf("Token type: %d (%s)\n", Less_logic, "<"); 
+                break;
+
+            case Less_eq_logic:
+                printf("Token type: %d (%s)\n", Less_eq_logic, "<="); 
+                break;
+                
             default:
                 ERROR_MESSAGE(stderr, ERR_LEX_NEW_TOK_TYPE)
                 printf("Token type: %d (%s)\n", LEX_TOKS[i].token_type, "NEW_TOK_TYPE");

@@ -476,15 +476,19 @@ int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file
         case Add:
             fprintf(asm_file_ptr, "ADD\n");
             return BACK_OK;
+
         case Sub:
             fprintf(asm_file_ptr, "SUB\n");
             return BACK_OK;
+
         case Div:
             fprintf(asm_file_ptr, "DIV\n");
             return BACK_OK;
+
         case Mul:
             fprintf(asm_file_ptr, "MUL\n");
             return BACK_OK; 
+
         default:
             BACK_ERROR = ERR_BCK_FOUND_NEW_OP;
             ERROR_MESSAGE(stderr, ERR_BCK_FOUND_NEW_OP)
@@ -729,6 +733,14 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
                     fprintf(asm_file_ptr, "JG :%ld\n", save_cur_flag_1);
                     break;
                 
+                case Less_logic:
+                    fprintf(asm_file_ptr, "JL :%ld\n", save_cur_flag_1);
+                    break;
+
+                case Less_eq_logic:
+                    fprintf(asm_file_ptr, "JLE :%ld\n", save_cur_flag_1);
+                    break;
+                
                 default:
                     ERROR_MESSAGE(stderr, ERR_BCK_NEW_LOG_OP)
                     BACK_ERROR = ERR_BCK_NEW_LOG_OP;
@@ -804,6 +816,14 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
 
                 case Greater_logic:
                     fprintf(asm_file_ptr, "JG :%ld\n", save_cur_flag_2);
+                    break;
+                
+                case Less_logic:
+                    fprintf(asm_file_ptr, "JL :%ld\n", save_cur_flag_2);
+                    break;
+
+                case Less_eq_logic:
+                    fprintf(asm_file_ptr, "JLE :%ld\n", save_cur_flag_2);
                     break;
                 
                 default:

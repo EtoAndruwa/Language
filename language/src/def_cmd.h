@@ -30,6 +30,8 @@ DEF_LOGIC_OP(Equal_logic, 70, "==")
 DEF_LOGIC_OP(N_equal_logic, 71, "!=")
 DEF_LOGIC_OP(Greater_logic, 72, ">")
 DEF_LOGIC_OP(Greater_eq_logic, 73, ">=")
+DEF_LOGIC_OP(Less_logic, 74, "<")
+DEF_LOGIC_OP(Less_eq_logic, 75, "<=")
 
 
 DEF_BRACK(Brack_l, (int)'(', '(')

@@ -773,7 +773,8 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
                 TREE_CUR_TOK++;
             }
             else if(tok_arr_ptr[TREE_CUR_TOK].token_type == Equal_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == N_equal_logic ||
-                tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic)
+                tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic
+                    || tok_arr_ptr[TREE_CUR_TOK].token_type == Less_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Less_eq_logic)
             {
                 Node* logic_node = LOGIC_OP_NODE(tok_arr_ptr[TREE_CUR_TOK].token_type)
 
@@ -782,7 +783,8 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
                 logic_node->left_child->right_child = rule_E(tree_str_ptr, tok_arr_ptr); 
 
                 if(tok_arr_ptr[TREE_CUR_TOK].token_type == Equal_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == N_equal_logic ||
-                    tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic)
+                    tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic
+                        || tok_arr_ptr[TREE_CUR_TOK].token_type == Less_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Less_eq_logic)
                 {
                     ERROR_MESSAGE(stderr, ERR_FRT_INVAL_LOG_OPS_SEQ)
                     TREE_ERR = ERR_FRT_INVAL_LOG_OPS_SEQ;
@@ -874,6 +876,7 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
 
             return IF_NODE(if_statm, if_body, else_body);;
         }    
+
         case While:
         {
             TREE_CUR_TOK++;
@@ -902,7 +905,8 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
                 TREE_CUR_TOK++;
             }
             else if(tok_arr_ptr[TREE_CUR_TOK].token_type == Equal_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == N_equal_logic ||
-                tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic)
+                tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic
+                    || tok_arr_ptr[TREE_CUR_TOK].token_type == Less_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Less_eq_logic)
             {
                 Node* logic_node = LOGIC_OP_NODE(tok_arr_ptr[TREE_CUR_TOK].token_type)
 
@@ -911,7 +915,8 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
                 logic_node->left_child->right_child = rule_E(tree_str_ptr, tok_arr_ptr); 
 
                 if(tok_arr_ptr[TREE_CUR_TOK].token_type == Equal_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == N_equal_logic ||
-                    tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic)
+                    tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic
+                        || tok_arr_ptr[TREE_CUR_TOK].token_type == Less_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Less_eq_logic)
                 {
                     ERROR_MESSAGE(stderr, ERR_FRT_INVAL_LOG_OPS_SEQ)
                     TREE_ERR = ERR_FRT_INVAL_LOG_OPS_SEQ;
@@ -936,6 +941,7 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
                 return ERROR_NODE()
             }
             TREE_CUR_TOK++;
+
             if((tok_arr_ptr[TREE_CUR_TOK].token_type == End_line && tok_arr_ptr[TREE_CUR_TOK + 1].token_type == Fig_brack_r) || 
                 tok_arr_ptr[TREE_CUR_TOK].token_type == Fig_brack_r)
             {
@@ -963,6 +969,7 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
 
             return WHILE_NODE(while_statm, while_body)
         }
+
         case For:
         {
             TREE_CUR_TOK++;
@@ -1010,7 +1017,8 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
                 logic_node = left_statm;
             }
             else if(tok_arr_ptr[TREE_CUR_TOK].token_type == Equal_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == N_equal_logic ||
-                tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic)
+                tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic
+                    || tok_arr_ptr[TREE_CUR_TOK].token_type == Less_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Less_eq_logic)
             {
                 logic_node = LOGIC_OP_NODE(tok_arr_ptr[TREE_CUR_TOK].token_type)
 
@@ -1019,7 +1027,8 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
                 logic_node->left_child->right_child = rule_E(tree_str_ptr, tok_arr_ptr); 
 
                 if(tok_arr_ptr[TREE_CUR_TOK].token_type == Equal_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == N_equal_logic ||
-                    tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic)
+                    tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic
+                        || tok_arr_ptr[TREE_CUR_TOK].token_type == Less_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Less_eq_logic)
                 {
                     ERROR_MESSAGE(stderr, ERR_FRT_INVAL_LOG_OPS_SEQ)
                     TREE_ERR = ERR_FRT_INVAL_LOG_OPS_SEQ;
@@ -1095,6 +1104,7 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
 
             return FOR_NODE(EXPR_NODE(counter_decl, EXPR_NODE(logic_node, EXPR_NODE(counter_action, nullptr))),for_body);
         }
+
         default:
             return nullptr;
     }
