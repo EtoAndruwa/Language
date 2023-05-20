@@ -26,6 +26,12 @@ DEF_LOGIC(For, 13, FOR_LANG_DEF)
 DEF_LOGIC(While, 14, WHILE_LANG_DEF)
 DEF_LOGIC(Break, 33, BREAK_LANG_DEF)
 
+DEF_LOGIC_OP(Equal_logic, 70, "==")
+DEF_LOGIC_OP(N_equal_logic, 71, "!=")
+DEF_LOGIC_OP(Greater_logic, 72, ">")
+DEF_LOGIC_OP(Greater_eq_logic, 73, ">=")
+
+
 DEF_BRACK(Brack_l, (int)'(', '(')
 DEF_BRACK(Brack_r, (int)')', ')')
 DEF_BRACK(Fig_brack_l, (int)'{', '{')

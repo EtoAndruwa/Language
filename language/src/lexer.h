@@ -19,12 +19,14 @@ enum token_types
     #define DEF_LOGIC(lname, lcode, ...) lname = lcode,
     #define DEF_BRACK(bname, bcode, ...) bname = bcode,
     #define DEF_KEY_W(wname, wcode, ...) wname = wcode,
+    #define DEF_LOGIC_OP(l_op_name, l_op_code, ...) l_op_name = l_op_code,
     #include "def_cmd.h"
     #undef DEF_OP
     #undef DEF_FUNC
     #undef DEF_LOGIC
     #undef DEF_BRACK
     #undef DEF_KEY_W
+    #undef DEF_LOGIC_OP
 };
 
 enum error_codes_lexer

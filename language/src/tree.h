@@ -50,6 +50,10 @@ enum node_type_tree
     LOGIC_OP_HEAD  = 14,
     LOGIC_OP       = 15,
 
+    STATM_OP_HEAD  = 21,
+    STATM_OP       = 22,
+
+
     MAIN           = 16,
     RETURN         = 18,
     BREAK          = 19,

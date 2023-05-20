@@ -281,7 +281,7 @@ int translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_fi
                 return ERR_BCK_TRANSLATE_SUB_EQ;
             }
         }
-        else if(NODE_LEFT_CHILD->type == LOGIC_OP_HEAD)
+        else if(NODE_LEFT_CHILD->type == STATM_OP_HEAD)
         {
             print_logic(backend_str_ptr, NODE_LEFT_CHILD->left_child, asm_file_ptr, func_name, jmp_for_break);
         }
@@ -436,9 +436,15 @@ int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file
 
             return BACK_OK;
         }
+        else if(!strcmp(NODE_LEFT_CHILD->left_child->value.text, SQRT_LANG_DEF))
+        {
+            print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->right_child->left_child->left_child, asm_file_ptr, func_name);
+
+            fprintf(asm_file_ptr, "SQRT\n");
+            return BACK_OK;
+        }
         else if(!strcmp(NODE_LEFT_CHILD->left_child->value.text, MAIN_LANG_DEF))
         {
-            printf("%s", func_name);
             ERROR_MESSAGE(stderr, ERR_BCK_MAIN_CANNOT_BE_CLLD)
             BACK_ERROR = ERR_BCK_MAIN_CANNOT_BE_CLLD;
             return ERR_BCK_MAIN_CANNOT_BE_CLLD;
@@ -766,7 +772,6 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
 
 int print_lib_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name)
 {
-    printf("HERE!\n");
     if(node_ptr->type == FUNC_HEAD && (!(strcmp(NODE_LEFT_CHILD->value.text, SCANF_LANG_DEF)) || !(strcmp(NODE_LEFT_CHILD->value.text, PRINTF_LANG_DEF))))
     {
         Node* args = NODE_RIGHT_CHILD->left_child;
@@ -817,31 +822,6 @@ int print_lib_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
 
                     args = args->right_child;
                 }
-
-                return BACK_OK;
-            }
-
-            BACK_ERROR = ERR_BCK_INVAL_ARGS_PRINTF;
-            ERROR_MESSAGE(stderr, ERR_BCK_INVAL_ARGS_PRINTF)
-            return ERR_BCK_INVAL_ARGS_PRINTF;
-        }
-        else if(!(strcmp(NODE_LEFT_CHILD->value.text, SQRT_LANG_DEF)))
-        {
-            Node* args = NODE_RIGHT_CHILD->left_child;
-            size_t num_of_args = count_func_args(args);
-
-            if(num_of_args != 1)
-            {
-                BACK_ERROR = ERR_BCK_INVAL_ARGS_SQRT;
-                ERROR_MESSAGE(stderr, ERR_BCK_INVAL_ARGS_SQRT)
-                return ERR_BCK_INVAL_ARGS_SQRT;
-            }
-
-            if(check_func_args(backend_str_ptr, args, FUNC_PRINTF) == BACK_OK)
-            {
-
-                print_sub_eq(backend_str_ptr, args->left_child, asm_file_ptr, func_name);
-                fprintf(asm_file_ptr, "SQRT\n");
 
                 return BACK_OK;
             }

@@ -164,12 +164,12 @@ int get_toks(Lexer_struct* lexer_str_ptr) // CHECKED
                 }
                 else
                 {
-                    printf("skipped %c\n", STRING[POSITION]);
+                    // printf("skipped %c\n", STRING[POSITION]);
                     POSITION++;
                 }
             }
 
-            printf("Leaved in POSITION %ld, CHAR %c and POSITION %ld, CHAR %c\n", POSITION, STRING[POSITION], POSITION + 1, STRING[POSITION + 1]);
+            // printf("Leaved in POSITION %ld, CHAR %c and POSITION %ld, CHAR %c\n", POSITION, STRING[POSITION], POSITION + 1, STRING[POSITION + 1]);
             if(POSITION + 2 > lexer_str_ptr->buff_size - 1)
             {
                 return 0;
@@ -326,6 +326,58 @@ int get_word(Lexer_struct* lexer_str_ptr) // CHECKED
 
 int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
 {
+    if(STRING[POSITION] == '=' && STRING[POSITION + 1] == '=')
+    {
+        printf("equal\n");
+        LEX_TOKS[LEX_CUR_TOK].token_text[0] = '=';
+        LEX_TOKS[LEX_CUR_TOK].token_text[1] = '=';
+        LEX_TOKS[LEX_CUR_TOK].token_text[2] = '\0';
+        LEX_TOKS[LEX_CUR_TOK].token_type = Equal_logic;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Equal_logic;
+        POSITION += 2;
+        LEX_CUR_TOK++;
+
+        return LEXER_OK;
+    }
+    else if(STRING[POSITION] == '!' && STRING[POSITION + 1] == '=')
+    {
+        printf("not equal\n");
+        LEX_TOKS[LEX_CUR_TOK].token_text[0] = '!';
+        LEX_TOKS[LEX_CUR_TOK].token_text[1] = '=';
+        LEX_TOKS[LEX_CUR_TOK].token_text[2] = '\0';
+        LEX_TOKS[LEX_CUR_TOK].token_type = N_equal_logic;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = N_equal_logic;
+        POSITION += 2;
+        LEX_CUR_TOK++;
+
+        return LEXER_OK;
+    }
+    else if(STRING[POSITION] == '>')
+    {
+        printf("greater\n");
+        LEX_TOKS[LEX_CUR_TOK].token_text[0] = '>';
+        LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+        LEX_TOKS[LEX_CUR_TOK].token_type = Greater_logic;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Greater_logic;
+        POSITION++;
+        LEX_CUR_TOK++;
+
+        return LEXER_OK;
+    }
+    else if(STRING[POSITION] == '>' && STRING[POSITION + 1] == '=')
+    {
+        printf("greater or equal\n");
+        LEX_TOKS[LEX_CUR_TOK].token_text[0] = '>';
+        LEX_TOKS[LEX_CUR_TOK].token_text[1] = '=';
+        LEX_TOKS[LEX_CUR_TOK].token_text[2] = '\0';
+        LEX_TOKS[LEX_CUR_TOK].token_type = Greater_eq_logic;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Greater_eq_logic;
+        POSITION += 2;
+        LEX_CUR_TOK++;
+
+        return LEXER_OK;
+    }
+
     switch((int)STRING[POSITION])
     {
         case Add:
@@ -614,6 +666,18 @@ void print_toks(Lexer_struct* lexer_str_ptr) // CHECKED
                 break;
             case Break:
                 printf("Token type: %d (%s)\n", Break, "break"); 
+                break;
+            case Greater_eq_logic:
+                printf("Token type: %d (%s)\n", Greater_eq_logic, ">="); 
+                break;
+            case N_equal_logic:
+                printf("Token type: %d (%s)\n", N_equal_logic, "!="); 
+                break;
+            case Greater_logic:
+                printf("Token type: %d (%s)\n", Greater_logic, ">"); 
+                break;
+            case Equal_logic:
+                printf("Token type: %d (%s)\n", Equal_logic, "=="); 
                 break;
             default:
                 ERROR_MESSAGE(stderr, ERR_LEX_NEW_TOK_TYPE)

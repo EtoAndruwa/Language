@@ -47,8 +47,10 @@
 #define FUNC_NAME_COLOR "#AFEEEE"
 #define RETURN_COLOR    "#79F660"
 #define BREAK_COLOR     "#506397"
-#define LOGIC_OP_HEAD_COLOR "#F27193"
-#define LOGIC_OP_COLOR      "#F3B0C2"
+#define STATM_OP_HEAD_COLOR "#F27193"
+#define STATM_OP_COLOR      "#F3B0C2"
+#define LOGIC_OP_HEAD_COLOR "#E5E596"
+#define LOGIC_OP_COLOR      "#C9C97F"
 
 
 
