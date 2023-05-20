@@ -430,6 +430,7 @@ int system_dot(char* file_name) // OK
     strcat(system_cmd, flag);
     strcat(system_cmd, jpg_file);
     
+    printf("%s\n", system_cmd);
     system(system_cmd);
 
     free(txt_file);

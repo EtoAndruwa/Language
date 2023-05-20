@@ -825,10 +825,35 @@ int print_lib_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
             ERROR_MESSAGE(stderr, ERR_BCK_INVAL_ARGS_PRINTF)
             return ERR_BCK_INVAL_ARGS_PRINTF;
         }
+        else if(!(strcmp(NODE_LEFT_CHILD->value.text, SQRT_LANG_DEF)))
+        {
+            Node* args = NODE_RIGHT_CHILD->left_child;
+            size_t num_of_args = count_func_args(args);
+
+            if(num_of_args != 1)
+            {
+                BACK_ERROR = ERR_BCK_INVAL_ARGS_SQRT;
+                ERROR_MESSAGE(stderr, ERR_BCK_INVAL_ARGS_SQRT)
+                return ERR_BCK_INVAL_ARGS_SQRT;
+            }
+
+            if(check_func_args(backend_str_ptr, args, FUNC_PRINTF) == BACK_OK)
+            {
+
+                print_sub_eq(backend_str_ptr, args->left_child, asm_file_ptr, func_name);
+                fprintf(asm_file_ptr, "SQRT\n");
+
+                return BACK_OK;
+            }
+
+            BACK_ERROR = ERR_BCK_INVAL_ARGS_PRINTF;
+            ERROR_MESSAGE(stderr, ERR_BCK_INVAL_ARGS_PRINTF)
+            return ERR_BCK_INVAL_ARGS_PRINTF;
+        }
     }
 }
 
-int count_func_args(Node* node_ptr) // CHEcKED
+int count_func_args(Node* node_ptr) // CHECKED
 {
     size_t num_of_args = 0;
     while(node_ptr != nullptr)
@@ -934,7 +959,7 @@ int check_func_args(Backend_struct* backend_str_ptr, Node* node_ptr, int flag)
     return ERR_BCK_INVAL_ARGS_PRINTF;
 }
 
-int check_is_positive(double value) // ok
+int check_is_positive(double value) // CHECKED
 {
     if((fabs(value - fabs(value)) < EPS) && (fabs(value) > EPS))
     {

@@ -299,6 +299,7 @@ Node* rule_P(Tree_struct* tree_str_ptr, token* tok_arr_ptr) // CHECKED
             inner_node = rule_V(tree_str_ptr, tok_arr_ptr);
             if(inner_node == nullptr)
             {
+                printf("RULE F ENTERING\n");
                 inner_node = rule_F(tree_str_ptr, tok_arr_ptr);
             }
         }
@@ -332,6 +333,8 @@ Node* rule_F(Tree_struct* tree_str_ptr, token* tok_arr_ptr) // CHECKED
 {
     if(tok_arr_ptr[TREE_CUR_TOK].token_type == Word && tok_arr_ptr[TREE_CUR_TOK + 1].token_type == Brack_l)
     {
+        printf("rule_F\n");
+
         Node* func_name = FUNC_NAME_NODE(tok_arr_ptr[TREE_CUR_TOK].token_text)
         Node* func_info = FUNC_INFO_NODE(nullptr, nullptr)
         TREE_CUR_TOK += 2;
@@ -395,6 +398,11 @@ Node* rule_F(Tree_struct* tree_str_ptr, token* tok_arr_ptr) // CHECKED
         func_info->right_child = EMPTY_NODE();
         Node* func_head = FUNC_HEAD_NODE(func_name, func_info)
         TREE_CUR_TOK++;
+
+        // Node* root = tree_str_ptr->root;
+        // tree_str_ptr->root = FUNC_CALL_NODE(func_head)
+        // create_graph_jpg(tree_str_ptr, "sqrt");
+        // tree_str_ptr->root = root;
         return FUNC_CALL_NODE(func_head)
     }
     return ERROR_NODE();

@@ -95,6 +95,7 @@
 // #define FOR_LANG_DEF     "esepshigi"
 // #define WHILE_LANG_DEF   "bolgansha"
 // #define BREAK_LANG_DEF   "toktay"
+// #define SQRT_LANG_DEF    "sqrt"
 
 #define MAIN_LANG_DEF    "main"
 #define DECL_LANG_DEF    "decl"
@@ -107,6 +108,7 @@
 #define FOR_LANG_DEF     "for"
 #define WHILE_LANG_DEF   "while"
 #define BREAK_LANG_DEF   "break"
+#define SQRT_LANG_DEF    "sqrt"
 
 
 #endif

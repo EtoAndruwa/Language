@@ -155,12 +155,21 @@ int get_toks(Lexer_struct* lexer_str_ptr) // CHECKED
         if(STRING[POSITION] == '\\' && STRING[POSITION + 1] == '*')
         {
             POSITION += 2;
-            while(STRING[POSITION] != '*' && STRING[POSITION + 1] != '\\')
+            int flag = 1;
+            while(flag)
             {
-                // printf("skipped %c\n", STRING[POSITION]);
-                POSITION++;
+                if(STRING[POSITION] = '*' && STRING[POSITION + 1] == '\\')
+                {
+                    flag = 0;
+                }
+                else
+                {
+                    printf("skipped %c\n", STRING[POSITION]);
+                    POSITION++;
+                }
             }
 
+            printf("Leaved in POSITION %ld, CHAR %c and POSITION %ld, CHAR %c\n", POSITION, STRING[POSITION], POSITION + 1, STRING[POSITION + 1]);
             if(POSITION + 2 > lexer_str_ptr->buff_size - 1)
             {
                 return 0;
@@ -300,6 +309,11 @@ int get_word(Lexer_struct* lexer_str_ptr) // CHECKED
         LEX_TOKS[LEX_CUR_TOK].token_type = Printf;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Printf;
     }
+    // else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, SQRT_LANG_DEF)))
+    // {
+    //     LEX_TOKS[LEX_CUR_TOK].token_type = Sqrt;
+    //     LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Sqrt;
+    // }
     else
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Word;
@@ -411,6 +425,7 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
             LEX_CUR_TOK++;
             break;
         default:
+            printf("POSIION %ld, CHAR %c\n", POSITION, STRING[POSITION]);
             ERROR_MESSAGE(stderr, ERR_LEX_INVALID_OP)
             LEX_ERROR = ERR_LEX_INVALID_OP;
             return ERR_LEX_INVALID_OP;
