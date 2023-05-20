@@ -830,7 +830,7 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
 
         fprintf(asm_file_ptr, "\n:%ld\n", save_cur_flag_1);
 
-        if(NODE_LEFT_CHILD->right_child->left_child->type == OP_HEAD)
+        if(NODE_LEFT_CHILD->type == OP_HEAD)
         {
             print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->right_child->left_child, asm_file_ptr, func_name);
             fprintf(asm_file_ptr, "POP ix\n");
