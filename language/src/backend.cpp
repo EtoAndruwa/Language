@@ -728,14 +728,7 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
         fprintf(asm_file_ptr, "POP ix\n");
         fprintf(asm_file_ptr, "JZ :%ld\n", save_cur_flag_2);
 
-        if(jmp_for_break != -1)
-        {
-            translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr, func_name, jmp_for_break);
-        }
-        else
-        {
-            translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr, func_name, save_cur_flag_2);
-        }
+        translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr, func_name, save_cur_flag_2);
 
         translate_var_assign(backend_str_ptr, NODE_LEFT_CHILD->right_child->right_child->left_child->left_child, asm_file_ptr, func_name);
         fprintf(asm_file_ptr, "JMP :%ld\n", save_cur_flag_1);
@@ -754,14 +747,7 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
         fprintf(asm_file_ptr, "POP ix\n\n");
         fprintf(asm_file_ptr, "JZ :%ld\n", save_cur_flag_2);
 
-        if(jmp_for_break != -1)
-        {
-            translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr, func_name, jmp_for_break);
-        }
-        else
-        {
-            translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr, func_name, save_cur_flag_2);
-        }
+        translate_expr(backend_str_ptr, NODE_RIGHT_CHILD, asm_file_ptr, func_name, save_cur_flag_2);
 
         fprintf(asm_file_ptr, "JMP :%ld\n", save_cur_flag_1);
         fprintf(asm_file_ptr, ":%ld\n\n", save_cur_flag_2);
