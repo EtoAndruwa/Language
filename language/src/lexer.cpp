@@ -200,18 +200,25 @@ int get_toks(Lexer_struct* lexer_str_ptr) // CHECKED
         return 0;
     }
 
-    if(STRING[POSITION] != '$')
+    if(STRING[POSITION] == '$')
+    {
+        LEX_TOKS[LEX_CUR_TOK].token_text[0] = '$';
+        LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+        LEX_TOKS[LEX_CUR_TOK].token_type = End_line;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = End_line;
+        LEX_CUR_TOK++;
+    }
+    else if(isspace(STRING[POSITION]))
+    {
+        return 0;
+    }
+    else
     {
         printf("char on this pos %c, pos %ld, lexer_str_ptr->buff_size - 1 = %ld\n", STRING[POSITION-1], POSITION -1, lexer_str_ptr->buff_size - 1);
         LEX_ERROR = ERR_LEX_NO_END_LINE;
         ERROR_MESSAGE(stderr, ERR_LEX_NO_END_LINE)
         return ERR_LEX_NO_END_LINE;
     }
-    LEX_TOKS[LEX_CUR_TOK].token_text[0] = '$';
-    LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
-    LEX_TOKS[LEX_CUR_TOK].token_type = End_line;
-    LEX_TOKS[LEX_CUR_TOK].token_value.int_val = End_line;
-    LEX_CUR_TOK++;
 }
 
 int get_word(Lexer_struct* lexer_str_ptr) // CHECKED
