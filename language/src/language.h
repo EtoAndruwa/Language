@@ -163,7 +163,7 @@ int dtor_backend(Backend_struct* backend_str_ptr);
 int ctor_backend(Backend_struct* backend_str_ptr);
 int find_main_node(Backend_struct* backend_str_ptr, Node* node_ptr);
 void print_decls(Backend_struct* backend_str_ptr);
-int translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name);
+int translate_expr(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name, int jmp_for_break = -1);
 int translate_var_decl(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name, int decl_flag = NOT_FUNC_ARGS);
 int create_asm(Backend_struct* backend_str_ptr);
 int print_sub_eq(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name);
@@ -173,7 +173,7 @@ int print_call_func(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
 int realloc_vars(Backend_struct* backend_str_ptr);
 int realloc_funcs(Backend_struct* backend_str_ptr);
 int realloc_decls(Backend_struct* backend_str_ptr);
-int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name);
+int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name, int jmp_for_break = -1);
 int count_func_args(Node* node_ptr);
 int print_lib_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_ptr, char* func_name);
 int check_func_args(Backend_struct* backend_str_ptr, Node* node_ptr, int flag);

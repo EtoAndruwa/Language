@@ -217,7 +217,7 @@ int get_toks(Lexer_struct* lexer_str_ptr) // CHECKED
 int get_word(Lexer_struct* lexer_str_ptr) // CHECKED
 {
     size_t tok_text_pos = 0;
-    while(isalpha(STRING[POSITION]) || (STRING[POSITION] == '_' && tok_text_pos == 4))
+    while(isalpha(STRING[POSITION]) || STRING[POSITION] == '_')
     {
         if(tok_text_pos == MAX_LEN_TOK_TEXT - 1)
         {
@@ -230,64 +230,65 @@ int get_word(Lexer_struct* lexer_str_ptr) // CHECKED
         POSITION++;
     }
 
-    if(isdigit(STRING[POSITION]) || STRING[POSITION] == '.' || STRING[POSITION] == '_')
+    if(isdigit(STRING[POSITION]) || STRING[POSITION] == '.')
     {
         LEX_ERROR = ERR_LEX_INV_WORD_NAME;
         ERROR_MESSAGE(stderr, ERR_LEX_INV_WORD_NAME)
         return ERR_LEX_INV_WORD_NAME;
-    }
+    }                                                       
 
-    if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "return")))
+    if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, RETURN_LANG_DEF)))
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Return;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Return;
+        
     }
-    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "var")))
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, VAR_LANG_DEF)))
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Var;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Var;
     }   
-    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "main")))
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, MAIN_LANG_DEF)))
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Main;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Main;
     }
-    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "decl")))
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, DECL_LANG_DEF)))
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Decl;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Decl;
     }
-    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "else")))
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, ELSE_LANG_DEF)))
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Else;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Else;
     }
-    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "if")))
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, IF_LANG_DEF)))
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = If;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = If;
     }
-    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "for")))
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, FOR_LANG_DEF)))
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = For;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = For;
     }
-    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "while")))
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, WHILE_LANG_DEF)))
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = While;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = While;
     }
-    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "break")))
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, BREAK_LANG_DEF)))
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Break;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Break;
     }
-    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "scanf")))
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, SCANF_LANG_DEF)))
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Scanf;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Scanf;
     }
-    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, "printf")))
+    else if(!(strcmp(LEX_TOKS[LEX_CUR_TOK].token_text, PRINTF_LANG_DEF)))
     {
         LEX_TOKS[LEX_CUR_TOK].token_type = Printf;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Printf;
@@ -537,6 +538,12 @@ void print_toks(Lexer_struct* lexer_str_ptr) // CHECKED
                 break;
             case Fig_brack_r:
                 printf("Token type: %d (%s)\n", Fig_brack_r, "Fig_brack_r"); 
+                break;
+            case Scanf:
+                printf("Token type: %d (%s)\n", Scanf, "Scanf"); 
+                break;
+            case Printf:
+                printf("Token type: %d (%s)\n", Printf, "Printf"); 
                 break;
             case End_line:
                 printf("Token type: %d (%s)\n", End_line, "End_line"); 

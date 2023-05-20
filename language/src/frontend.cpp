@@ -1007,5 +1007,18 @@ Node* get_lib_funcs(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
 
         return lib_func_node;
     }
+    else if(tok_arr_ptr[TREE_CUR_TOK].token_type == Break)
+    {
+        TREE_CUR_TOK++;
+        if(tok_arr_ptr[TREE_CUR_TOK].token_type != End_line)
+        {
+            ERROR_MESSAGE(stderr, ERR_FRT_NO_END_LINE)
+            TREE_ERR = ERR_FRT_NO_END_LINE;
+            return ERROR_NODE()
+        }
+        TREE_CUR_TOK++;
+
+        return BREAK_NODE()
+    }
     return nullptr;
 }

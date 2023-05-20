@@ -96,6 +96,11 @@ int print_tree_data(Tree_struct* tree_struct, Node* node_ptr, FILE* graph_txt_pt
             fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>return} | {<f0>}}\"];\n", 
                 node_ptr, RETURN_COLOR);
         }
+        else if(node_ptr->type == BREAK)
+        {
+            fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>break} | {<f0>}}\"];\n", 
+                node_ptr, BREAK_COLOR);
+        }
         else if(node_ptr->type == LOGIC_OP_HEAD)
         {
             fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here>LOGIC_OP_HEAD} | {<f0>}}\"];\n", 

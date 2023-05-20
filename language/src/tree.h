@@ -52,6 +52,7 @@ enum node_type_tree
 
     MAIN           = 16,
     RETURN         = 18,
+    BREAK          = 19,
 };
 
 typedef struct Node

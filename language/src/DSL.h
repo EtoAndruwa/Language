@@ -17,6 +17,7 @@
 #define FOR_NODE(statement, for_body)           create_node(tree_str_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_str_ptr, For, LOGIC_OP, nullptr, statement, for_body), nullptr);
 #define WHILE_NODE(statement, while_body)       create_node(tree_str_ptr, 0, LOGIC_OP_HEAD, nullptr, create_node(tree_str_ptr, While, LOGIC_OP, nullptr, statement, while_body), nullptr);
 #define ELSE_NODE(if_body, else_body)           create_node(tree_str_ptr, Else, LOGIC_OP, nullptr, if_body, else_body)
+#define BREAK_NODE()                            create_node(tree_str_ptr, Break, BREAK, nullptr, nullptr, nullptr);
 
 #define MUL_NODE(left_child, right_child)  create_node(tree_str_ptr, 0, OP_HEAD, nullptr, create_node(tree_str_ptr, Mul, OP, nullptr, left_child, right_child), nullptr);
 #define ADD_NODE(left_child, right_child)  create_node(tree_str_ptr, 0, OP_HEAD, nullptr, create_node(tree_str_ptr, Add, OP, nullptr, left_child, right_child), nullptr);
@@ -81,5 +82,31 @@
 
 
 /*####################################################################################################################################################################*/
+
+// LANG CONFIG
+// #define MAIN_LANG_DEF    "assalamaleikum"
+// #define DECL_LANG_DEF    "kettik"
+// #define VAR_LANG_DEF     "soz_berem_brat"
+// #define RETURN_LANG_DEF  "jebersh"
+// #define PRINTF_LANG_DEF  "korsish"
+// #define SCANF_LANG_DEF   "ait_magan"
+// #define IF_LANG_DEF      "eger"
+// #define ELSE_LANG_DEF    "nemese"
+// #define FOR_LANG_DEF     "esepshigi"
+// #define WHILE_LANG_DEF   "bolgansha"
+// #define BREAK_LANG_DEF   "toktay"
+
+#define MAIN_LANG_DEF    "main"
+#define DECL_LANG_DEF    "decl"
+#define VAR_LANG_DEF     "var"
+#define RETURN_LANG_DEF  "return"
+#define PRINTF_LANG_DEF  "printf"
+#define SCANF_LANG_DEF   "scanf"
+#define IF_LANG_DEF      "if"
+#define ELSE_LANG_DEF    "else"
+#define FOR_LANG_DEF     "for"
+#define WHILE_LANG_DEF   "while"
+#define BREAK_LANG_DEF   "break"
+
 
 #endif
