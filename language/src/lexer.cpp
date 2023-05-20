@@ -352,18 +352,6 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
 
         return LEXER_OK;
     }
-    else if(STRING[POSITION] == '>')
-    {
-        printf("greater\n");
-        LEX_TOKS[LEX_CUR_TOK].token_text[0] = '>';
-        LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
-        LEX_TOKS[LEX_CUR_TOK].token_type = Greater_logic;
-        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Greater_logic;
-        POSITION++;
-        LEX_CUR_TOK++;
-
-        return LEXER_OK;
-    }
     else if(STRING[POSITION] == '>' && STRING[POSITION + 1] == '=')
     {
         printf("greater or equal\n");
@@ -373,6 +361,18 @@ int get_op(Lexer_struct* lexer_str_ptr) // CHECKED
         LEX_TOKS[LEX_CUR_TOK].token_type = Greater_eq_logic;
         LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Greater_eq_logic;
         POSITION += 2;
+        LEX_CUR_TOK++;
+
+        return LEXER_OK;
+    }
+    else if(STRING[POSITION] == '>')
+    {
+        printf("greater\n");
+        LEX_TOKS[LEX_CUR_TOK].token_text[0] = '>';
+        LEX_TOKS[LEX_CUR_TOK].token_text[1] = '\0';
+        LEX_TOKS[LEX_CUR_TOK].token_type = Greater_logic;
+        LEX_TOKS[LEX_CUR_TOK].token_value.int_val = Greater_logic;
+        POSITION++;
         LEX_CUR_TOK++;
 
         return LEXER_OK;

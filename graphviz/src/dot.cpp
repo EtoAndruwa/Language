@@ -146,23 +146,23 @@ int print_tree_data(Tree_struct* tree_struct, Node* node_ptr, FILE* graph_txt_pt
             switch(node_ptr->value.op_number)
             {
                 case Greater_eq_logic:
-                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> '>='} | {<f0>}}\"];\n", 
-                    node_ptr, LOGIC_OP_COLOR);
+                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> %s} | {<f0>}}\"];\n", 
+                    node_ptr, LOGIC_OP_COLOR, "greater or equal");
                     break;
 
                 case Equal_logic:
-                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> '=='} | {<f0>}}\"];\n", 
-                    node_ptr, LOGIC_OP_COLOR);  
+                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> %s} | {<f0>}}\"];\n", 
+                    node_ptr, LOGIC_OP_COLOR, "equal");  
                     break;
 
                 case N_equal_logic:
-                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> '!='} | {<f0>}}\"];\n", 
-                    node_ptr, LOGIC_OP_COLOR);
+                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> %s} | {<f0>}}\"];\n", 
+                    node_ptr, LOGIC_OP_COLOR, "not equal");
                     break;
 
                 case Greater_logic:
-                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> '>'} | {<f0>}}\"];\n", 
-                    node_ptr, LOGIC_OP_COLOR);
+                    fprintf(graph_txt_ptr, "\tnode_%p[shape = Mrecord, style=\"filled\" fillcolor=\"%s\", label =\"{{<here> %s} | {<f0>}}\"];\n", 
+                    node_ptr, LOGIC_OP_COLOR, "greater");
                     break;
 
                 default:
