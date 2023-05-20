@@ -66,7 +66,8 @@ enum error_codes_front
     ERR_FRT_EMPTY_LOG_BODY      = -22,
     ERR_FRT_INVALID_LOG_STATM   = -23,
     ERR_FRT_NO_COMMA_SEPARATOR  = -24,
-    ERR_FRT_IVAL_LIB_FUNC_CALL  = -25,
+    ERR_FRT_INVAL_LIB_FUNC_CALL = -25,
+    ERR_FRT_INVAL_LOG_OPS_SEQ   = -26,
 };
 
 enum error_codes_back

@@ -88,8 +88,8 @@ Node* get_express(Tree_struct* tree_str_ptr, token* tok_arr_ptr, size_t control_
                 }
                 else if(inner_of_expr1->type == ERROR)
                 {   
-                    TREE_ERR = ERR_FRT_IVAL_LIB_FUNC_CALL;
-                    ERROR_MESSAGE(stderr, ERR_FRT_IVAL_LIB_FUNC_CALL)
+                    TREE_ERR = ERR_FRT_INVAL_LIB_FUNC_CALL;
+                    ERROR_MESSAGE(stderr, ERR_FRT_INVAL_LIB_FUNC_CALL)
                     return inner_of_expr1;
                 }  
             }
@@ -148,8 +148,8 @@ Node* get_express(Tree_struct* tree_str_ptr, token* tok_arr_ptr, size_t control_
                     }
                     else if(inner_of_expr2->type == ERROR)
                     {   
-                        TREE_ERR = ERR_FRT_IVAL_LIB_FUNC_CALL;
-                        ERROR_MESSAGE(stderr, ERR_FRT_IVAL_LIB_FUNC_CALL)
+                        TREE_ERR = ERR_FRT_INVAL_LIB_FUNC_CALL;
+                        ERROR_MESSAGE(stderr, ERR_FRT_INVAL_LIB_FUNC_CALL)
                         return inner_of_expr2;
                     }  
                 }
@@ -759,11 +759,19 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
 
             Node* left_statm = rule_E(tree_str_ptr, tok_arr_ptr); 
 
-            printf("HERER!\n");
             if(tok_arr_ptr[TREE_CUR_TOK].token_type == Brack_r)
             {
                 printf("Only E rule in the if statm\n");
                 if_statm = left_statm;
+
+
+                if(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_r)
+                {
+                    ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_BR)
+                    TREE_ERR = ERR_FRT_NO_CLOS_BR;
+                    return ERROR_NODE()
+                }
+                TREE_CUR_TOK++;
             }
             else if(tok_arr_ptr[TREE_CUR_TOK].token_type == Equal_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == N_equal_logic ||
                 tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic)
@@ -774,22 +782,24 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
                 logic_node->left_child->left_child = left_statm;
                 logic_node->left_child->right_child = rule_E(tree_str_ptr, tok_arr_ptr); 
 
+                if(tok_arr_ptr[TREE_CUR_TOK].token_type == Equal_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == N_equal_logic ||
+                    tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == Greater_eq_logic)
+                {
+                    ERROR_MESSAGE(stderr, ERR_FRT_INVAL_LOG_OPS_SEQ)
+                    TREE_ERR = ERR_FRT_INVAL_LOG_OPS_SEQ;
+                    return ERROR_NODE()
+                }
+
+                if(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_r)
+                {
+                    ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_BR)
+                    TREE_ERR = ERR_FRT_NO_CLOS_BR;
+                    return ERROR_NODE()
+                }
+                TREE_CUR_TOK++;
+
                 if_statm = logic_node;
             }
-            else
-            {
-                ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_BR)
-                TREE_ERR = ERR_FRT_NO_CLOS_BR;
-                return ERROR_NODE()
-            }
-
-            if(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_r)
-            {
-                ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_BR)
-                TREE_ERR = ERR_FRT_NO_CLOS_BR;
-                return ERROR_NODE()
-            }
-            TREE_CUR_TOK++;
 
             if(tok_arr_ptr[TREE_CUR_TOK].token_type != Fig_brack_l)
             {
