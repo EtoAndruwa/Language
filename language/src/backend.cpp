@@ -693,24 +693,59 @@ int print_logic(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_file_
 {
     if(node_ptr->value.op_number == If)
     {
-        print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr, func_name);
-        fprintf(asm_file_ptr, "POP ix\n");
-
         size_t save_cur_flag_1 = FLAG_ID; // allows inner ifs in the body of logic op
         size_t save_cur_flag_2 = FLAG_ID + 1;
         FLAG_ID += 2;
 
-        fprintf(asm_file_ptr, "JZ :%ld\n", save_cur_flag_1);
+        if(NODE_LEFT_CHILD->type == OP_HEAD)
+        {
+            print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD, asm_file_ptr, func_name);
+            fprintf(asm_file_ptr, "POP ix\n");
+            fprintf(asm_file_ptr, "JZ :%ld\n", save_cur_flag_1);
+        }   
+        else 
+        {
+            print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->left_child->left_child, asm_file_ptr, func_name);
+            fprintf(asm_file_ptr, "POP ix\n");
+
+            print_sub_eq(backend_str_ptr, NODE_LEFT_CHILD->left_child->right_child, asm_file_ptr, func_name);
+            fprintf(asm_file_ptr, "POP hx\n");
+
+            switch(NODE_LEFT_CHILD->left_child->value.op_number)
+            {
+                case Equal_logic:
+                    fprintf(asm_file_ptr, "JE :%ld\n", save_cur_flag_1);
+                    break;
+
+                case N_equal_logic:
+                    fprintf(asm_file_ptr, "JNE :%ld\n", save_cur_flag_1);
+                    break;
+                
+                case Greater_eq_logic:
+                    fprintf(asm_file_ptr, "JGE :%ld\n", save_cur_flag_1);
+                    break;
+
+                case Greater_logic:
+                    fprintf(asm_file_ptr, "JG :%ld\n", save_cur_flag_1);
+                    break;
+                
+                default:
+                    ERROR_MESSAGE(stderr, ERR_BCK_NEW_LOG_OP)
+                    BACK_ERROR = ERR_BCK_NEW_LOG_OP;
+                    fprintf(asm_file_ptr, "ERR_BCK_NEW_LOG_OP\n");
+                    break;
+            }
+        }
 
         if(NODE_RIGHT_CHILD->right_child->type != EMPTY)
         {
             if(jmp_for_break != -1)
             {
-                translate_expr(backend_str_ptr, NODE_RIGHT_CHILD->left_child, asm_file_ptr, func_name, jmp_for_break);
+                translate_expr(backend_str_ptr, NODE_RIGHT_CHILD->right_child, asm_file_ptr, func_name, jmp_for_break);
             }
             else
             {
-                translate_expr(backend_str_ptr, NODE_RIGHT_CHILD->left_child, asm_file_ptr, func_name, save_cur_flag_2);
+                translate_expr(backend_str_ptr, NODE_RIGHT_CHILD->right_child, asm_file_ptr, func_name, save_cur_flag_2);
             }
         }
         fprintf(asm_file_ptr, "JMP :%ld\n", save_cur_flag_2);

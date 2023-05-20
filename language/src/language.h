@@ -103,6 +103,7 @@ enum error_codes_back
     ERR_BCK_MAIN_CANNOT_BE_CLLD = -28,
     ERR_BKC_INV_RETURN_MAIN     = -29,
     ERR_BCK_INVAL_ARGS_SQRT     = -30,
+    ERR_BCK_NEW_LOG_OP          = -31,
 };
 
 typedef struct var_info
