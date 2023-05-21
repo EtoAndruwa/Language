@@ -192,6 +192,16 @@ int get_toks(Lexer_struct* lexer_str_ptr) // CHECKED
             }
             continue;
         }
+        else if((STRING[POSITION] == '-' && isdigit(STRING[POSITION + 1])) || (isdigit(STRING[POSITION])))
+        {
+            get_val(lexer_str_ptr);
+            if(LEX_ERROR != LEXER_OK)
+            {
+                ERROR_MESSAGE(stderr, LEX_ERROR)
+                return LEX_ERROR;
+            }
+            continue;
+        }
         else if(ispunct(STRING[POSITION]))
         {
             get_op(lexer_str_ptr);
@@ -202,7 +212,6 @@ int get_toks(Lexer_struct* lexer_str_ptr) // CHECKED
             }
             continue;
         }
-        get_val(lexer_str_ptr);
     }
     if(POSITION == lexer_str_ptr->buff_size - 1 && STRING[POSITION] == '\\' && STRING[POSITION - 1] == '*')
     {

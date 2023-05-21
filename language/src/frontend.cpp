@@ -294,6 +294,13 @@ Node* rule_P(Tree_struct* tree_str_ptr, token* tok_arr_ptr) // CHECKED
     else
     {
         inner_node = rule_N(tree_str_ptr, tok_arr_ptr);
+
+        // if(inner_node->type == ERROR_NODE)
+        // {
+        //     printf("SUKA\n\n\n\n");
+        // }
+
+
         if(inner_node == nullptr)
         {
             inner_node = rule_V(tree_str_ptr, tok_arr_ptr);
@@ -762,14 +769,6 @@ Node* get_logic(Tree_struct* tree_str_ptr, token* tok_arr_ptr)
             {
                 if_statm = left_statm;
 
-                TREE_CUR_TOK++;
-
-                if(tok_arr_ptr[TREE_CUR_TOK].token_type != Brack_r)
-                {
-                    ERROR_MESSAGE(stderr, ERR_FRT_NO_CLOS_BR)
-                    TREE_ERR = ERR_FRT_NO_CLOS_BR;
-                    return ERROR_NODE()
-                }
                 TREE_CUR_TOK++;
             }
             else if(tok_arr_ptr[TREE_CUR_TOK].token_type == Equal_logic || tok_arr_ptr[TREE_CUR_TOK].token_type == N_equal_logic ||

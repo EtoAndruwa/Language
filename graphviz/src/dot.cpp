@@ -257,7 +257,7 @@ int create_graph_jpg(Tree_struct* tree_struct, char* legend) // OK
         return ERR_MAKE_DIR_NEW_FILE; 
     }
 
-    FILE* graph_txt_ptr = fopen(dir_file_name, "a+");
+    FILE* graph_txt_ptr = fopen(dir_file_name, "w");
     if(graph_txt_ptr == nullptr)
     {
         ERROR_MESSAGE(stderr, ERR_TO_OPEN_GRAPH_TXT)

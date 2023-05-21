@@ -150,6 +150,8 @@ int create_asm(Backend_struct* backend_str_ptr) // CHECKED
                 continue;
             }
 
+            printf("CREATE ASM %s\n", DECL_NODES[i]->left_child->left_child->value.text);
+
             if(print_decl_funcs(backend_str_ptr, DECL_NODES[i], asm_file_ptr, DECL_NODES[i]->left_child->left_child->value.text) != BACK_OK)
             {
                 ERROR_MESSAGE(stderr, ERR_BCK_TRANSLATE_FUNC_DECL)
@@ -157,7 +159,6 @@ int create_asm(Backend_struct* backend_str_ptr) // CHECKED
                 return ERR_BCK_TRANSLATE_FUNC_DECL;
             }
         }
-        break;
     }
 
     if(fclose(asm_file_ptr) == EOF)
@@ -539,6 +540,7 @@ int print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_
 {
     if(node_ptr->type == DECL_FUNC_HEAD)
     {
+        printf("DECL %s\n", NODE_LEFT_CHILD->left_child->value.text);
         fprintf(asm_file_ptr, "\n\n%s:\n", NODE_LEFT_CHILD->left_child->value.text);
 
         Node* args = NODE_LEFT_CHILD->right_child->left_child;
@@ -551,7 +553,7 @@ int print_decl_funcs(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_
         }
 
         int num_of_args = -1;
-        for(size_t i = 0; i < CUR_FUNC_ID; i ++)
+        for(size_t i = 0; i < CUR_FUNC_ID; i++)
         {
             if(!strcmp(FUNCS_ARR[i].func_name, func_name))
             {
@@ -610,6 +612,7 @@ int print_call_func(Backend_struct* backend_str_ptr, Node* node_ptr, FILE* asm_f
             }
         }
 
+        printf("%s\n", NODE_LEFT_CHILD->value.text);
         fprintf(asm_file_ptr, "CALL %s:\n", NODE_LEFT_CHILD->value.text);
         if(strcmp(func_name, NODE_LEFT_CHILD->value.text) != 0)
         {
